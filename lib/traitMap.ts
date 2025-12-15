@@ -1,0 +1,18 @@
+export const keywordToTraitMap: Record<string, string[]> = {
+  create: ["craft", "hands-on"],
+  making: ["craft"],
+  build: ["hands-on"],
+  detail: ["detail"],
+  quality: ["quality"],
+  slow: ["intentional", "presence"],
+  calm: ["calm"],
+  cozy: ["cozy", "comfort"],
+  comfort: ["comfort"],
+  home: ["warmth", "safety"],
+  nature: ["nature", "organic"],
+  imperfect: ["imperfection"],
+  quiet: ["quiet"],
+  alone: ["intimacy"],
+  small: ["intimacy"],
+  together: ["togetherness"],
+};
