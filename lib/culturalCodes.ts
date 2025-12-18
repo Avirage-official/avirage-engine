@@ -1,13 +1,14 @@
 /**
  * AVIRAGE CULTURAL CODES
  * The 20 Cultural Codes with complete trait profiles
+ * ONLY uses the 25 valid traits from types.ts
  */
 
 import { CulturalCode } from "./types";
 
 export const CULTURAL_CODES: CulturalCode[] = [
   // ========================================================================
-  // CODE 1: SHOKUNIN
+  // CODE 1: SHOKUNIN - Japanese craft mastery
   // ========================================================================
   {
     id: "shokunin",
@@ -28,7 +29,6 @@ export const CULTURAL_CODES: CulturalCode[] = [
       emotional_expressiveness: 30,
       conflict_navigation: 25,
       influence_drive: 35,
-      imperfection_tolerance: 40,
       output_orientation: 45,
       novelty_seeking: 40,
       optimism_baseline: 60,
@@ -43,12 +43,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "sensory_appreciation", score: 85 },
       { trait: "tradition_orientation", score: 85 },
       { trait: "pace_preference", score: 80 },
-      { trait: "meaning_orientation", score: 80 },
     ],
   },
 
   // ========================================================================
-  // CODE 2: YUGEN
+  // CODE 2: YUGEN - Japanese profound beauty
   // ========================================================================
   {
     id: "yugen",
@@ -85,13 +84,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "abstract_thinking", score: 85 },
       { trait: "nature_connection", score: 85 },
       { trait: "pace_preference", score: 85 },
-      { trait: "present_moment_focus", score: 85 },
-      { trait: "meaning_orientation", score: 85 },
     ],
   },
 
   // ========================================================================
-  // CODE 3: KOSELIG
+  // CODE 3: KOSELIG - Norwegian/Scandinavian cozy comfort
   // ========================================================================
   {
     id: "koselig",
@@ -126,13 +123,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "pace_preference", score: 80 },
       { trait: "nature_connection", score: 75 },
       { trait: "environmental_sensitivity", score: 75 },
-      { trait: "emotional_expressiveness", score: 70 },
-      { trait: "emotional_stability", score: 70 },
     ],
   },
 
   // ========================================================================
-  // CODE 4: ALLEGRIA
+  // CODE 4: ALLEGRIA - Italian social joy
   // ========================================================================
   {
     id: "allegria",
@@ -167,13 +162,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "emotional_expressiveness", score: 90 },
       { trait: "sensory_appreciation", score: 90 },
       { trait: "craftsmanship_drive", score: 80 },
-      { trait: "group_size_preference", score: 75 },
-      { trait: "pace_preference", score: 75 },
     ],
   },
 
   // ========================================================================
-  // CODE 5: GINGA
+  // CODE 5: GINGA - Brazilian celebration flow
   // ========================================================================
   {
     id: "ginga",
@@ -202,18 +195,18 @@ export const CULTURAL_CODES: CulturalCode[] = [
       output_orientation: 40,
       stability_seeking: 40,
       nature_connection: 60,
+      improvisation_comfort: 80,
     },
     strongestDifferentiators: [
       { trait: "optimism_baseline", score: 95 },
       { trait: "social_energy", score: 90 },
       { trait: "emotional_expressiveness", score: 90 },
       { trait: "group_size_preference", score: 85 },
-      { trait: "sensory_appreciation", score: 80 },
     ],
   },
 
   // ========================================================================
-  // CODE 6: NHẸ NHÀNG
+  // CODE 6: NHẸ NHÀNG - Vietnamese gentle ease
   // ========================================================================
   {
     id: "nhe_nhang",
@@ -247,14 +240,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "pace_preference", score: 95 },
       { trait: "present_moment_focus", score: 85 },
       { trait: "sensory_appreciation", score: 80 },
-      { trait: "emotional_stability", score: 70 },
-      { trait: "tradition_orientation", score: 70 },
-      { trait: "introspection_depth", score: 70 },
     ],
   },
 
   // ========================================================================
-  // CODE 7: JOIE DE VIVRE
+  // CODE 7: JOIE DE VIVRE - French refined pleasure
   // ========================================================================
   {
     id: "joie_de_vivre",
@@ -289,12 +279,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "craftsmanship_drive", score: 85 },
       { trait: "abstract_thinking", score: 80 },
       { trait: "detail_orientation", score: 80 },
-      { trait: "pace_preference", score: 70 },
     ],
   },
 
   // ========================================================================
-  // CODE 8: FUEGO
+  // CODE 8: FUEGO - Spanish passionate fire
   // ========================================================================
   {
     id: "fuego",
@@ -328,13 +317,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "emotional_expressiveness", score: 95 },
       { trait: "social_energy", score: 85 },
       { trait: "sensory_appreciation", score: 85 },
-      { trait: "tradition_orientation", score: 75 },
-      { trait: "meaning_orientation", score: 75 },
     ],
   },
 
   // ========================================================================
-  // CODE 9: DAVKA
+  // CODE 9: DAVKA - Israeli defiant boldness
   // ========================================================================
   {
     id: "davka",
@@ -369,12 +356,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "novelty_seeking", score: 90 },
       { trait: "influence_drive", score: 85 },
       { trait: "output_orientation", score: 85 },
-      { trait: "optimism_baseline", score: 75 },
     ],
   },
 
   // ========================================================================
-  // CODE 10: UJAMAA
+  // CODE 10: UJAMAA - African communal togetherness
   // ========================================================================
   {
     id: "ujamaa",
@@ -387,6 +373,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
       emotional_expressiveness: 90,
       meaning_orientation: 85,
       tradition_orientation: 85,
+      collaborative_preference: 85,
       influence_drive: 45,
       conflict_navigation: 50,
       optimism_baseline: 70,
@@ -410,11 +397,12 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "group_size_preference", score: 85 },
       { trait: "meaning_orientation", score: 85 },
       { trait: "tradition_orientation", score: 85 },
+      { trait: "collaborative_preference", score: 85 },
     ],
   },
 
   // ========================================================================
-  // CODE 11: VIDA
+  // CODE 11: VIDA - Costa Rican pure life
   // ========================================================================
   {
     id: "vida",
@@ -449,12 +437,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "nature_connection", score: 90 },
       { trait: "emotional_stability", score: 75 },
       { trait: "pace_preference", score: 75 },
-      { trait: "meaning_orientation", score: 70 },
     ],
   },
 
   // ========================================================================
-  // CODE 12: BAUHAUS
+  // CODE 12: BAUHAUS - German structured excellence
   // ========================================================================
   {
     id: "bauhaus",
@@ -490,12 +477,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "craftsmanship_drive", score: 85 },
       { trait: "output_orientation", score: 85 },
       { trait: "stability_seeking", score: 85 },
-      { trait: "conflict_navigation", score: 75 },
     ],
   },
 
   // ========================================================================
-  // CODE 13: GEZELLIGHEID
+  // CODE 13: GEZELLIGHEID - Dutch cozy directness
   // ========================================================================
   {
     id: "gezelligheid",
@@ -529,12 +515,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "conflict_navigation", score: 90 },
       { trait: "stability_seeking", score: 80 },
       { trait: "sensory_appreciation", score: 70 },
-      { trait: "structure_preference", score: 65 },
     ],
   },
 
   // ========================================================================
-  // CODE 14: SANUK
+  // CODE 14: SANUK - Thai joyful fun
   // ========================================================================
   {
     id: "sanuk",
@@ -563,19 +548,19 @@ export const CULTURAL_CODES: CulturalCode[] = [
       influence_drive: 30,
       abstract_thinking: 55,
       environmental_sensitivity: 60,
+      improvisation_comfort: 75,
     },
     strongestDifferentiators: [
       { trait: "sensory_appreciation", score: 85 },
       { trait: "optimism_baseline", score: 75 },
       { trait: "emotional_expressiveness", score: 75 },
       { trait: "tradition_orientation", score: 75 },
-      { trait: "social_energy", score: 70 },
-      { trait: "conflict_navigation", score: 20 }, // LOW as differentiator
+      { trait: "conflict_navigation", score: 20 }, // LOW as key differentiator
     ],
   },
 
   // ========================================================================
-  // CODE 15: SADHANA
+  // CODE 15: SADHANA - Indian spiritual practice
   // ========================================================================
   {
     id: "sadhana",
@@ -610,12 +595,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "abstract_thinking", score: 90 },
       { trait: "introspection_depth", score: 90 },
       { trait: "tradition_orientation", score: 90 },
-      { trait: "sensory_appreciation", score: 85 },
     ],
   },
 
   // ========================================================================
-  // CODE 16: JÄMLIK
+  // CODE 16: JÄMLIK - Swedish egalitarian balance
   // ========================================================================
   {
     id: "jamlik",
@@ -644,18 +628,18 @@ export const CULTURAL_CODES: CulturalCode[] = [
       influence_drive: 35,
       output_orientation: 60,
       environmental_sensitivity: 70,
+      collaborative_preference: 70,
     },
     strongestDifferentiators: [
       { trait: "stability_seeking", score: 90 },
       { trait: "nature_connection", score: 80 },
       { trait: "structure_preference", score: 75 },
       { trait: "emotional_stability", score: 75 },
-      { trait: "craftsmanship_drive", score: 75 },
     ],
   },
 
   // ========================================================================
-  // CODE 17: MAJLIS
+  // CODE 17: MAJLIS - Arabic intimate assembly
   // ========================================================================
   {
     id: "majlis",
@@ -691,12 +675,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "emotional_expressiveness", score: 85 },
       { trait: "introspection_depth", score: 85 },
       { trait: "craftsmanship_drive", score: 85 },
-      { trait: "tradition_orientation", score: 85 },
     ],
   },
 
   // ========================================================================
-  // CODE 18: VILLMARK
+  // CODE 18: VILLMARK - Norwegian wild nature
   // ========================================================================
   {
     id: "villmark",
@@ -731,13 +714,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "introspection_depth", score: 80 },
       { trait: "sensory_appreciation", score: 80 },
       { trait: "emotional_stability", score: 75 },
-      { trait: "tradition_orientation", score: 75 },
-      { trait: "meaning_orientation", score: 75 },
     ],
   },
 
   // ========================================================================
-  // CODE 19: MERAKI
+  // CODE 19: MERAKI - Greek soul in creation
   // ========================================================================
   {
     id: "meraki",
@@ -772,12 +753,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "meaning_orientation", score: 90 },
       { trait: "detail_orientation", score: 85 },
       { trait: "sensory_appreciation", score: 85 },
-      { trait: "emotional_expressiveness", score: 80 },
     ],
   },
 
   // ========================================================================
-  // CODE 20: LUJA
+  // CODE 20: LUJA - Finnish solid strength
   // ========================================================================
   {
     id: "luja",
@@ -812,8 +792,6 @@ export const CULTURAL_CODES: CulturalCode[] = [
       { trait: "nature_connection", score: 85 },
       { trait: "introspection_depth", score: 80 },
       { trait: "stability_seeking", score: 80 },
-      { trait: "output_orientation", score: 75 },
-      { trait: "tradition_orientation", score: 75 },
     ],
   },
 ];
