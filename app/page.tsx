@@ -5,21 +5,21 @@ import { QUIZ_QUESTIONS } from "@/lib/quizQuestions";
 
 interface AnalysisResult {
   primary: {
-    name: string;
-    culture: string;
-    essence: string;
+    code_name: string;
+    full_name: string;
+    description: string;
     matchPercentage: number;
   };
   secondary: {
-    name: string;
-    culture: string;
-    essence: string;
+    code_name: string;
+    full_name: string;
+    description: string;
     matchPercentage: number;
   };
   tertiary: {
-    name: string;
-    culture: string;
-    essence: string;
+    code_name: string;
+    full_name: string;
+    description: string;
     matchPercentage: number;
   };
   explanation: string;
@@ -36,28 +36,28 @@ interface AnalysisResult {
   };
 }
 
-// Code colors for visual identity
+// Code colors for visual identity (UPDATE THESE WITH NEW CODE NAMES)
 const CODE_COLORS: Record<string, string> = {
+  Khoisan: "#D2691E",
+  Káyori: "#E63946",
+  Sahén: "#8B7355",
+  Enzuka: "#C41E3A",
+  Siyuané: "#4A5568",
+  Jaejin: "#2E86AB",
+  Namséa: "#90C9A6",
   Shokunin: "#8B4513",
-  Yugen: "#4A5568",
-  Koselig: "#D4A373",
-  Allegria: "#E63946",
-  Ginga: "#FFB703",
-  "Nhẹ Nhàng": "#90C9A6",
-  "Joie de Vivre": "#9B59B6",
-  Fuego: "#FF6B6B",
-  Davka: "#3498DB",
-  Ujamaa: "#E74C3C",
-  Vida: "#27AE60",
-  Bauhaus: "#34495E",
-  Gezelligheid: "#FF8C42",
-  Sanuk: "#F39C12",
-  Sadhana: "#8E44AD",
-  Jämlik: "#5DADE2",
-  Majlis: "#D35400",
-  Villmark: "#16A085",
-  Meraki: "#2E86AB",
-  Luja: "#7F8C8D",
+  Khoruun: "#7F8C8D",
+  Lhumir: "#9B59B6",
+  Yatevar: "#8E44AD",
+  Rénara: "#D4A373",
+  Karayni: "#27AE60",
+  Wóhaka: "#16A085",
+  Tjukari: "#F39C12",
+  Kinmora: "#D35400",
+  Siljoa: "#5DADE2",
+  Skénari: "#34495E",
+  Ashkara: "#C0392B",
+  Aléthir: "#3498DB",
 };
 
 export default function Home() {
@@ -641,7 +641,7 @@ export default function Home() {
             {/* Primary Code - HERO */}
             <div style={{
               padding: "60px 40px",
-              background: CODE_COLORS[result.primary.name] || "#2c3e50",
+              background: CODE_COLORS[result.primary.code_name] || "#2c3e50",
               color: "#fff",
               borderRadius: "24px",
               marginBottom: "20px",
@@ -676,7 +676,7 @@ export default function Home() {
                 fontWeight: "900",
                 textShadow: "0 4px 20px rgba(0,0,0,0.2)",
               }}>
-                {result.primary.name}
+                {result.primary.code_name}
               </h1>
               <div style={{
                 fontSize: "20px",
@@ -684,7 +684,7 @@ export default function Home() {
                 marginBottom: "25px",
                 fontWeight: "500",
               }}>
-                {result.primary.culture} • {result.primary.matchPercentage}% resonance
+                {result.primary.full_name} • {result.primary.matchPercentage}% resonance
               </div>
               <p style={{
                 fontSize: "17px",
@@ -693,7 +693,7 @@ export default function Home() {
                 maxWidth: "500px",
                 margin: "0 auto",
               }}>
-                {result.primary.essence}
+                {result.primary.description}
               </p>
             </div>
 
@@ -709,7 +709,7 @@ export default function Home() {
                 backgroundColor: "rgba(255, 255, 255, 0.95)",
                 borderRadius: "20px",
                 boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-                borderLeft: `5px solid ${CODE_COLORS[result.secondary.name] || "#95a5a6"}`,
+                borderLeft: `5px solid ${CODE_COLORS[result.secondary.code_name] || "#95a5a6"}`,
               }}>
                 <div style={{
                   fontSize: "11px",
@@ -726,14 +726,14 @@ export default function Home() {
                   color: "#2c3e50",
                   fontWeight: "700",
                 }}>
-                  {result.secondary.name}
+                  {result.secondary.code_name}
                 </h3>
                 <div style={{ fontSize: "14px", color: "#7f8c8d", fontWeight: "500" }}>
-                  {result.secondary.culture}
+                  {result.secondary.full_name}
                 </div>
                 <div style={{
                   fontSize: "13px",
-                  color: CODE_COLORS[result.secondary.name] || "#95a5a6",
+                  color: CODE_COLORS[result.secondary.code_name] || "#95a5a6",
                   marginTop: "8px",
                   fontWeight: "700",
                 }}>
@@ -746,7 +746,7 @@ export default function Home() {
                 backgroundColor: "rgba(255, 255, 255, 0.95)",
                 borderRadius: "20px",
                 boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-                borderLeft: `5px solid ${CODE_COLORS[result.tertiary.name] || "#95a5a6"}`,
+                borderLeft: `5px solid ${CODE_COLORS[result.tertiary.code_name] || "#95a5a6"}`,
               }}>
                 <div style={{
                   fontSize: "11px",
@@ -763,14 +763,14 @@ export default function Home() {
                   color: "#2c3e50",
                   fontWeight: "700",
                 }}>
-                  {result.tertiary.name}
+                  {result.tertiary.code_name}
                 </h3>
                 <div style={{ fontSize: "14px", color: "#7f8c8d", fontWeight: "500" }}>
-                  {result.tertiary.culture}
+                  {result.tertiary.full_name}
                 </div>
                 <div style={{
                   fontSize: "13px",
-                  color: CODE_COLORS[result.tertiary.name] || "#95a5a6",
+                  color: CODE_COLORS[result.tertiary.code_name] || "#95a5a6",
                   marginTop: "8px",
                   fontWeight: "700",
                 }}>
