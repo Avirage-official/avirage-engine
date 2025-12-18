@@ -778,3 +778,5 @@ export function getCodeByName(codeName: string): CulturalCode | undefined {
 export function getAllCodeNames(): string[] {
   return culturalCodes.map(code => code.code_name);
 }
+// At the very end of culturalCodes.ts file
+export const CULTURAL_CODES = culturalCodes;
