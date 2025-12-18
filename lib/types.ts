@@ -96,15 +96,41 @@ export const TRAIT_NAMES: (keyof TraitScores)[] = [
  * with specific trait ranges and cultural grounding
  */
 export interface CulturalCode {
-  id: string;
-  name: string;
-  culture: string;
-  essence: string;
-  traitProfile: Partial<TraitScores>;
-  strongestDifferentiators: {
-    trait: keyof TraitScores;
-    score: number;
-  }[];
+  id: number;
+  code_name: string;
+  full_name: string;
+  type: "standalone" | "fusion";
+  origin: string;
+  description: string;
+  core_concepts: string[];
+  source_cultures?: string[];
+  traits: {
+    abstract_thinking: number;
+    sensory_appreciation: number;
+    pattern_recognition: number;
+    detail_orientation: number;
+    present_moment_focus: number;
+    craftsmanship_drive: number;
+    structure_preference: number;
+    improvisation_comfort: number;
+    pace_preference: number;
+    output_orientation: number;
+    emotional_stability: number;
+    emotional_expressiveness: number;
+    environmental_sensitivity: number;
+    introspection_depth: number;
+    optimism_baseline: number;
+    social_energy: number;
+    group_size_preference: number;
+    conflict_navigation: number;
+    influence_drive: number;
+    collaborative_preference: number;
+    tradition_orientation: number;
+    novelty_seeking: number;
+    stability_seeking: number;
+    meaning_orientation: number;
+    nature_connection: number;
+  };
 }
 
 /**
@@ -127,21 +153,21 @@ export interface CodeMatch {
  */
 export interface AnalysisResult {
   primary: {
-    name: string;
-    culture: string;
-    essence: string;
+    code_name: string;
+    full_name: string;
+    description: string;
     matchPercentage: number;
   };
   secondary: {
-    name: string;
-    culture: string;
-    essence: string;
+    code_name: string;
+    full_name: string;
+    description: string;
     matchPercentage: number;
   };
   tertiary?: {
-    name: string;
-    culture: string;
-    essence: string;
+    code_name: string;
+    full_name: string;
+    description: string;
     matchPercentage: number;
   };
   traitScores: TraitScores;
