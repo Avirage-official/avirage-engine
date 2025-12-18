@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse birth date
-    const parsedBirthDate = new Date(birthDate);
+    const parsedBirthDate = new Date(birthDate.replace(/\//g, '-'));
     if (isNaN(parsedBirthDate.getTime())) {
       return NextResponse.json(
         { error: "Invalid birth date" },
