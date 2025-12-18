@@ -24,21 +24,20 @@ function calculateMatch(
   const alignments: CodeMatch["traitAlignments"] = [];
 
   // Compare each trait
-  for (const traitKey in code.traitProfile) {
+  for (const traitKey in code.traits) {
     const trait = traitKey as keyof TraitScores;
     const userScore = userTraits[trait];
-    const codeScore = code.traitProfile[trait];
+    const codeScore = code.traits[trait];
 
     if (codeScore === undefined) continue;
 
     // Calculate distance (0 = perfect match, 100 = maximum difference)
     const distance = Math.abs(userScore - codeScore);
 
-    // Weight based on how defining the trait is for this code
-    const isDifferentiator = code.strongestDifferentiators.some(
-      (d) => d.trait === trait
-    );
-    const weight = isDifferentiator ? 2.0 : 1.0;
+    // Weight based on core concepts (traits mentioned in core_concepts get higher weight)
+    // Simple heuristic: if trait has extreme value (>80 or <20), it's likely a differentiator
+    const isExtreme = codeScore > 80 || codeScore < 20;
+    const weight = isExtreme ? 2.0 : 1.0;
 
     totalDistance += distance * weight;
     totalWeight += weight;
@@ -123,13 +122,13 @@ function generateExplanation(
     return description;
   });
 
-  const explanation = `You align with ${primary.code.name} (${
+  const explanation = `You align with ${primary.code.code_name} (${
     Math.round(primary.matchPercentage)
   }% match) through your ${traitDescriptions.join(", ")}. Your secondary resonance with ${
-    secondary.code.name
+    secondary.code.code_name
   } (${
     Math.round(secondary.matchPercentage)
-  }% match) suggests you also value ${secondary.code.essence.toLowerCase()}.`;
+  }% match) suggests you also value ${secondary.code.description.toLowerCase()}.`;
 
   return explanation;
 }
@@ -209,21 +208,21 @@ export function analyzeTraits(userTraits: TraitScores): AnalysisResult {
 
   return {
     primary: {
-      name: primary.code.name,
-      culture: primary.code.culture,
-      essence: primary.code.essence,
+      code_name: primary.code.code_name,
+      full_name: primary.code.full_name,
+      description: primary.code.description,
       matchPercentage: Math.round(primary.matchPercentage),
     },
     secondary: {
-      name: secondary.code.name,
-      culture: secondary.code.culture,
-      essence: secondary.code.essence,
+      code_name: secondary.code.code_name,
+      full_name: secondary.code.full_name,
+      description: secondary.code.description,
       matchPercentage: Math.round(secondary.matchPercentage),
     },
     tertiary: {
-      name: tertiary.code.name,
-      culture: tertiary.code.culture,
-      essence: tertiary.code.essence,
+      code_name: tertiary.code.code_name,
+      full_name: tertiary.code.full_name,
+      description: tertiary.code.description,
       matchPercentage: Math.round(tertiary.matchPercentage),
     },
     traitScores: userTraits,
@@ -247,7 +246,7 @@ export function getDetailedBreakdown(
   const matches = findMatches(userTraits);
 
   const topAlignments = matches.slice(0, 3).map((match) => ({
-    code: match.code.name,
+    code: match.code.code_name,
     traits: match.traitAlignments.slice(0, 5).map((a) => ({
       trait: TRAIT_METADATA[a.trait].name,
       userScore: Math.round(a.userScore),
