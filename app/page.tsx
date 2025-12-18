@@ -42,7 +42,11 @@ export default function Home() {
   
   // Basic info
   const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [genderOther, setGenderOther] = useState("");
   const [birthDate, setBirthDate] = useState("");
+  const [city, setCity] = useState("");
+  const [ethnicity, setEthnicity] = useState("");
   
   // Quiz state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -55,10 +59,16 @@ export default function Home() {
 
   // Handle basic info submission
   function startQuiz() {
-    if (!name.trim() || !birthDate) {
-      setError("Please enter your name and birth date");
+    if (!name.trim() || !gender || !birthDate || !city.trim() || !ethnicity.trim()) {
+      setError("Please fill in all fields");
       return;
     }
+    
+    if (gender === "other" && !genderOther.trim()) {
+      setError("Please specify your gender");
+      return;
+    }
+    
     setError(null);
     setStep("quiz");
   }
@@ -98,7 +108,7 @@ export default function Home() {
     setError(null);
 
     try {
-      const response = await fetch("/api/analyse", {
+      const response = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -127,7 +137,11 @@ export default function Home() {
   function restart() {
     setStep("info");
     setName("");
+    setGender("");
+    setGenderOther("");
     setBirthDate("");
+    setCity("");
+    setEthnicity("");
     setCurrentQuestionIndex(0);
     setQuizAnswers({});
     setResult(null);
@@ -147,9 +161,10 @@ export default function Home() {
           </p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            {/* Name */}
             <div>
               <label style={{ display: "block", marginBottom: "8px", fontWeight: "500" }}>
-                Your Name
+                Your Name <span style={{ color: "red" }}>*</span>
               </label>
               <input
                 type="text"
@@ -166,9 +181,54 @@ export default function Home() {
               />
             </div>
 
+            {/* Gender */}
             <div>
               <label style={{ display: "block", marginBottom: "8px", fontWeight: "500" }}>
-                Birth Date
+                Gender <span style={{ color: "red" }}>*</span>
+              </label>
+              <select
+                value={gender}
+                onChange={(e) => {
+                  setGender(e.target.value);
+                  if (e.target.value !== "other") setGenderOther("");
+                }}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  fontSize: "16px",
+                  border: "2px solid #ddd",
+                  borderRadius: "8px",
+                }}
+              >
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="non-binary">Non-binary</option>
+                <option value="other">Other</option>
+              </select>
+              
+              {gender === "other" && (
+                <input
+                  type="text"
+                  value={genderOther}
+                  onChange={(e) => setGenderOther(e.target.value)}
+                  placeholder="Please specify"
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    fontSize: "16px",
+                    border: "2px solid #ddd",
+                    borderRadius: "8px",
+                    marginTop: "10px",
+                  }}
+                />
+              )}
+            </div>
+
+            {/* Birth Date */}
+            <div>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "500" }}>
+                Birth Date <span style={{ color: "red" }}>*</span>
               </label>
               <input
                 type="date"
@@ -185,6 +245,46 @@ export default function Home() {
               <p style={{ fontSize: "14px", color: "#888", marginTop: "5px" }}>
                 We'll use this to calculate your astrological profile
               </p>
+            </div>
+
+            {/* City */}
+            <div>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "500" }}>
+                City <span style={{ color: "red" }}>*</span>
+              </label>
+              <input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="e.g. Brisbane"
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  fontSize: "16px",
+                  border: "2px solid #ddd",
+                  borderRadius: "8px",
+                }}
+              />
+            </div>
+
+            {/* Ethnicity */}
+            <div>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "500" }}>
+                Ethnicity <span style={{ color: "red" }}>*</span>
+              </label>
+              <input
+                type="text"
+                value={ethnicity}
+                onChange={(e) => setEthnicity(e.target.value)}
+                placeholder="e.g. Chinese, African American, Mixed"
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  fontSize: "16px",
+                  border: "2px solid #ddd",
+                  borderRadius: "8px",
+                }}
+              />
             </div>
 
             {error && (
