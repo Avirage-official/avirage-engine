@@ -49,6 +49,9 @@ export function calculateTraitScores(
   }
 
   // STEP 2: Get quiz contribution (weight: 0.7)
+  // Collect all quiz scores per trait (traits appear in multiple questions)
+  const quizContributions: Record<string, number[]> = {};
+
   for (const questionId in quizAnswers) {
     const question = QUIZ_QUESTIONS.find((q) => q.id === questionId);
     if (!question) continue;
@@ -57,18 +60,30 @@ export function calculateTraitScores(
     const selectedOption = question.options[selectedOptionIndex];
     if (!selectedOption) continue;
 
-    // Apply quiz answer scores
+    // Collect scores for each trait
     const optionScores = selectedOption.traitScores;
     for (const key in optionScores) {
-      const traitKey = key as keyof TraitScores;
-      const quizScore = optionScores[traitKey];
+      const quizScore = optionScores[key as keyof TraitScores];
       if (quizScore !== undefined) {
-        // Apply 70% weight to quiz answers
-        // Each question contributes its score directly (already calibrated)
-        const adjustment = (quizScore - 50) * 0.7;
-        traits[traitKey] += adjustment;
+        if (!quizContributions[key]) {
+          quizContributions[key] = [];
+        }
+        quizContributions[key].push(quizScore);
       }
     }
+  }
+
+  // Apply AVERAGED quiz scores with 70% weight
+  for (const key in quizContributions) {
+    const traitKey = key as keyof TraitScores;
+    const scores = quizContributions[key];
+    
+    // Average all quiz contributions for this trait
+    const avgScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+    
+    // Apply 70% weight to averaged quiz score
+    const adjustment = (avgScore - 50) * 0.7;
+    traits[traitKey] += adjustment;
   }
 
   // STEP 3: Normalize scores if user answered all questions
