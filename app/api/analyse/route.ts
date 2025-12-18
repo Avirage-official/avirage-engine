@@ -1,57 +1,46 @@
-/**
- * AVIRAGE API ENDPOINT
- * POST /api/analyze
- * Receives text input, returns Cultural Code analysis
- */
-
 import { NextRequest, NextResponse } from "next/server";
-import { analyzeText, getConfidence } from "@/lib/textAnalyzer";
+import { calculateTraitScores, isQuizComplete } from "@/lib/quizEngine";
 import { analyzeTraits } from "@/lib/matcher";
 
 export async function POST(req: NextRequest) {
   try {
-    // Parse request body
-    const { text } = await req.json();
+    const { name, birthDate, quizAnswers } = await req.json();
 
-    // Validate input
-    if (!text || typeof text !== "string") {
-      return NextResponse.json(
-        { error: "Text input is required" },
-        { status: 400 }
-      );
+    if (!name || typeof name !== "string") {
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
-    if (text.trim().length < 20) {
-      return NextResponse.json(
-        { error: "Please write at least 20 characters to get accurate results" },
-        { status: 400 }
-      );
+    if (!birthDate) {
+      return NextResponse.json({ error: "Birth date is required" }, { status: 400 });
     }
 
-    // STEP 1: Extract trait scores from text
-    const traitScores = analyzeText(text);
+    if (!quizAnswers || typeof quizAnswers !== "object") {
+      return NextResponse.json({ error: "Quiz answers are required" }, { status: 400 });
+    }
 
-    // STEP 2: Calculate confidence
-    const confidence = getConfidence(text, traitScores);
+    const parsedBirthDate = new Date(birthDate);
+    if (isNaN(parsedBirthDate.getTime())) {
+      return NextResponse.json({ error: "Invalid birth date" }, { status: 400 });
+    }
 
-    // STEP 3: Match traits to Cultural Codes
+    const quizComplete = isQuizComplete(quizAnswers);
+
+    const { traitScores, astrologyData } = calculateTraitScores(
+      { name, birthDate: parsedBirthDate },
+      quizAnswers
+    );
+
     const result = analyzeTraits(traitScores);
 
-    // STEP 4: Return complete analysis
     return NextResponse.json({
       ...result,
-      confidence: Math.round(confidence * 100),
-      lowConfidence: confidence < 0.6,
-      suggestedAction:
-        confidence < 0.6
-          ? "Try writing more about your preferences, habits, and how you like to spend your time for better accuracy."
-          : null,
+      userName: name,
+      astrologyData,
+      quizComplete,
+      warning: quizComplete ? null : "Complete all questions for best accuracy",
     });
   } catch (error) {
     console.error("Analysis error:", error);
-    return NextResponse.json(
-      { error: "Failed to analyze text. Please try again." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to analyze. Please try again." }, { status: 500 });
   }
 }
