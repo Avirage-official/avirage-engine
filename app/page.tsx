@@ -36,9 +36,33 @@ interface AnalysisResult {
   };
 }
 
+// Code colors for visual identity
+const CODE_COLORS: Record<string, string> = {
+  Shokunin: "#8B4513",
+  Yugen: "#4A5568",
+  Koselig: "#D4A373",
+  Allegria: "#E63946",
+  Ginga: "#FFB703",
+  "Nhẹ Nhàng": "#90C9A6",
+  "Joie de Vivre": "#9B59B6",
+  Fuego: "#FF6B6B",
+  Davka: "#3498DB",
+  Ujamaa: "#E74C3C",
+  Vida: "#27AE60",
+  Bauhaus: "#34495E",
+  Gezelligheid: "#FF8C42",
+  Sanuk: "#F39C12",
+  Sadhana: "#8E44AD",
+  Jämlik: "#5DADE2",
+  Majlis: "#D35400",
+  Villmark: "#16A085",
+  Meraki: "#2E86AB",
+  Luja: "#7F8C8D",
+};
+
 export default function Home() {
   // Step control
-  const [step, setStep] = useState<"info" | "quiz" | "result">("info");
+  const [step, setStep] = useState<"info" | "quiz" | "result" | "loading">("info");
   
   // Basic info
   const [name, setName] = useState("");
@@ -51,6 +75,7 @@ export default function Home() {
   // Quiz state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
   
   // Result
   const [result, setResult] = useState<AnalysisResult | null>(null);
@@ -73,26 +98,30 @@ export default function Home() {
     setStep("quiz");
   }
 
-  // Handle quiz answer
+  // Handle quiz answer with animation
   function answerQuestion(optionIndex: number) {
-    const currentQuestion = QUIZ_QUESTIONS[currentQuestionIndex];
+    setSelectedOption(optionIndex);
     
-    // Save answer
-    setQuizAnswers({
-      ...quizAnswers,
-      [currentQuestion.id]: optionIndex,
-    });
-
-    // Move to next question or submit
-    if (currentQuestionIndex < QUIZ_QUESTIONS.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      // Quiz complete - submit
-      submitQuiz({
+    // Wait for animation before proceeding
+    setTimeout(() => {
+      const currentQuestion = QUIZ_QUESTIONS[currentQuestionIndex];
+      
+      // Save answer
+      const newAnswers = {
         ...quizAnswers,
         [currentQuestion.id]: optionIndex,
-      });
-    }
+      };
+      setQuizAnswers(newAnswers);
+      setSelectedOption(null);
+
+      // Move to next question or submit
+      if (currentQuestionIndex < QUIZ_QUESTIONS.length - 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+      } else {
+        // Quiz complete - submit
+        submitQuiz(newAnswers);
+      }
+    }, 400);
   }
 
   // Go back to previous question
@@ -104,11 +133,12 @@ export default function Home() {
 
   // Submit quiz
   async function submitQuiz(finalAnswers: Record<string, number>) {
+    setStep("loading");
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch("/api/analyze", {
+      const response = await fetch("/api/analyse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -124,11 +154,16 @@ export default function Home() {
       }
 
       const data = await response.json();
-      setResult(data);
-      setStep("result");
+      
+      // Dramatic pause before reveal
+      setTimeout(() => {
+        setResult(data);
+        setStep("result");
+        setLoading(false);
+      }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
+      setStep("quiz");
       setLoading(false);
     }
   }
@@ -151,390 +186,768 @@ export default function Home() {
   const progress = Math.round(((currentQuestionIndex + 1) / QUIZ_QUESTIONS.length) * 100);
 
   return (
-    <main style={{ padding: "20px", maxWidth: "700px", margin: "auto", fontFamily: "system-ui", minHeight: "100vh" }}>
-      {/* STEP 1: BASIC INFO */}
-      {step === "info" && (
-        <div>
-          <h1 style={{ fontSize: "2.5rem", marginBottom: "10px" }}>Avirage</h1>
-          <p style={{ color: "#666", marginBottom: "40px" }}>
-            Discover your Cultural Code through personality + astrology
-          </p>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            {/* Name */}
-            <div>
-              <label style={{ display: "block", marginBottom: "8px", fontWeight: "500" }}>
-                Your Name <span style={{ color: "red" }}>*</span>
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name"
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  fontSize: "16px",
-                  border: "2px solid #ddd",
-                  borderRadius: "8px",
-                }}
-              />
-            </div>
-
-            {/* Gender */}
-            <div>
-              <label style={{ display: "block", marginBottom: "8px", fontWeight: "500" }}>
-                Gender <span style={{ color: "red" }}>*</span>
-              </label>
-              <select
-                value={gender}
-                onChange={(e) => {
-                  setGender(e.target.value);
-                  if (e.target.value !== "other") setGenderOther("");
-                }}
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  fontSize: "16px",
-                  border: "2px solid #ddd",
-                  borderRadius: "8px",
-                }}
-              >
-                <option value="">Select gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="non-binary">Non-binary</option>
-                <option value="other">Other</option>
-              </select>
-              
-              {gender === "other" && (
-                <input
-                  type="text"
-                  value={genderOther}
-                  onChange={(e) => setGenderOther(e.target.value)}
-                  placeholder="Please specify"
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    fontSize: "16px",
-                    border: "2px solid #ddd",
-                    borderRadius: "8px",
-                    marginTop: "10px",
-                  }}
-                />
-              )}
-            </div>
-
-            {/* Birth Date */}
-            <div>
-              <label style={{ display: "block", marginBottom: "8px", fontWeight: "500" }}>
-                Birth Date <span style={{ color: "red" }}>*</span>
-              </label>
-              <input
-                type="date"
-                value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  fontSize: "16px",
-                  border: "2px solid #ddd",
-                  borderRadius: "8px",
-                }}
-              />
-              <p style={{ fontSize: "14px", color: "#888", marginTop: "5px" }}>
-                We'll use this to calculate your astrological profile
+    <main style={{
+      minHeight: "100vh",
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      background: step === "info" 
+        ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+        : step === "quiz"
+        ? "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+        : step === "loading"
+        ? "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+        : "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+      transition: "background 0.8s ease",
+    }}>
+      <div style={{
+        maxWidth: "700px",
+        margin: "auto",
+        padding: "40px 20px",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}>
+        
+        {/* STEP 1: BASIC INFO */}
+        {step === "info" && (
+          <div style={{
+            backgroundColor: "rgba(255, 255, 255, 0.95)",
+            borderRadius: "24px",
+            padding: "50px 40px",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+            animation: "fadeInUp 0.6s ease",
+          }}>
+            <div style={{ textAlign: "center", marginBottom: "40px" }}>
+              <h1 style={{
+                fontSize: "3rem",
+                marginBottom: "15px",
+                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                fontWeight: "800",
+              }}>
+                Avirage
+              </h1>
+              <p style={{ color: "#666", fontSize: "18px", lineHeight: "1.6" }}>
+                Discover your Cultural Code — a personality archetype<br />rooted in global wisdom traditions
               </p>
             </div>
 
-            {/* City */}
-            <div>
-              <label style={{ display: "block", marginBottom: "8px", fontWeight: "500" }}>
-                City <span style={{ color: "red" }}>*</span>
-              </label>
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="e.g. Brisbane"
+            <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+              {/* Name */}
+              <div>
+                <label style={{ display: "block", marginBottom: "10px", fontWeight: "600", color: "#333" }}>
+                  What's your name? <span style={{ color: "#e74c3c" }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter your full name"
+                  style={{
+                    width: "100%",
+                    padding: "14px 16px",
+                    fontSize: "16px",
+                    border: "2px solid #e0e0e0",
+                    borderRadius: "12px",
+                    transition: "all 0.3s",
+                    outline: "none",
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = "#667eea"}
+                  onBlur={(e) => e.target.style.borderColor = "#e0e0e0"}
+                />
+              </div>
+
+              {/* Gender */}
+              <div>
+                <label style={{ display: "block", marginBottom: "10px", fontWeight: "600", color: "#333" }}>
+                  Gender <span style={{ color: "#e74c3c" }}>*</span>
+                </label>
+                <select
+                  value={gender}
+                  onChange={(e) => {
+                    setGender(e.target.value);
+                    if (e.target.value !== "other") setGenderOther("");
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "14px 16px",
+                    fontSize: "16px",
+                    border: "2px solid #e0e0e0",
+                    borderRadius: "12px",
+                    transition: "all 0.3s",
+                    outline: "none",
+                    backgroundColor: "#fff",
+                  }}
+                  onFocus={(e) => e.currentTarget.style.borderColor = "#667eea"}
+                  onBlur={(e) => e.currentTarget.style.borderColor = "#e0e0e0"}
+                >
+                  <option value="">Select your gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="non-binary">Non-binary</option>
+                  <option value="other">Other</option>
+                </select>
+                
+                {gender === "other" && (
+                  <input
+                    type="text"
+                    value={genderOther}
+                    onChange={(e) => setGenderOther(e.target.value)}
+                    placeholder="Please specify"
+                    style={{
+                      width: "100%",
+                      padding: "14px 16px",
+                      fontSize: "16px",
+                      border: "2px solid #e0e0e0",
+                      borderRadius: "12px",
+                      marginTop: "12px",
+                      outline: "none",
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = "#667eea"}
+                    onBlur={(e) => e.target.style.borderColor = "#e0e0e0"}
+                  />
+                )}
+              </div>
+
+              {/* Birth Date */}
+              <div>
+                <label style={{ display: "block", marginBottom: "10px", fontWeight: "600", color: "#333" }}>
+                  Birth Date <span style={{ color: "#e74c3c" }}>*</span>
+                </label>
+                <input
+                  type="date"
+                  value={birthDate}
+                  onChange={(e) => setBirthDate(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "14px 16px",
+                    fontSize: "16px",
+                    border: "2px solid #e0e0e0",
+                    borderRadius: "12px",
+                    transition: "all 0.3s",
+                    outline: "none",
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = "#667eea"}
+                  onBlur={(e) => e.target.style.borderColor = "#e0e0e0"}
+                />
+                <p style={{ fontSize: "13px", color: "#999", marginTop: "6px" }}>
+                  ✨ Used to calculate your astrological influences
+                </p>
+              </div>
+
+              {/* City */}
+              <div>
+                <label style={{ display: "block", marginBottom: "10px", fontWeight: "600", color: "#333" }}>
+                  City <span style={{ color: "#e74c3c" }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="e.g. Brisbane"
+                  style={{
+                    width: "100%",
+                    padding: "14px 16px",
+                    fontSize: "16px",
+                    border: "2px solid #e0e0e0",
+                    borderRadius: "12px",
+                    transition: "all 0.3s",
+                    outline: "none",
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = "#667eea"}
+                  onBlur={(e) => e.target.style.borderColor = "#e0e0e0"}
+                />
+              </div>
+
+              {/* Ethnicity */}
+              <div>
+                <label style={{ display: "block", marginBottom: "10px", fontWeight: "600", color: "#333" }}>
+                  Ethnicity <span style={{ color: "#e74c3c" }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  value={ethnicity}
+                  onChange={(e) => setEthnicity(e.target.value)}
+                  placeholder="e.g. Chinese, African American, Mixed"
+                  style={{
+                    width: "100%",
+                    padding: "14px 16px",
+                    fontSize: "16px",
+                    border: "2px solid #e0e0e0",
+                    borderRadius: "12px",
+                    transition: "all 0.3s",
+                    outline: "none",
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = "#667eea"}
+                  onBlur={(e) => e.target.style.borderColor = "#e0e0e0"}
+                />
+              </div>
+
+              {error && (
+                <div style={{
+                  padding: "14px",
+                  backgroundColor: "#fee",
+                  color: "#c00",
+                  borderRadius: "12px",
+                  border: "1px solid #fcc",
+                }}>
+                  {error}
+                </div>
+              )}
+
+              <button
+                onClick={startQuiz}
                 style={{
-                  width: "100%",
-                  padding: "12px",
-                  fontSize: "16px",
-                  border: "2px solid #ddd",
-                  borderRadius: "8px",
+                  padding: "18px",
+                  fontSize: "18px",
+                  fontWeight: "600",
+                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "12px",
+                  cursor: "pointer",
+                  marginTop: "10px",
+                  transition: "transform 0.2s, box-shadow 0.2s",
                 }}
-              />
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 10px 30px rgba(102, 126, 234, 0.4)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              >
+                Begin Your Journey →
+              </button>
             </div>
 
-            {/* Ethnicity */}
-            <div>
-              <label style={{ display: "block", marginBottom: "8px", fontWeight: "500" }}>
-                Ethnicity <span style={{ color: "red" }}>*</span>
-              </label>
-              <input
-                type="text"
-                value={ethnicity}
-                onChange={(e) => setEthnicity(e.target.value)}
-                placeholder="e.g. Chinese, African American, Mixed"
-                style={{
-                  width: "100%",
-                  padding: "12px",
+            <p style={{
+              textAlign: "center",
+              color: "#999",
+              fontSize: "13px",
+              marginTop: "30px",
+            }}>
+              ⏱️ Takes about 10 minutes • 🔒 Your data is private
+            </p>
+          </div>
+        )}
+
+        {/* STEP 2: QUIZ */}
+        {step === "quiz" && !loading && (
+          <div style={{
+            backgroundColor: "rgba(255, 255, 255, 0.95)",
+            borderRadius: "24px",
+            padding: "40px",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+            animation: "fadeIn 0.5s ease",
+          }}>
+            {/* Progress bar */}
+            <div style={{ marginBottom: "40px" }}>
+              <div style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "12px",
+                alignItems: "center",
+              }}>
+                <span style={{ fontSize: "14px", color: "#666", fontWeight: "500" }}>
+                  Question {currentQuestionIndex + 1} of {QUIZ_QUESTIONS.length}
+                </span>
+                <span style={{
                   fontSize: "16px",
-                  border: "2px solid #ddd",
-                  borderRadius: "8px",
-                }}
-              />
+                  fontWeight: "700",
+                  background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}>
+                  {progress}%
+                </span>
+              </div>
+              <div style={{
+                height: "10px",
+                backgroundColor: "#f0f0f0",
+                borderRadius: "10px",
+                overflow: "hidden",
+                position: "relative",
+              }}>
+                <div style={{
+                  height: "100%",
+                  background: "linear-gradient(90deg, #f093fb 0%, #f5576c 100%)",
+                  width: `${progress}%`,
+                  transition: "width 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                  borderRadius: "10px",
+                }} />
+              </div>
             </div>
 
-            {error && (
-              <div style={{ padding: "12px", backgroundColor: "#fee", color: "#c00", borderRadius: "6px" }}>
-                {error}
+            {/* Motivational text */}
+            {currentQuestionIndex === 9 && (
+              <div style={{
+                textAlign: "center",
+                padding: "20px",
+                backgroundColor: "#fff3e0",
+                borderRadius: "12px",
+                marginBottom: "30px",
+                border: "2px solid #ffe0b2",
+              }}>
+                <span style={{ fontSize: "20px", marginRight: "8px" }}>🌟</span>
+                <span style={{ color: "#e65100", fontWeight: "600" }}>
+                  Halfway there! Your code is taking shape...
+                </span>
               </div>
             )}
 
-            <button
-              onClick={startQuiz}
-              style={{
-                padding: "16px",
-                fontSize: "18px",
-                backgroundColor: "#000",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontWeight: "500",
-              }}
-            >
-              Start Quiz →
-            </button>
-          </div>
-        </div>
-      )}
+            {/* Question */}
+            <div style={{ marginBottom: "35px" }}>
+              <h2 style={{
+                fontSize: "1.8rem",
+                marginBottom: "35px",
+                lineHeight: "1.4",
+                color: "#2c3e50",
+                fontWeight: "700",
+              }}>
+                {QUIZ_QUESTIONS[currentQuestionIndex].question}
+              </h2>
 
-      {/* STEP 2: QUIZ */}
-      {step === "quiz" && !loading && (
-        <div>
-          {/* Progress bar */}
-          <div style={{ marginBottom: "30px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-              <span style={{ fontSize: "14px", color: "#666" }}>
-                Question {currentQuestionIndex + 1} of {QUIZ_QUESTIONS.length}
-              </span>
-              <span style={{ fontSize: "14px", fontWeight: "500" }}>{progress}%</span>
+              {/* Options */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                {QUIZ_QUESTIONS[currentQuestionIndex].options.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => answerQuestion(index)}
+                    disabled={selectedOption !== null}
+                    style={{
+                      padding: "22px 24px",
+                      fontSize: "16px",
+                      backgroundColor: selectedOption === index ? "#f093fb" : "#fff",
+                      color: selectedOption === index ? "#fff" : "#333",
+                      border: selectedOption === index ? "2px solid #f093fb" : "2px solid #e0e0e0",
+                      borderRadius: "16px",
+                      cursor: selectedOption !== null ? "not-allowed" : "pointer",
+                      textAlign: "left",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                      transform: selectedOption === index ? "scale(0.98)" : "scale(1)",
+                      fontWeight: "500",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (selectedOption === null) {
+                        e.currentTarget.style.backgroundColor = "#f8f9fa";
+                        e.currentTarget.style.borderColor = "#f093fb";
+                        e.currentTarget.style.transform = "translateX(8px)";
+                        e.currentTarget.style.boxShadow = "0 8px 25px rgba(240, 147, 251, 0.15)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (selectedOption === null) {
+                        e.currentTarget.style.backgroundColor = "#fff";
+                        e.currentTarget.style.borderColor = "#e0e0e0";
+                        e.currentTarget.style.transform = "translateX(0)";
+                        e.currentTarget.style.boxShadow = "none";
+                      }
+                    }}
+                  >
+                    <span style={{ fontSize: "28px", marginRight: "14px" }}>{option.emoji}</span>
+                    <span>{option.text}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-            <div style={{ height: "8px", backgroundColor: "#eee", borderRadius: "4px", overflow: "hidden" }}>
-              <div
+
+            {/* Back button */}
+            {currentQuestionIndex > 0 && (
+              <button
+                onClick={previousQuestion}
+                disabled={selectedOption !== null}
                 style={{
-                  height: "100%",
-                  backgroundColor: "#000",
-                  width: `${progress}%`,
-                  transition: "width 0.3s",
+                  padding: "12px 28px",
+                  fontSize: "15px",
+                  backgroundColor: "transparent",
+                  color: "#666",
+                  border: "2px solid #e0e0e0",
+                  borderRadius: "12px",
+                  cursor: selectedOption !== null ? "not-allowed" : "pointer",
+                  fontWeight: "600",
+                  transition: "all 0.2s",
                 }}
-              />
-            </div>
-          </div>
-
-          {/* Question */}
-          <div style={{ marginBottom: "30px" }}>
-            <h2 style={{ fontSize: "1.8rem", marginBottom: "30px", lineHeight: "1.3" }}>
-              {QUIZ_QUESTIONS[currentQuestionIndex].question}
-            </h2>
-
-            {/* Options */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {QUIZ_QUESTIONS[currentQuestionIndex].options.map((option, index) => (
-                <button
-                  key={index}
-                  onClick={() => answerQuestion(index)}
-                  style={{
-                    padding: "20px",
-                    fontSize: "16px",
-                    backgroundColor: "#f9f9f9",
-                    border: "2px solid #ddd",
-                    borderRadius: "12px",
-                    cursor: "pointer",
-                    textAlign: "left",
-                    transition: "all 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#f0f0f0";
+                onMouseEnter={(e) => {
+                  if (selectedOption === null) {
                     e.currentTarget.style.borderColor = "#999";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "#f9f9f9";
-                    e.currentTarget.style.borderColor = "#ddd";
-                  }}
-                >
-                  <span style={{ fontSize: "24px", marginRight: "12px" }}>{option.emoji}</span>
-                  {option.text}
-                </button>
-              ))}
-            </div>
+                    e.currentTarget.style.color = "#333";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedOption === null) {
+                    e.currentTarget.style.borderColor = "#e0e0e0";
+                    e.currentTarget.style.color = "#666";
+                  }
+                }}
+              >
+                ← Back
+              </button>
+            )}
           </div>
+        )}
 
-          {/* Back button */}
-          {currentQuestionIndex > 0 && (
-            <button
-              onClick={previousQuestion}
-              style={{
-                padding: "12px 24px",
-                fontSize: "16px",
-                backgroundColor: "#fff",
-                color: "#666",
-                border: "2px solid #ddd",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
-            >
-              ← Back
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* Loading state */}
-      {loading && (
-        <div style={{ textAlign: "center", padding: "60px 20px" }}>
-          <div style={{ fontSize: "48px", marginBottom: "20px" }}>✨</div>
-          <h2>Analyzing your Cultural Code...</h2>
-          <p style={{ color: "#666" }}>Mapping your traits across 20 cultural patterns</p>
-        </div>
-      )}
-
-      {/* STEP 3: RESULT */}
-      {step === "result" && result && (
-        <div>
-          {/* Header */}
-          <div style={{ marginBottom: "40px", textAlign: "center" }}>
-            <p style={{ color: "#888", marginBottom: "5px" }}>Hello, {result.userName}</p>
-            <p style={{ fontSize: "14px", color: "#aaa" }}>
-              {result.astrologyData.sunSign} Sun · {result.astrologyData.element} · {result.astrologyData.modality}
+        {/* LOADING STATE */}
+        {step === "loading" && (
+          <div style={{
+            textAlign: "center",
+            padding: "80px 40px",
+            backgroundColor: "rgba(255, 255, 255, 0.95)",
+            borderRadius: "24px",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+            animation: "pulse 2s ease infinite",
+          }}>
+            <div style={{
+              fontSize: "64px",
+              marginBottom: "30px",
+              animation: "float 3s ease-in-out infinite",
+            }}>
+              ✨
+            </div>
+            <h2 style={{
+              fontSize: "2rem",
+              marginBottom: "15px",
+              color: "#2c3e50",
+              fontWeight: "700",
+            }}>
+              Discovering Your Cultural Code
+            </h2>
+            <p style={{ color: "#7f8c8d", fontSize: "16px", lineHeight: "1.6" }}>
+              Mapping your traits across 20 cultural archetypes...<br />
+              Analyzing patterns from global wisdom traditions...
             </p>
           </div>
+        )}
 
-          {/* Primary Code */}
-          <div
-            style={{
-              padding: "40px",
-              backgroundColor: "#000",
+        {/* STEP 3: RESULT */}
+        {step === "result" && result && (
+          <div style={{ animation: "fadeInUp 0.8s ease" }}>
+            {/* Header */}
+            <div style={{
+              marginBottom: "30px",
+              textAlign: "center",
               color: "#fff",
-              borderRadius: "16px",
+            }}>
+              <p style={{ fontSize: "18px", marginBottom: "8px", opacity: 0.9 }}>
+                Welcome, {result.userName}
+              </p>
+              <p style={{ fontSize: "14px", opacity: 0.8 }}>
+                {result.astrologyData.sunSign} Sun • {result.astrologyData.element} • {result.astrologyData.modality}
+              </p>
+            </div>
+
+            {/* Primary Code - HERO */}
+            <div style={{
+              padding: "60px 40px",
+              background: CODE_COLORS[result.primary.name] || "#2c3e50",
+              color: "#fff",
+              borderRadius: "24px",
               marginBottom: "20px",
               textAlign: "center",
-            }}
-          >
-            <div style={{ fontSize: "14px", opacity: 0.7, marginBottom: "10px" }}>
-              YOUR CULTURAL CODE
-            </div>
-            <h1 style={{ fontSize: "3.5rem", margin: "15px 0" }}>{result.primary.name}</h1>
-            <div style={{ fontSize: "18px", opacity: 0.8, marginBottom: "20px" }}>
-              {result.primary.culture} · {result.primary.matchPercentage}% match
-            </div>
-            <p style={{ fontSize: "16px", lineHeight: "1.6", opacity: 0.9 }}>
-              {result.primary.essence}
-            </p>
-          </div>
-
-          {/* Secondary & Tertiary */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px", marginBottom: "30px" }}>
-            <div style={{ padding: "25px", backgroundColor: "#f9f9f9", borderRadius: "12px" }}>
-              <div style={{ fontSize: "12px", color: "#888", marginBottom: "8px" }}>SECONDARY</div>
-              <h3 style={{ fontSize: "1.8rem", margin: "5px 0" }}>{result.secondary.name}</h3>
-              <div style={{ fontSize: "14px", color: "#666" }}>
-                {result.secondary.culture} · {result.secondary.matchPercentage}%
+              boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+              position: "relative",
+              overflow: "hidden",
+              animation: "scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            }}>
+              <div style={{
+                position: "absolute",
+                top: "-50%",
+                right: "-50%",
+                width: "200%",
+                height: "200%",
+                background: "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
+                pointerEvents: "none",
+              }} />
+              
+              <div style={{
+                fontSize: "14px",
+                opacity: 0.9,
+                marginBottom: "15px",
+                letterSpacing: "2px",
+                fontWeight: "600",
+              }}>
+                YOUR CULTURAL CODE
               </div>
-            </div>
-
-            <div style={{ padding: "25px", backgroundColor: "#f9f9f9", borderRadius: "12px" }}>
-              <div style={{ fontSize: "12px", color: "#888", marginBottom: "8px" }}>TERTIARY</div>
-              <h3 style={{ fontSize: "1.8rem", margin: "5px 0" }}>{result.tertiary.name}</h3>
-              <div style={{ fontSize: "14px", color: "#666" }}>
-                {result.tertiary.culture} · {result.tertiary.matchPercentage}%
+              <h1 style={{
+                fontSize: "4rem",
+                margin: "20px 0",
+                fontWeight: "900",
+                textShadow: "0 4px 20px rgba(0,0,0,0.2)",
+              }}>
+                {result.primary.name}
+              </h1>
+              <div style={{
+                fontSize: "20px",
+                opacity: 0.95,
+                marginBottom: "25px",
+                fontWeight: "500",
+              }}>
+                {result.primary.culture} • {result.primary.matchPercentage}% resonance
               </div>
+              <p style={{
+                fontSize: "17px",
+                lineHeight: "1.7",
+                opacity: 0.95,
+                maxWidth: "500px",
+                margin: "0 auto",
+              }}>
+                {result.primary.essence}
+              </p>
             </div>
-          </div>
 
-          {/* Explanation */}
-          <div
-            style={{
-              padding: "25px",
-              backgroundColor: "#f0f0f0",
-              borderRadius: "12px",
+            {/* Secondary & Tertiary */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "20px",
               marginBottom: "30px",
-            }}
-          >
-            <h3 style={{ fontSize: "1.2rem", marginBottom: "12px" }}>Why You Match</h3>
-            <p style={{ lineHeight: "1.6", color: "#333" }}>{result.explanation}</p>
-          </div>
+            }}>
+              <div style={{
+                padding: "30px 25px",
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                borderRadius: "20px",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+                borderLeft: `5px solid ${CODE_COLORS[result.secondary.name] || "#95a5a6"}`,
+              }}>
+                <div style={{
+                  fontSize: "11px",
+                  color: "#999",
+                  marginBottom: "10px",
+                  letterSpacing: "1.5px",
+                  fontWeight: "600",
+                }}>
+                  SECONDARY
+                </div>
+                <h3 style={{
+                  fontSize: "1.6rem",
+                  margin: "8px 0 6px 0",
+                  color: "#2c3e50",
+                  fontWeight: "700",
+                }}>
+                  {result.secondary.name}
+                </h3>
+                <div style={{ fontSize: "14px", color: "#7f8c8d", fontWeight: "500" }}>
+                  {result.secondary.culture}
+                </div>
+                <div style={{
+                  fontSize: "13px",
+                  color: CODE_COLORS[result.secondary.name] || "#95a5a6",
+                  marginTop: "8px",
+                  fontWeight: "700",
+                }}>
+                  {result.secondary.matchPercentage}% match
+                </div>
+              </div>
 
-          {/* Key Traits */}
-          <div style={{ marginBottom: "40px" }}>
-            <h3 style={{ fontSize: "1.2rem", marginBottom: "15px" }}>Your Defining Traits</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {result.keyTraits.map((trait, index) => (
-                <div
-                  key={index}
-                  style={{
+              <div style={{
+                padding: "30px 25px",
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                borderRadius: "20px",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+                borderLeft: `5px solid ${CODE_COLORS[result.tertiary.name] || "#95a5a6"}`,
+              }}>
+                <div style={{
+                  fontSize: "11px",
+                  color: "#999",
+                  marginBottom: "10px",
+                  letterSpacing: "1.5px",
+                  fontWeight: "600",
+                }}>
+                  TERTIARY
+                </div>
+                <h3 style={{
+                  fontSize: "1.6rem",
+                  margin: "8px 0 6px 0",
+                  color: "#2c3e50",
+                  fontWeight: "700",
+                }}>
+                  {result.tertiary.name}
+                </h3>
+                <div style={{ fontSize: "14px", color: "#7f8c8d", fontWeight: "500" }}>
+                  {result.tertiary.culture}
+                </div>
+                <div style={{
+                  fontSize: "13px",
+                  color: CODE_COLORS[result.tertiary.name] || "#95a5a6",
+                  marginTop: "8px",
+                  fontWeight: "700",
+                }}>
+                  {result.tertiary.matchPercentage}% match
+                </div>
+              </div>
+            </div>
+
+            {/* Explanation */}
+            <div style={{
+              padding: "35px",
+              backgroundColor: "rgba(255, 255, 255, 0.95)",
+              borderRadius: "20px",
+              marginBottom: "30px",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+            }}>
+              <h3 style={{
+                fontSize: "1.3rem",
+                marginBottom: "18px",
+                color: "#2c3e50",
+                fontWeight: "700",
+              }}>
+                Why You Resonate
+              </h3>
+              <p style={{
+                lineHeight: "1.8",
+                color: "#34495e",
+                fontSize: "16px",
+              }}>
+                {result.explanation}
+              </p>
+            </div>
+
+            {/* Key Traits */}
+            <div style={{
+              backgroundColor: "rgba(255, 255, 255, 0.95)",
+              borderRadius: "20px",
+              padding: "35px",
+              marginBottom: "40px",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+            }}>
+              <h3 style={{
+                fontSize: "1.3rem",
+                marginBottom: "25px",
+                color: "#2c3e50",
+                fontWeight: "700",
+              }}>
+                Your Defining Traits
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                {result.keyTraits.map((trait, index) => (
+                  <div key={index} style={{
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    padding: "18px",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "8px",
+                    padding: "20px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "14px",
+                    border: "2px solid #e9ecef",
+                    transition: "transform 0.2s",
                   }}
-                >
-                  <div>
-                    <div style={{ fontWeight: "500", marginBottom: "4px" }}>{trait.trait}</div>
-                    <div style={{ fontSize: "14px", color: "#666" }}>{trait.description}</div>
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "24px",
-                      fontWeight: "600",
-                      color: trait.score > 50 ? "#4CAF50" : "#2196F3",
-                    }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = "translateX(5px)"}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = "translateX(0)"}
                   >
-                    {trait.score}
+                    <div>
+                      <div style={{
+                        fontWeight: "600",
+                        marginBottom: "5px",
+                        color: "#2c3e50",
+                        fontSize: "16px",
+                      }}>
+                        {trait.trait}
+                      </div>
+                      <div style={{ fontSize: "14px", color: "#7f8c8d" }}>
+                        {trait.description}
+                      </div>
+                    </div>
+                    <div style={{
+                      fontSize: "28px",
+                      fontWeight: "800",
+                      color: trait.score > 50 ? "#27ae60" : "#3498db",
+                      minWidth: "60px",
+                      textAlign: "right",
+                    }}>
+                      {trait.score}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Restart button */}
+            <div style={{ textAlign: "center" }}>
+              <button
+                onClick={restart}
+                style={{
+                  padding: "16px 40px",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  backgroundColor: "rgba(255, 255, 255, 0.95)",
+                  color: "#2c3e50",
+                  border: "2px solid rgba(255, 255, 255, 0.5)",
+                  borderRadius: "12px",
+                  cursor: "pointer",
+                  transition: "all 0.3s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#fff";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 10px 30px rgba(0,0,0,0.15)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.95)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              >
+                Discover Another Code
+              </button>
             </div>
           </div>
+        )}
 
-          {/* Restart button */}
-          <div style={{ textAlign: "center" }}>
-            <button
-              onClick={restart}
-              style={{
-                padding: "12px 32px",
-                fontSize: "16px",
-                backgroundColor: "#fff",
-                color: "#000",
-                border: "2px solid #ddd",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
-            >
-              Take Quiz Again
-            </button>
-          </div>
-        </div>
-      )}
-
-      {error && step === "quiz" && (
-        <div
-          style={{
+        {error && step === "quiz" && (
+          <div style={{
             marginTop: "20px",
-            padding: "15px",
-            backgroundColor: "#fee",
-            borderRadius: "8px",
-            color: "#c00",
-          }}
-        >
-          {error}
-        </div>
-      )}
+            padding: "18px",
+            backgroundColor: "rgba(255, 255, 255, 0.95)",
+            borderRadius: "12px",
+            color: "#e74c3c",
+            border: "2px solid #ffcdd2",
+            fontWeight: "500",
+          }}>
+            {error}
+          </div>
+        )}
+      </div>
+
+      {/* Global Animations */}
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.8; }
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+        }
+      `}</style>
     </main>
   );
 }
