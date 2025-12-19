@@ -1,10 +1,6 @@
 // lib/codePages.ts
-/**
- * CODE PAGES (STUBS)
- * - Single source of truth for all cultural code “lens” pages
- * - Slugs are URL-safe + file-path-safe (lowercase, no accents)
- * - Display fields can include accents
- */
+// Master content registry for Cultural Code (Lens) pages.
+// Each "code page" is editorial content + assets (images) that explain the lens.
 
 export type CodeSlug =
   | "khoisan"
@@ -28,583 +24,248 @@ export type CodeSlug =
   | "ashkara"
   | "alethir";
 
-export type CodeLevel = 1 | 2 | 3 | 4;
-
-export type CodeImageKey =
-  | "hero"
-  | "origin"
-  | "lens"
-  | "lifestyle"
-  | "places"
-  | "music"
-  | "activities";
-
-export interface CodePageImage {
-  key: CodeImageKey;
-  /**
-   * Image path convention:
-   * Put images inside:
-   *   /public/codepages/<slug>/<key>.jpg
-   * Example:
-   *   /public/codepages/shokunin/hero.jpg
-   *
-   * You can switch jpg/png/webp—just update the path here.
-   */
-  src: string;
+export type ImageAsset = {
+  src: string; // path from /public, e.g. "/codepages/shokunin/hero.jpg"
   alt: string;
   caption?: string;
-}
+};
 
-export interface CodePageSection {
-  id:
-    | "overview"
-    | "origin"
-    | "traits"
-    | "lens"
-    | "signals"
-    | "shadow"
-    | "growth"
-    | "lifestyle"
-    | "places"
-    | "music"
-    | "activities"
-    | "community"
-    | "notes";
-  title: string;
-  /**
-   * Keep content as paragraphs (strings).
-   * Your page template can render these as <p> blocks.
-   */
-  body: string[];
-}
+export type CodePageSection =
+  | {
+      type: "prose";
+      title: string;
+      body: string; // keep as plain text; you can render line breaks with \n\n
+    }
+  | {
+      type: "bullets";
+      title: string;
+      bullets: string[];
+    }
+  | {
+      type: "callout";
+      title: string;
+      tone?: "neutral" | "insight" | "warning";
+      body: string;
+    }
+  | {
+      type: "imageRow";
+      title?: string;
+      images: ImageAsset[];
+    };
 
-export interface CodePage {
+export type CodePage = {
   slug: CodeSlug;
 
-  // Display / educational naming (can include accents)
-  codeName: string; // e.g. "Shokunin"
-  fullName: string; // e.g. "Japanese"
-  type: "standalone" | "fusion";
-  origin: string; // e.g. "Japan"
-  level: CodeLevel; // your “Level 1 culture” concept, etc.
+  // Display
+  codeName: string; // "Shokunin"
+  fullName: string; // "Japanese"
+  origin: string; // "Japan"
+  tagline: string; // one-liner
+  heroImage?: ImageAsset;
 
-  /**
-   * Short, high-level description for top of page.
-   * Keep it clean + credible (no overclaiming).
-   */
-  summary: string;
+  // “Level 1 culture” educational framing
+  level1Culture: {
+    name: string; // e.g. "Japanese"
+    note: string; // short: how level 1 relates to this lens
+  };
 
-  /**
-   * Optional: show the “lineage” you described.
-   * Example:
-   *  ["Level 1: Japan (historic)", "Level 2: Edo artisan guilds", ...]
-   */
-  lineage: string[];
+  // Traits (optional, but useful to show “why”)
+  traitHighlights: Array<{
+    label: string; // e.g. "Craftsmanship drive"
+    value: number; // 0-100
+    note: string;  // one-liner interpretation
+  }>;
 
-  /**
-   * Pull from your culturalCodes.ts core_concepts if you want,
-   * but keep as editable content here for the page narrative.
-   */
-  coreConcepts: string[];
-
-  /**
-   * Optional: your trait profile (0-100) — can mirror your culturalCodes.ts
-   * Keep empty for stubs; fill later.
-   */
-  traitProfile?: Partial<Record<string, number>>;
-
-  images: CodePageImage[];
+  // Main narrative
   sections: CodePageSection[];
 
-  /**
-   * Optional metadata for later (SEO, internal linking, etc.)
-   */
-  seo?: {
-    title?: string;
-    description?: string;
+  // Light recommendations (kept careful + non-prescriptive)
+  suggestedEcosystems: {
+    places: string[];
+    activities: string[];
+    musicMood: string[];
+    workStyles: string[];
   };
-}
+
+  // Asset convention note (for you / future scaling)
+  assetsHint?: {
+    folder: string; // e.g. "/public/codepages/shokunin/"
+    recommendedFiles: string[]; // filenames you plan to add
+  };
+};
 
 /**
- * Helper: build image path for a given slug + key
+ * Shokunin — fully written example
+ * Keep it compact + “intellectual” without pretending it is deterministic science.
  */
-export function codeImage(slug: CodeSlug, key: CodeImageKey, ext: "jpg" | "png" | "webp" = "jpg") {
-  return `/codepages/${slug}/${key}.${ext}`;
-}
-
-/**
- * Empty but valid stubs for all 20 codes.
- * Fill in images/sections incrementally without breaking routes.
- */
-export const CODE_PAGES: Record<CodeSlug, CodePage> = {
-  khoisan: {
-    slug: "khoisan",
-    codeName: "Khoisan",
-    fullName: "San/Khoisan",
-    type: "standalone",
-    origin: "Southern Africa",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [
-      { key: "hero", src: codeImage("khoisan", "hero"), alt: "Khoisan — hero image" },
-    ],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Khoisan — Avirage Code", description: "" },
+const SHOKUNIN_PAGE: CodePage = {
+  slug: "shokunin",
+  codeName: "Shokunin",
+  fullName: "Japanese",
+  origin: "Japan",
+  tagline: "Craft, discipline, and quiet excellence — a lens for building quality over time.",
+  heroImage: {
+    src: "/codepages/shokunin/hero.jpg",
+    alt: "Shokunin lens — craftsmanship, order, and refined focus",
+    caption: "Avirage lens page imagery is aesthetic, not diagnostic.",
   },
 
-  kayori: {
-    slug: "kayori",
-    codeName: "Kayori",
-    fullName: "Yoruba",
-    type: "standalone",
-    origin: "West Africa",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("kayori", "hero"), alt: "Kayori — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Kayori — Avirage Code", description: "" },
+  level1Culture: {
+    name: "Japanese (Level 1)",
+    note:
+      "This lens is inspired by long-running cultural patterns often associated with Japanese craft traditions and social harmony norms — translated into a modern behavioral archetype, not a statement about ethnicity or nationality.",
   },
 
-  sahen: {
-    slug: "sahen",
-    codeName: "Sahen",
-    fullName: "Tuareg",
-    type: "standalone",
-    origin: "Sahara Desert",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("sahen", "hero"), alt: "Sahen — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
+  // These values match your culturalCodes.ts “Japanese / Shokunin” profile.
+  traitHighlights: [
+    { label: "Craftsmanship drive", value: 95, note: "Pride in doing things properly, repeatedly." },
+    { label: "Detail orientation", value: 95, note: "Noticing small errors before they become big ones." },
+    { label: "Structure preference", value: 95, note: "Clear systems reduce noise and raise quality." },
+    { label: "Sensory appreciation", value: 95, note: "Refinement in feel, finish, and atmosphere." },
+    { label: "Collaborative preference", value: 95, note: "Excellence is often achieved together." },
+  ],
+
+  sections: [
+    {
+      type: "prose",
+      title: "What this lens means",
+      body:
+        "The Shokunin lens is about earning trust through precision. People who lean Shokunin tend to value quality, reliability, and refinement — not as perfectionism for its own sake, but as a way to reduce harm, create beauty, and respect time.\n\nIt often shows up as: clear standards, strong taste, careful execution, and a preference for environments that reward mastery.",
+    },
+    {
+      type: "bullets",
+      title: "Signature patterns you might recognize",
+      bullets: [
+        "You feel calmer when systems are clean: steps, checklists, rituals, routines.",
+        "You’d rather build one great thing than ten rushed things.",
+        "You can sense “off” details quickly (tone, layout, quality, timing).",
+        "You prefer controlled novelty: improvement > chaos.",
+      ],
+    },
+    {
+      type: "prose",
+      title: "Why it links to the culture (educational, not literal identity)",
+      body:
+        "Across many Japanese craft lineages, there’s a repeated emphasis on disciplined practice, continuity, and respect for tools, materials, and process. In everyday life, related ideas are often described as harmony (Wa), attention to form, and refinement under constraints.\n\nAvirage uses this as an archetypal tradition: the lens of “careful mastery” and “order that creates beauty.”",
+    },
+    {
+      type: "callout",
+      tone: "neutral",
+      title: "Trust note",
+      body:
+        "This is not a clinical assessment. It’s a structured interpretation of your quiz patterns. Use it as a mirror and a vocabulary — not a cage.",
+    },
+    {
+      type: "imageRow",
+      title: "Visual mood",
+      images: [
+        { src: "/codepages/shokunin/gallery-1.jpg", alt: "Refined workspace aesthetic" },
+        { src: "/codepages/shokunin/gallery-2.jpg", alt: "Craft detail / texture aesthetic" },
+      ],
+    },
+    {
+      type: "bullets",
+      title: "What helps you thrive",
+      bullets: [
+        "Clear standards and authority: you do best when “good” is defined.",
+        "Time to iterate: you improve things through cycles, not one-shot bursts.",
+        "Respect-based teams: you don’t need loud culture — you need competent culture.",
+      ],
+    },
+    {
+      type: "bullets",
+      title: "Common friction points",
+      bullets: [
+        "Messy environments can feel physically draining.",
+        "If quality is constantly sacrificed, motivation drops fast.",
+        "You may carry stress silently — performance looks fine, but the inside feels tense.",
+      ],
+    },
+  ],
+
+  suggestedEcosystems: {
+    places: [
+      "Quiet cafes with intentional design",
+      "Museums, galleries, design bookstores",
+      "Minimal, well-curated spaces (good lighting, good sound, low clutter)",
     ],
-    seo: { title: "Sahen — Avirage Code", description: "" },
+    activities: [
+      "Craft learning (ceramics, cooking technique, typography, photography, woodworking)",
+      "Skill journaling / deliberate practice routines",
+      "Slow improvement hobbies (tea, espresso, calligraphy-style practice, language study)",
+    ],
+    musicMood: [
+      "Minimal / ambient focus music",
+      "Instrumental jazz / lo-fi that supports concentration",
+      "Soundtracks with clean structure (for deep work)",
+    ],
+    workStyles: [
+      "Quality-first roles: craft, design, engineering, operations excellence",
+      "Process ownership: systems, documentation, QA, product polish",
+      "Small teams with high standards and stable cadence",
+    ],
   },
 
-  enzuka: {
-    slug: "enzuka",
-    codeName: "Enzuka",
-    fullName: "Maasai + Zulu Fusion",
-    type: "fusion",
-    origin: "East Africa",
-    level: 2,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("enzuka", "hero"), alt: "Enzuka — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Enzuka — Avirage Code", description: "" },
-  },
-
-  siyuane: {
-    slug: "siyuane",
-    codeName: "Siyuane",
-    fullName: "Ethiopian + Han Chinese Fusion",
-    type: "fusion",
-    origin: "Highland Ethiopia + Ancient China",
-    level: 2,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("siyuane", "hero"), alt: "Siyuane — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Siyuane — Avirage Code", description: "" },
-  },
-
-  jaejin: {
-    slug: "jaejin",
-    codeName: "Jaejin",
-    fullName: "Korean",
-    type: "standalone",
-    origin: "Korea",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("jaejin", "hero"), alt: "Jaejin — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Jaejin — Avirage Code", description: "" },
-  },
-
-  namsea: {
-    slug: "namsea",
-    codeName: "Namsea",
-    fullName: "Vietnamese + Thai Fusion",
-    type: "fusion",
-    origin: "Southeast Asia",
-    level: 2,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("namsea", "hero"), alt: "Namsea — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Namsea — Avirage Code", description: "" },
-  },
-
-  shokunin: {
-    slug: "shokunin",
-    codeName: "Shokunin",
-    fullName: "Japanese",
-    type: "standalone",
-    origin: "Japan",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("shokunin", "hero"), alt: "Shokunin — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Shokunin — Avirage Code", description: "" },
-  },
-
-  khoruun: {
-    slug: "khoruun",
-    codeName: "Khoruun",
-    fullName: "Mongolian",
-    type: "standalone",
-    origin: "Mongolian Steppe",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("khoruun", "hero"), alt: "Khoruun — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Khoruun — Avirage Code", description: "" },
-  },
-
-  lhumir: {
-    slug: "lhumir",
-    codeName: "Lhumir",
-    fullName: "Tibetan",
-    type: "standalone",
-    origin: "Tibetan Plateau",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("lhumir", "hero"), alt: "Lhumir — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Lhumir — Avirage Code", description: "" },
-  },
-
-  yatevar: {
-    slug: "yatevar",
-    codeName: "Yatevar",
-    fullName: "Indian Vedic + Nahua Fusion",
-    type: "fusion",
-    origin: "Ancient India + Mesoamerica",
-    level: 2,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("yatevar", "hero"), alt: "Yatevar — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Yatevar — Avirage Code", description: "" },
-  },
-
-  renara: {
-    slug: "renara",
-    codeName: "Renara",
-    fullName: "Javanese",
-    type: "standalone",
-    origin: "Java, Indonesia",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("renara", "hero"), alt: "Renara — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Renara — Avirage Code", description: "" },
-  },
-
-  karayni: {
-    slug: "karayni",
-    codeName: "Karayni",
-    fullName: "Balinese + Quechua Fusion",
-    type: "fusion",
-    origin: "Bali + Andean Highlands",
-    level: 2,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("karayni", "hero"), alt: "Karayni — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Karayni — Avirage Code", description: "" },
-  },
-
-  wohaka: {
-    slug: "wohaka",
-    codeName: "Wohaka",
-    fullName: "Maori + Lakota Fusion",
-    type: "fusion",
-    origin: "Aotearoa + Great Plains",
-    level: 2,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("wohaka", "hero"), alt: "Wohaka — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Wohaka — Avirage Code", description: "" },
-  },
-
-  tjukari: {
-    slug: "tjukari",
-    codeName: "Tjukari",
-    fullName: "Aboriginal Australian",
-    type: "standalone",
-    origin: "Australia",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("tjukari", "hero"), alt: "Tjukari — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Tjukari — Avirage Code", description: "" },
-  },
-
-  kinmora: {
-    slug: "kinmora",
-    codeName: "Kinmora",
-    fullName: "Maya",
-    type: "standalone",
-    origin: "Mesoamerica",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("kinmora", "hero"), alt: "Kinmora — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Kinmora — Avirage Code", description: "" },
-  },
-
-  siljoa: {
-    slug: "siljoa",
-    codeName: "Siljoa",
-    fullName: "Inuit + Sami Fusion",
-    type: "fusion",
-    origin: "Circumpolar Arctic",
-    level: 2,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("siljoa", "hero"), alt: "Siljoa — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Siljoa — Avirage Code", description: "" },
-  },
-
-  skenari: {
-    slug: "skenari",
-    codeName: "Skenari",
-    fullName: "Haudenosaunee",
-    type: "standalone",
-    origin: "Eastern Woodlands, North America",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("skenari", "hero"), alt: "Skenari — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Skenari — Avirage Code", description: "" },
-  },
-
-  ashkara: {
-    slug: "ashkara",
-    codeName: "Ashkara",
-    fullName: "Persian/Zoroastrian",
-    type: "standalone",
-    origin: "Ancient Persia",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("ashkara", "hero"), alt: "Ashkara — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Ashkara — Avirage Code", description: "" },
-  },
-
-  alethir: {
-    slug: "alethir",
-    codeName: "Alethir",
-    fullName: "Ancient Greek",
-    type: "standalone",
-    origin: "Ancient Greece",
-    level: 1,
-    summary: "",
-    lineage: [],
-    coreConcepts: [],
-    images: [{ key: "hero", src: codeImage("alethir", "hero"), alt: "Alethir — hero image" }],
-    sections: [
-      { id: "overview", title: "Overview", body: [] },
-      { id: "origin", title: "Cultural Origin", body: [] },
-      { id: "traits", title: "Trait Profile", body: [] },
-      { id: "lens", title: "Lens", body: [] },
-      { id: "lifestyle", title: "Lifestyle Alignment", body: [] },
-      { id: "activities", title: "Activities", body: [] },
-      { id: "notes", title: "Notes", body: [] },
-    ],
-    seo: { title: "Alethir — Avirage Code", description: "" },
+  assetsHint: {
+    folder: "/public/codepages/shokunin/",
+    recommendedFiles: ["hero.jpg", "gallery-1.jpg", "gallery-2.jpg"],
   },
 };
 
 /**
- * Convenience helpers
+ * Stubs for the other 19 (valid but empty-ish).
+ * You’ll fill these one by one like we did for Shokunin.
  */
-export const ALL_CODE_SLUGS: CodeSlug[] = Object.keys(CODE_PAGES) as CodeSlug[];
+function stub(slug: CodeSlug, codeName: string, fullName: string, origin: string): CodePage {
+  return {
+    slug,
+    codeName,
+    fullName,
+    origin,
+    tagline: "Page coming soon.",
+    level1Culture: {
+      name: fullName,
+      note: "Stub. Add educational lens explanation here.",
+    },
+    traitHighlights: [],
+    sections: [
+      { type: "prose", title: "Overview", body: "Stub content." },
+    ],
+    suggestedEcosystems: { places: [], activities: [], musicMood: [], workStyles: [] },
+    assetsHint: { folder: `/public/codepages/${slug}/`, recommendedFiles: ["hero.jpg"] },
+  };
+}
+
+export const CODE_PAGES: Record<CodeSlug, CodePage> = {
+  khoisan: stub("khoisan", "Khoisan", "San/Khoisan", "Southern Africa"),
+  kayori: stub("kayori", "Kayori", "Yoruba", "West Africa"),
+  sahen: stub("sahen", "Sahen", "Tuareg", "Sahara Desert"),
+  enzuka: stub("enzuka", "Enzuka", "Maasai + Zulu Fusion", "East Africa"),
+  siyuane: stub("siyuane", "Siyuane", "Ethiopian + Han Chinese Fusion", "Highland Ethiopia + Ancient China"),
+  jaejin: stub("jaejin", "Jaejin", "Korean", "Korea"),
+  namsea: stub("namsea", "Namsea", "Vietnamese + Thai Fusion", "Southeast Asia"),
+
+  // ✅ Fully authored first page:
+  shokunin: SHOKUNIN_PAGE,
+
+  khoruun: stub("khoruun", "Khoruun", "Mongolian", "Mongolian Steppe"),
+  lhumir: stub("lhumir", "Lhumir", "Tibetan", "Tibetan Plateau"),
+  yatevar: stub("yatevar", "Yatevar", "Indian Vedic + Nahua Fusion", "Ancient India + Mesoamerica"),
+  renara: stub("renara", "Renara", "Javanese", "Java, Indonesia"),
+  karayni: stub("karayni", "Karayni", "Balinese + Quechua Fusion", "Bali + Andean Highlands"),
+  wohaka: stub("wohaka", "Wohaka", "Maori + Lakota Fusion", "Aotearoa + Great Plains"),
+  tjukari: stub("tjukari", "Tjukari", "Aboriginal Australian", "Australia"),
+  kinmora: stub("kinmora", "Kinmora", "Maya", "Mesoamerica"),
+  siljoa: stub("siljoa", "Siljoa", "Inuit + Sami Fusion", "Circumpolar Arctic"),
+  skenari: stub("skenari", "Skenari", "Haudenosaunee", "Eastern Woodlands, North America"),
+  ashkara: stub("ashkara", "Ashkara", "Persian/Zoroastrian", "Ancient Persia"),
+  alethir: stub("alethir", "Alethir", "Ancient Greek", "Ancient Greece"),
+};
 
 export function getCodePage(slug: CodeSlug): CodePage {
   return CODE_PAGES[slug];
+}
+
+export function getAllCodePages(): CodePage[] {
+  return Object.values(CODE_PAGES);
 }
