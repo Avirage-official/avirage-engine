@@ -188,7 +188,7 @@ function calculateEnneagram(answers: QuizAnswers): EnneagramType {
   if (answers["q35"] === 2) wingIndicators.toward_flowing += 1;
 
   // Determine wing direction based on core type
-  let wingDirection: "w" + (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9);
+  let wingNum: number;
   
   // Simple wing logic: adjacent types
   const wingMap: Record<number, [number, number]> = {
@@ -206,7 +206,7 @@ function calculateEnneagram(answers: QuizAnswers): EnneagramType {
   const [lowerWing, higherWing] = wingMap[coreType];
   
   // Pick wing based on indicators (simplified)
-  const wingNum = wingIndicators.toward_structured > wingIndicators.toward_flowing
+  wingNum = wingIndicators.toward_structured > wingIndicators.toward_flowing
     ? (coreType === 1 ? lowerWing : higherWing)
     : lowerWing;
 
