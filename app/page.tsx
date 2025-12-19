@@ -754,7 +754,7 @@ export default function Home() {
               <p style={{
                 fontSize: "17px",
                 lineHeight: "1.7",
-                opacity: 0.95",
+                opacity: 0.95,
                 maxWidth: "500px",
                 margin: "0 auto",
               }}>
