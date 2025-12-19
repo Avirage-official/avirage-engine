@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import { useMemo, useState } from "react";
 import { QUIZ_QUESTIONS } from "@/lib/quizQuestions";
 
@@ -392,6 +393,7 @@ export default function Home() {
             gap: 12,
             padding: "10px 6px",
             opacity: step === "result" ? 0.9 : 1,
+            flexWrap: "wrap",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -427,7 +429,7 @@ export default function Home() {
         {/* Main card */}
         <div style={{ ...PANEL_STYLE, padding: 26 }}>
           {/* Header */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 16, marginBottom: 18 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 16, marginBottom: 18, flexWrap: "wrap" }}>
             <div>
               <div
                 style={{
@@ -477,18 +479,30 @@ export default function Home() {
 
           {/* INFO STEP */}
           {step === "info" && (
-            <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 18 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.1fr 0.9fr",
+                gap: 18,
+              }}
+            >
               {/* Left: form */}
               <div style={{ ...glassCard, padding: 20 }}>
                 <div style={{ color: THEME.textSecondary, fontSize: 14, lineHeight: 1.7, marginBottom: 18 }}>
-                  This is a **lens**, not a label: a structured match between your behavioral signals and a set of archetypal traditions.
-                  You’ll get **primary / secondary / tertiary** matches with a short explanation.
+                  This is a <strong>lens</strong>, not a label: a structured match between your behavioral signals and a set of archetypal traditions.
+                  You’ll get <strong>primary / secondary / tertiary</strong> matches with a short explanation.
                 </div>
 
                 <div style={{ display: "grid", gap: 14 }}>
                   <div style={{ display: "grid", gap: 8 }}>
                     <FieldLabel>Full name</FieldLabel>
-                    <input placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
+                    <input
+                      placeholder="Your name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      style={inputStyle}
+                      autoComplete="name"
+                    />
                   </div>
 
                   <div style={{ display: "grid", gap: 8 }}>
@@ -524,7 +538,7 @@ export default function Home() {
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     <div style={{ display: "grid", gap: 8 }}>
                       <FieldLabel>City</FieldLabel>
-                      <input placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} style={inputStyle} />
+                      <input placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} style={inputStyle} autoComplete="address-level2" />
                     </div>
                     <div style={{ display: "grid", gap: 8 }}>
                       <FieldLabel>Ethnicity</FieldLabel>
@@ -533,7 +547,18 @@ export default function Home() {
                   </div>
 
                   {error && (
-                    <div style={{ color: THEME.danger, fontSize: 13, border: `1px solid rgba(255,107,107,0.28)`, background: "rgba(255,107,107,0.06)", padding: 10, borderRadius: 12 }}>
+                    <div
+                      style={{
+                        color: THEME.danger,
+                        fontSize: 13,
+                        border: `1px solid rgba(255,107,107,0.28)`,
+                        background: "rgba(255,107,107,0.06)",
+                        padding: 10,
+                        borderRadius: 12,
+                      }}
+                      role="alert"
+                      aria-live="polite"
+                    >
                       {error}
                     </div>
                   )}
@@ -593,22 +618,29 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+
+              {/* Mobile: stack columns */}
+              <style jsx>{`
+                @media (max-width: 860px) {
+                  div[style*="grid-template-columns: 1.1fr 0.9fr"] {
+                    grid-template-columns: 1fr !important;
+                  }
+                }
+              `}</style>
             </div>
           )}
 
           {/* QUIZ STEP */}
           {step === "quiz" && !loading && (
             <div style={{ ...glassCard, padding: 20 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, marginBottom: 14 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, marginBottom: 14, flexWrap: "wrap" }}>
                 <div style={{ color: THEME.textSecondary, fontSize: 13 }}>
                   Question <span style={{ color: THEME.textPrimary, fontWeight: 800 }}>{currentQuestionIndex + 1}</span> of{" "}
                   <span style={{ color: THEME.textPrimary, fontWeight: 800 }}>{QUIZ_QUESTIONS.length}</span>
                 </div>
 
                 <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                  <span style={{ color: THEME.textMuted, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                    Lens calibration
-                  </span>
+                  <span style={{ color: THEME.textMuted, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>Lens calibration</span>
                   <span style={{ color: THEME.accent, fontWeight: 900 }}>{progress}%</span>
                 </div>
               </div>
@@ -646,7 +678,7 @@ export default function Home() {
                         padding: "16px 16px",
                         fontSize: 14,
                         background: isSelected ? "rgba(201, 169, 106, 0.14)" : "rgba(255,255,255,0.02)",
-                        color: isSelected ? THEME.textPrimary : THEME.textPrimary,
+                        color: THEME.textPrimary,
                         border: isSelected ? `1px solid rgba(201,169,106,0.55)` : `1px solid ${THEME.softBorder}`,
                         borderRadius: 14,
                         cursor: selectedOption !== null ? "not-allowed" : "pointer",
@@ -656,6 +688,7 @@ export default function Home() {
                         display: "flex",
                         gap: 12,
                         alignItems: "center",
+                        outline: "none",
                       }}
                       onMouseEnter={(e) => {
                         if (selectedOption === null) e.currentTarget.style.transform = "translateY(-1px)";
@@ -679,7 +712,7 @@ export default function Home() {
                 })}
               </div>
 
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, marginTop: 16 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, marginTop: 16, flexWrap: "wrap" }}>
                 <button
                   onClick={previousQuestion}
                   disabled={selectedOption !== null || currentQuestionIndex === 0}
@@ -697,12 +730,12 @@ export default function Home() {
                 </button>
 
                 <div style={{ color: THEME.textMuted, fontSize: 12, display: "flex", alignItems: "center" }}>
-                  Tip: answer how you *usually* are, not the “ideal” version.
+                  Tip: answer how you <em>usually</em> are, not the “ideal” version.
                 </div>
               </div>
 
               {error && (
-                <div style={{ marginTop: 14, color: THEME.danger, fontSize: 13 }}>
+                <div style={{ marginTop: 14, color: THEME.danger, fontSize: 13 }} role="alert" aria-live="polite">
                   {error}
                 </div>
               )}
@@ -744,7 +777,7 @@ export default function Home() {
           {step === "result" && result && (
             <div style={{ display: "grid", gap: 16 }}>
               {/* Header */}
-              <div style={{ ...glassCard, padding: 18, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14 }}>
+              <div style={{ ...glassCard, padding: 18, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
                 <div>
                   <div style={{ color: THEME.textPrimary, fontWeight: 900, fontSize: 16 }}>{result.userName}</div>
                   <div style={{ color: THEME.textMuted, fontSize: 12 }}>
@@ -796,6 +829,7 @@ export default function Home() {
                         display: "grid",
                         placeItems: "center",
                         boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
+                        position: "relative",
                       }}
                     >
                       <img
@@ -855,11 +889,17 @@ export default function Home() {
 
                     <div style={{ height: 10 }} />
 
-                    <div style={{ fontSize: 14, lineHeight: 1.75, opacity: 0.92, maxWidth: 560, color: "#fff" }}>
-                      {result.primary.description}
-                    </div>
+                    <div style={{ fontSize: 14, lineHeight: 1.75, opacity: 0.92, maxWidth: 560, color: "#fff" }}>{result.primary.description}</div>
                   </div>
                 </div>
+
+                <style jsx>{`
+                  @media (max-width: 700px) {
+                    div[style*="grid-template-columns: 160px 1fr"] {
+                      grid-template-columns: 1fr !important;
+                    }
+                  }
+                `}</style>
               </div>
 
               {/* Secondary & Tertiary */}
@@ -882,7 +922,7 @@ export default function Home() {
 
               {/* Explanation */}
               <div style={{ ...glassCard, padding: 20 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
                   <div style={{ color: THEME.textPrimary, fontWeight: 900, fontSize: 16 }}>Why you resonate</div>
                   <div style={{ color: THEME.textMuted, fontSize: 12 }}>Explainable output</div>
                 </div>
@@ -904,11 +944,12 @@ export default function Home() {
                         background: "rgba(255,255,255,0.02)",
                         borderRadius: 14,
                         border: `1px solid ${THEME.softBorder}`,
+                        gap: 12,
                       }}
                     >
-                      <div>
+                      <div style={{ minWidth: 0 }}>
                         <div style={{ fontWeight: 800, marginBottom: 3, color: THEME.textPrimary, fontSize: 14 }}>{trait.trait}</div>
-                        <div style={{ fontSize: 12, color: THEME.textSecondary }}>{trait.description}</div>
+                        <div style={{ fontSize: 12, color: THEME.textSecondary, lineHeight: 1.4 }}>{trait.description}</div>
                       </div>
                       <div
                         style={{
@@ -917,6 +958,7 @@ export default function Home() {
                           color: trait.score >= 55 ? THEME.accent : "rgba(120,170,255,0.85)",
                           minWidth: 52,
                           textAlign: "right",
+                          flex: "0 0 auto",
                         }}
                       >
                         {trait.score}
@@ -933,6 +975,14 @@ export default function Home() {
                   Your result is a lens match (a stable “lean”), not a daily mood. You can still explore — this just gives you a clearer starting point.
                 </div>
               </div>
+
+              <style jsx>{`
+                @media (max-width: 860px) {
+                  div[style*="grid-template-columns: 1fr 1fr"] {
+                    grid-template-columns: 1fr !important;
+                  }
+                }
+              `}</style>
             </div>
           )}
         </div>
@@ -943,7 +993,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Animations */}
+      {/* Animations + focus styling */}
       <style jsx>{`
         @keyframes scaleIn {
           from {
@@ -984,13 +1034,7 @@ export default function Home() {
    MINI CARD
 ============================ */
 
-function MiniCodeCard(props: {
-  label: string;
-  codeName: string;
-  fullName: string;
-  match: number;
-  emblemPick: number;
-}) {
+function MiniCodeCard(props: { label: string; codeName: string; fullName: string; match: number; emblemPick: number }) {
   const { label, codeName, fullName, match, emblemPick } = props;
 
   return (
@@ -1018,10 +1062,8 @@ function MiniCodeCard(props: {
         />
       </div>
 
-      <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 11, color: THEME.textMuted, letterSpacing: "0.14em", fontWeight: 800, textTransform: "uppercase" }}>
-          {label}
-        </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 11, color: THEME.textMuted, letterSpacing: "0.14em", fontWeight: 800, textTransform: "uppercase" }}>{label}</div>
         <div style={{ fontSize: 18, fontWeight: 950, color: THEME.textPrimary }}>{codeName}</div>
         <div style={{ fontSize: 12, color: THEME.textSecondary, lineHeight: 1.4 }}>{fullName}</div>
       </div>
