@@ -36,28 +36,57 @@ interface AnalysisResult {
   };
 }
 
-// Code colors for visual identity (UPDATE THESE WITH NEW CODE NAMES)
+// Emblem-based color palettes (from your color specifications)
 const CODE_COLORS: Record<string, string> = {
-  Khoisan: "#D2691E",
-  Káyori: "#E63946",
-  Sahén: "#8B7355",
-  Enzuka: "#C41E3A",
-  Siyuané: "#4A5568",
-  Jaejin: "#2E86AB",
-  Namséa: "#90C9A6",
-  Shokunin: "#8B4513",
-  Khoruun: "#7F8C8D",
-  Lhumir: "#9B59B6",
-  Yatevar: "#8E44AD",
-  Rénara: "#D4A373",
-  Karayni: "#27AE60",
-  Wóhaka: "#16A085",
-  Tjukari: "#F39C12",
-  Kinmora: "#D35400",
-  Siljoa: "#5DADE2",
-  Skénari: "#34495E",
-  Ashkara: "#C0392B",
-  Aléthir: "#3498DB",
+  // Fusion Codes
+  Enzuka: "linear-gradient(135deg, #CD853F 0%, #8B0000 100%)", // Deep ochre + iron red
+  Siyuané: "linear-gradient(135deg, #00A86B 0%, #FFFFF0 100%)", // Jade green + warm ivory
+  Namséa: "linear-gradient(135deg, #4682B4 0%, #F5F5DC 100%)", // River blue + soft pearl
+  Karayni: "linear-gradient(135deg, #228B22 0%, #FFD700 100%)", // Earth green + sun gold
+  Siljoa: "linear-gradient(135deg, #708090 0%, #48D1CC 100%)", // Ice gray + aurora teal
+  Yatevar: "linear-gradient(135deg, #B22222 0%, #000000 100%)", // Volcanic red + obsidian black
+  Wóhaka: "linear-gradient(135deg, #87CEEB 0%, #F5F5F5 100%)", // Sky blue + bone white
+  
+  // Standalone Codes
+  Jaejin: "linear-gradient(135deg, #778899 0%, #DC143C 100%)", // Steel gray + ember red
+  Tjukari: "linear-gradient(135deg, #A0522D 0%, #36454F 100%)", // Red earth + charcoal
+  Kinmora: "linear-gradient(135deg, #FFD700 0%, #191970 100%)", // Solar gold + deep indigo
+  Skénari: "linear-gradient(135deg, #228B22 0%, #C0C0C0 100%)", // Forest green + dawn silver
+  Ashkara: "linear-gradient(135deg, #FF8C00 0%, #FFFFFF 100%)", // Sacred fire orange + white
+  Aléthir: "linear-gradient(135deg, #4169E1 0%, #87CEEB 100%)", // Royal blue + light blue
+  Káyori: "linear-gradient(135deg, #DAA520 0%, #000080 100%)", // Burnished gold + indigo-black
+  Sahén: "linear-gradient(135deg, #F5DEB3 0%, #8B7355 100%)", // Sand beige + dusk brown
+  Khoruun: "linear-gradient(135deg, #CD7F32 0%, #808080 100%)", // Steppe bronze + wind gray
+  Lhumir: "linear-gradient(135deg, #F5F5F5 0%, #87CEEB 100%)", // Mist white + soft sky blue
+  Rénara: "linear-gradient(135deg, #7CFC00 0%, #FFD700 100%)", // Muted jade + pale gold
+  
+  // Placeholder for any missing codes
+  Khoisan: "linear-gradient(135deg, #8B4513 0%, #D2691E 100%)",
+  Shokunin: "linear-gradient(135deg, #8B4513 0%, #A0522D 100%)",
+};
+
+// Emblem counts (how many variations each code has)
+const CODE_EMBLEM_COUNTS: Record<string, number> = {
+  "Aléthir": 5,
+  "Ashkara": 4,
+  "Enzuka": 3,
+  "Jaejin": 3,
+  "Karayni": 5,
+  "Káyori": 4,
+  "Khoisan": 4,
+  "Khoruun": 4,
+  "Kinmora": 3,
+  "Lhumir": 4,
+  "Namséa": 4,
+  "Rénara": 4,
+  "Sahén": 3,
+  "Shokunin": 5,
+  "Siljoa": 4,
+  "Siyuané": 4,
+  "Skénari": 3,
+  "Tjukari": 4,
+  "Wóhaka": 3,
+  "Yatevar": 3,
 };
 
 export default function Home() {
@@ -81,6 +110,13 @@ export default function Home() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Emblem selection (randomized on result)
+  const [selectedEmblems, setSelectedEmblems] = useState<{
+    primary: number;
+    secondary: number;
+    tertiary: number;
+  }>({ primary: 1, secondary: 1, tertiary: 1 });
 
   // Handle basic info submission
   function startQuiz() {
@@ -158,6 +194,14 @@ export default function Home() {
       // Dramatic pause before reveal
       setTimeout(() => {
         setResult(data);
+        
+        // Randomly select emblems for each code
+        setSelectedEmblems({
+          primary: Math.floor(Math.random() * (CODE_EMBLEM_COUNTS[data.primary.code_name] || 1)) + 1,
+          secondary: Math.floor(Math.random() * (CODE_EMBLEM_COUNTS[data.secondary.code_name] || 1)) + 1,
+          tertiary: Math.floor(Math.random() * (CODE_EMBLEM_COUNTS[data.tertiary.code_name] || 1)) + 1,
+        });
+        
         setStep("result");
         setLoading(false);
       }, 2000);
@@ -641,7 +685,7 @@ export default function Home() {
             {/* Primary Code - HERO */}
             <div style={{
               padding: "60px 40px",
-              background: CODE_COLORS[result.primary.code_name] || "#2c3e50",
+              background: CODE_COLORS[result.primary.code_name] || "linear-gradient(135deg, #2c3e50 0%, #34495e 100%)",
               color: "#fff",
               borderRadius: "24px",
               marginBottom: "20px",
@@ -660,6 +704,27 @@ export default function Home() {
                 background: "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
                 pointerEvents: "none",
               }} />
+              
+              {/* Emblem Display */}
+              <div style={{ marginBottom: "20px" }}>
+                <img
+                  src={`/emblems/${result.primary.code_name} ${selectedEmblems.primary}.jpg`}
+                  alt={`${result.primary.code_name} emblem`}
+                  style={{
+                    width: "180px",
+                    height: "180px",
+                    objectFit: "contain",
+                    margin: "0 auto",
+                    display: "block",
+                    filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.3))",
+                    animation: "float 3s ease-in-out infinite",
+                  }}
+                  onError={(e) => {
+                    // Hide image if it fails to load
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+              </div>
               
               <div style={{
                 fontSize: "14px",
@@ -689,7 +754,7 @@ export default function Home() {
               <p style={{
                 fontSize: "17px",
                 lineHeight: "1.7",
-                opacity: 0.95,
+                opacity: 0.95",
                 maxWidth: "500px",
                 margin: "0 auto",
               }}>
@@ -709,8 +774,26 @@ export default function Home() {
                 backgroundColor: "rgba(255, 255, 255, 0.95)",
                 borderRadius: "20px",
                 boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-                borderLeft: `5px solid ${CODE_COLORS[result.secondary.code_name] || "#95a5a6"}`,
+                borderLeft: `5px solid transparent`,
+                borderImage: CODE_COLORS[result.secondary.code_name] || "#95a5a6",
+                borderImageSlice: 1,
               }}>
+                {/* Small emblem */}
+                <img
+                  src={`/emblems/${result.secondary.code_name} ${selectedEmblems.secondary}.jpg`}
+                  alt={`${result.secondary.code_name} emblem`}
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    objectFit: "contain",
+                    marginBottom: "15px",
+                    filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.15))",
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+                
                 <div style={{
                   fontSize: "11px",
                   color: "#999",
@@ -733,7 +816,7 @@ export default function Home() {
                 </div>
                 <div style={{
                   fontSize: "13px",
-                  color: CODE_COLORS[result.secondary.code_name] || "#95a5a6",
+                  color: "#2c3e50",
                   marginTop: "8px",
                   fontWeight: "700",
                 }}>
@@ -746,8 +829,26 @@ export default function Home() {
                 backgroundColor: "rgba(255, 255, 255, 0.95)",
                 borderRadius: "20px",
                 boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-                borderLeft: `5px solid ${CODE_COLORS[result.tertiary.code_name] || "#95a5a6"}`,
+                borderLeft: `5px solid transparent`,
+                borderImage: CODE_COLORS[result.tertiary.code_name] || "#95a5a6",
+                borderImageSlice: 1,
               }}>
+                {/* Small emblem */}
+                <img
+                  src={`/emblems/${result.tertiary.code_name} ${selectedEmblems.tertiary}.jpg`}
+                  alt={`${result.tertiary.code_name} emblem`}
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    objectFit: "contain",
+                    marginBottom: "15px",
+                    filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.15))",
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+                
                 <div style={{
                   fontSize: "11px",
                   color: "#999",
@@ -770,7 +871,7 @@ export default function Home() {
                 </div>
                 <div style={{
                   fontSize: "13px",
-                  color: CODE_COLORS[result.tertiary.code_name] || "#95a5a6",
+                  color: "#2c3e50",
                   marginTop: "8px",
                   fontWeight: "700",
                 }}>
