@@ -72,29 +72,29 @@ interface AnalysisResult {
 // Emblem-based color palettes
 const CODE_COLORS: Record<string, string> = {
   Enzuka: "linear-gradient(135deg, #CD853F 0%, #8B0000 100%)",
-  Siyuane: "linear-gradient(135deg, #00A86B 0%, #FFFFF0 100%)",
-  Namsea: "linear-gradient(135deg, #4682B4 0%, #F5F5DC 100%)",
+  Siyuané: "linear-gradient(135deg, #00A86B 0%, #FFFFF0 100%)",
+  Namséa: "linear-gradient(135deg, #4682B4 0%, #F5F5DC 100%)",
   Karayni: "linear-gradient(135deg, #228B22 0%, #FFD700 100%)",
   Siljoa: "linear-gradient(135deg, #708090 0%, #48D1CC 100%)",
   Yatevar: "linear-gradient(135deg, #B22222 0%, #000000 100%)",
-  Wohaka: "linear-gradient(135deg, #87CEEB 0%, #F5F5F5 100%)",
+  Wóhaka: "linear-gradient(135deg, #87CEEB 0%, #F5F5F5 100%)",
   Jaejin: "linear-gradient(135deg, #778899 0%, #DC143C 100%)",
   Tjukari: "linear-gradient(135deg, #A0522D 0%, #36454F 100%)",
   Kinmora: "linear-gradient(135deg, #FFD700 0%, #191970 100%)",
-  Skenari: "linear-gradient(135deg, #228B22 0%, #C0C0C0 100%)",
+  Skénari: "linear-gradient(135deg, #228B22 0%, #C0C0C0 100%)",
   Ashkara: "linear-gradient(135deg, #FF8C00 0%, #FFFFFF 100%)",
-  Alethir: "linear-gradient(135deg, #4169E1 0%, #87CEEB 100%)",
-  Kayori: "linear-gradient(135deg, #DAA520 0%, #000080 100%)",
-  Sahen: "linear-gradient(135deg, #F5DEB3 0%, #8B7355 100%)",
+  Aléthir: "linear-gradient(135deg, #4169E1 0%, #87CEEB 100%)",
+  Káyori: "linear-gradient(135deg, #DAA520 0%, #000080 100%)",
+  Sahén: "linear-gradient(135deg, #F5DEB3 0%, #8B7355 100%)",
   Khoruun: "linear-gradient(135deg, #CD7F32 0%, #808080 100%)",
   Lhumir: "linear-gradient(135deg, #F5F5F5 0%, #87CEEB 100%)",
-  Renara: "linear-gradient(135deg, #7CFC00 0%, #FFD700 100%)",
+  Rénara: "linear-gradient(135deg, #7CFC00 0%, #FFD700 100%)",
   Khoisan: "linear-gradient(135deg, #8B4513 0%, #D2691E 100%)",
   Shokunin: "linear-gradient(135deg, #8B4513 0%, #A0522D 100%)",
 };
 
 const CODE_EMBLEM_COUNTS: Record<string, number> = {
-  "Alethir": 5,
+  "Aléthir": 5,
   "Ashkara": 4,
   "Enzuka": 3,
   "Jaejin": 3,
@@ -104,17 +104,24 @@ const CODE_EMBLEM_COUNTS: Record<string, number> = {
   "Khoruun": 4,
   "Kinmora": 3,
   "Lhumir": 4,
-  "Namsea": 4,
-  "Renara": 4,
-  "Sahen": 3,
+  "Namséa": 4,
+  "Rénara": 4,
+  "Sahén": 3,
   "Shokunin": 5,
   "Siljoa": 4,
   "Siyuané": 4,
-  "Skenari": 3,
+  "Skénari": 3,
   "Tjukari": 4,
-  "Wohaka": 3,
+  "Wóhaka": 3,
   "Yatevar": 3,
 };
+
+// Helper function to remove accents for file paths
+function removeAccents(str: string): string {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
 
 /* ============================
    COMPONENT
@@ -547,7 +554,7 @@ export default function Home() {
               {/* Emblem */}
               <div style={{ marginBottom: "20px", position: "relative", zIndex: 1 }}>
                 <img
-                  src={`/emblems/${encodeURIComponent(result.primary.code_name)} ${selectedEmblems.primary}.jpg`}
+                  src={`/emblems/${removeAccents(result.primary.code_name)} ${selectedEmblems.primary}.jpg`}
                   alt={`${result.primary.code_name} emblem`}
                   style={{
                     width: "180px",
@@ -592,7 +599,7 @@ export default function Home() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "30px" }}>
               <div style={{ ...PANEL_STYLE, padding: "28px 24px" }}>
                 <img
-                  src={`/emblems/${encodeURIComponent(result.secondary.code_name)} ${selectedEmblems.secondary}.jpg`}
+                  src={`/emblems/${removeAccents(result.secondary.code_name)} ${selectedEmblems.secondary}.jpg`}
                   alt={`${result.secondary.code_name} emblem`}
                   style={{ width: "50px", height: "50px", objectFit: "contain", marginBottom: "12px", filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.2))" }}
                   onError={(e) => { e.currentTarget.style.display = "none"; }}
@@ -613,7 +620,7 @@ export default function Home() {
 
               <div style={{ ...PANEL_STYLE, padding: "28px 24px" }}>
                 <img
-                  src={`/emblems/${encodeURIComponent(result.tertiary.code_name)} ${selectedEmblems.tertiary}.jpg`}
+                  src={`/emblems/${removeAccents(result.tertiary.code_name)} ${selectedEmblems.tertiary}.jpg`}
                   alt={`${result.tertiary.code_name} emblem`}
                   style={{ width: "50px", height: "50px", objectFit: "contain", marginBottom: "12px", filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.2))" }}
                   onError={(e) => { e.currentTarget.style.display = "none"; }}
