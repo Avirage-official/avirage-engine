@@ -94,26 +94,26 @@ const CODE_COLORS: Record<string, string> = {
 };
 
 const CODE_EMBLEM_COUNTS: Record<string, number> = {
-  "Aléthir": 2,
-  "Ashkara": 2,
-  "Enzuka": 2,
+  "Aléthir": 5,
+  "Ashkara": 4,
+  "Enzuka": 3,
   "Jaejin": 3,
-  "Karayni": 2,
-  "Káyori": 2,
-  "Khoisan": 2,
-  "Khoruun": 2,
-  "Kinmora": 2,
-  "Lhumir": 2,
-  "Namséa": 2,
-  "Rénara": 2,
-  "Sahén": 2,
-  "Shokunin": 2,
-  "Siljoa": 2,
-  "Siyuané": 2,
-  "Skénari": 2,
-  "Tjukari": 2,
-  "Wóhaka": 2,
-  "Yatevar": 2,
+  "Karayni": 5,
+  "Káyori": 4,
+  "Khoisan": 4,
+  "Khoruun": 4,
+  "Kinmora": 3,
+  "Lhumir": 4,
+  "Namséa": 4,
+  "Rénara": 4,
+  "Sahén": 3,
+  "Shokunin": 5,
+  "Siljoa": 4,
+  "Siyuané": 4,
+  "Skénari": 3,
+  "Tjukari": 4,
+  "Wóhaka": 3,
+  "Yatevar": 3,
 };
 
 /* ============================
@@ -547,7 +547,7 @@ export default function Home() {
               {/* Emblem */}
               <div style={{ marginBottom: "20px", position: "relative", zIndex: 1 }}>
                 <img
-                  src={`/emblems/${result.primary.code_name} ${selectedEmblems.primary}.jpg`}
+                  src={`/emblems/${encodeURIComponent(result.primary.code_name)} ${selectedEmblems.primary}.jpg`}
                   alt={`${result.primary.code_name} emblem`}
                   style={{
                     width: "180px",
@@ -592,7 +592,7 @@ export default function Home() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "30px" }}>
               <div style={{ ...PANEL_STYLE, padding: "28px 24px" }}>
                 <img
-                  src={`/emblems/${result.secondary.code_name} ${selectedEmblems.secondary}.jpg`}
+                  src={`/emblems/${encodeURIComponent(result.secondary.code_name)} ${selectedEmblems.secondary}.jpg`}
                   alt={`${result.secondary.code_name} emblem`}
                   style={{ width: "50px", height: "50px", objectFit: "contain", marginBottom: "12px", filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.2))" }}
                   onError={(e) => { e.currentTarget.style.display = "none"; }}
@@ -613,7 +613,7 @@ export default function Home() {
 
               <div style={{ ...PANEL_STYLE, padding: "28px 24px" }}>
                 <img
-                  src={`/emblems/${result.tertiary.code_name} ${selectedEmblems.tertiary}.jpg`}
+                  src={`/emblems/${encodeURIComponent(result.tertiary.code_name)} ${selectedEmblems.tertiary}.jpg`}
                   alt={`${result.tertiary.code_name} emblem`}
                   style={{ width: "50px", height: "50px", objectFit: "contain", marginBottom: "12px", filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.2))" }}
                   onError={(e) => { e.currentTarget.style.display = "none"; }}
