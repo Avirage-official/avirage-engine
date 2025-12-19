@@ -1,10 +1,32 @@
 @import "tailwindcss";
 
+/* ==========================
+   Base Tokens
+========================== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* You’re rendering your own backgrounds in page.tsx, but
+     these help the browser chrome + form controls behave well. */
+  --background: #070a0e;
+  --foreground: #e9edf3;
+
+  --muted: rgba(233, 237, 243, 0.64);
+  --muted-2: rgba(233, 237, 243, 0.48);
+
+  --card: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.12);
+
+  --accent: #c9a96a;
+  --accent-soft: rgba(201, 169, 106, 0.18);
+
+  --danger: #ff6b6b;
+
+  /* nicer rounding rhythm */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
 }
 
+/* Keep your Tailwind theme mapping */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -12,15 +34,121 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ==========================
+   Global Reset / Quality
+========================== */
+html,
+body {
+  height: 100%;
+}
+
+html {
+  color-scheme: dark; /* ensures native inputs/scrollbars match dark UI */
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
 }
 
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+  /* Default to Geist (from layout). If it’s missing, system fonts. */
+  font-family: var(--font-geist-sans), system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.5;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Make links look intentional */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Better selection */
+::selection {
+  background: rgba(201, 169, 106, 0.28);
+  color: var(--foreground);
+}
+
+/* ==========================
+   Form Controls (Default polish)
+========================== */
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(233, 237, 243, 0.42);
+}
+
+/* Remove ugly blue outlines and replace with a consistent focus ring */
+:where(input, select, textarea, button):focus {
+  outline: none;
+}
+
+:where(input, select, textarea):focus-visible {
+  box-shadow:
+    0 0 0 1px rgba(201, 169, 106, 0.45),
+    0 0 0 4px rgba(201, 169, 106, 0.16);
+  border-color: rgba(201, 169, 106, 0.55);
+}
+
+button:focus-visible {
+  box-shadow:
+    0 0 0 1px rgba(201, 169, 106, 0.45),
+    0 0 0 4px rgba(201, 169, 106, 0.16);
+}
+
+/* ==========================
+   Scrollbars (subtle)
+========================== */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(233, 237, 243, 0.22) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(233, 237, 243, 0.18);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(233, 237, 243, 0.28);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* ==========================
+   Reduced Motion Respect
+========================== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
