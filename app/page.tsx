@@ -220,10 +220,11 @@ export default function Home() {
       setTimeout(() => {
         setResult(data);
 
+        // Always randomly pick between emblem 1 or 2 only
         setSelectedEmblems({
-          primary: Math.floor(Math.random() * (CODE_EMBLEM_COUNTS[data.primary.code_name] || 1)) + 1,
-          secondary: Math.floor(Math.random() * (CODE_EMBLEM_COUNTS[data.secondary.code_name] || 1)) + 1,
-          tertiary: Math.floor(Math.random() * (CODE_EMBLEM_COUNTS[data.tertiary.code_name] || 1)) + 1,
+          primary: Math.floor(Math.random() * 2) + 1,    // Random: 1 or 2
+          secondary: Math.floor(Math.random() * 2) + 1,  // Random: 1 or 2
+          tertiary: Math.floor(Math.random() * 2) + 1,   // Random: 1 or 2
         });
 
         setStep("result");
