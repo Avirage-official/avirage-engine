@@ -1,886 +1,380 @@
 /**
- * AVIRAGE QUIZ QUESTIONS
- * Multi-dimensional questions that score multiple traits at once
+ * AVIRAGE QUIZ QUESTIONS - FRAMEWORK EDITION
+ * 35 questions designed to detect Big 5, MBTI, Enneagram, Astrology
+ * Culturally neutral, behaviorally focused
  */
-
-import { TraitScores } from "./types";
 
 export interface QuizQuestion {
   id: string;
   question: string;
   options: {
     text: string;
-    traitScores: Partial<TraitScores>;
     emoji?: string;
   }[];
 }
 
 /**
- * 18 multi-dimensional questions covering all 25 traits
- * Each option scores 2-4 traits
+ * 35 FRAMEWORK DETECTION QUESTIONS
+ * Q1-8: MBTI (2 per dichotomy)
+ * Q9-23: Big 5 (3 per trait)
+ * Q24-32: Enneagram Core (1 per type)
+ * Q33-35: Enneagram Wing
  */
 export const QUIZ_QUESTIONS: QuizQuestion[] = [
-  // Q1: Social Energy + Group Size + Environmental Sensitivity
+  // ==========================================
+  // SECTION 1: MBTI DISCOVERY (Q1-8)
+  // ==========================================
+
+  // Q1: I/E - Energy Source
   {
-    id: "social_gathering",
-    question: "Your ideal Saturday night:",
+    id: "q1",
+    question: "When you need to restore your energy, you naturally prefer:",
     options: [
-      {
-        text: "Big party with 30+ people, loud music, dancing",
-        emoji: "🎉",
-        traitScores: {
-          social_energy: 85,
-          group_size_preference: 85,
-          environmental_sensitivity: 25,
-          optimism_baseline: 70,
-        },
-      },
-      {
-        text: "Dinner with 4-6 close friends, conversation and laughter",
-        emoji: "🍷",
-        traitScores: {
-          social_energy: 65,
-          group_size_preference: 45,
-          environmental_sensitivity: 50,
-          emotional_expressiveness: 65,
-        },
-      },
-      {
-        text: "Quiet night with 1-2 people, deep conversation",
-        emoji: "☕",
-        traitScores: {
-          social_energy: 35,
-          group_size_preference: 25,
-          environmental_sensitivity: 70,
-          introspection_depth: 70,
-        },
-      },
-      {
-        text: "Alone at home, recharging in solitude",
-        emoji: "🏠",
-        traitScores: {
-          social_energy: 20,
-          group_size_preference: 20,
-          environmental_sensitivity: 75,
-          introspection_depth: 75,
-        },
-      },
+      { text: "Solitude or one-on-one time with someone close", emoji: "🏠" },
+      { text: "Gathering with friends, family, or community", emoji: "👥" },
+      { text: "A mix of both", emoji: "⚖️" },
     ],
   },
 
-  // Q2: Craftsmanship + Pace + Detail Orientation
+  // Q2: I/E - Social Processing
   {
-    id: "creation_style",
-    question: "When making or creating something:",
+    id: "q2",
+    question: "When working through a problem or big decision, I naturally:",
     options: [
-      {
-        text: "I obsess over every detail, perfecting it slowly",
-        emoji: "🎨",
-        traitScores: {
-          craftsmanship_drive: 90,
-          detail_orientation: 85,
-          pace_preference: 85,
-          meaning_orientation: 75,
-        },
-      },
-      {
-        text: "I take my time but focus on the overall result",
-        emoji: "🛠️",
-        traitScores: {
-          craftsmanship_drive: 70,
-          detail_orientation: 60,
-          pace_preference: 65,
-          output_orientation: 65,
-        },
-      },
-      {
-        text: "I work quickly to see results, refine later",
-        emoji: "⚡",
-        traitScores: {
-          craftsmanship_drive: 45,
-          detail_orientation: 40,
-          pace_preference: 30,
-          output_orientation: 80,
-        },
-      },
-      {
-        text: "I improvise and go with the flow",
-        emoji: "🎭",
-        traitScores: {
-          craftsmanship_drive: 50,
-          improvisation_comfort: 80,
-          structure_preference: 30,
-          novelty_seeking: 70,
-        },
-      },
+      { text: "Think it through internally first, then maybe discuss it", emoji: "🤔" },
+      { text: "Talk it out with others - speaking helps me process", emoji: "💬" },
+      { text: "Depends on the situation", emoji: "🔄" },
     ],
   },
 
-  // Q3: Nature Connection + Introspection + Environmental Sensitivity
+  // Q3: S/N - Information Focus
   {
-    id: "recharge_method",
-    question: "To recharge and feel centered, I need:",
+    id: "q3",
+    question: "When someone explains something to me, I pay most attention to:",
     options: [
-      {
-        text: "Time in nature - forests, mountains, ocean",
-        emoji: "🌲",
-        traitScores: {
-          nature_connection: 90,
-          introspection_depth: 70,
-          environmental_sensitivity: 65,
-          emotional_stability: 70,
-        },
-      },
-      {
-        text: "Quiet indoor spaces with soft lighting and comfort",
-        emoji: "🕯️",
-        traitScores: {
-          nature_connection: 40,
-          environmental_sensitivity: 80,
-          introspection_depth: 75,
-          sensory_appreciation: 75,
-        },
-      },
-      {
-        text: "Urban energy - cafes, streets, people watching",
-        emoji: "🏙️",
-        traitScores: {
-          nature_connection: 25,
-          social_energy: 65,
-          sensory_appreciation: 70,
-          abstract_thinking: 60,
-        },
-      },
-      {
-        text: "Physical activity and movement",
-        emoji: "🏃",
-        traitScores: {
-          nature_connection: 55,
-          pace_preference: 35,
-          environmental_sensitivity: 40,
-          emotional_stability: 70,
-        },
-      },
+      { text: "The concrete details, facts, and step-by-step process", emoji: "📋" },
+      { text: "The overall concept, possibilities, and what it could mean", emoji: "💡" },
+      { text: "Both equally", emoji: "👁️" },
     ],
   },
 
-  // Q4: Conflict Navigation + Emotional Expression + Influence
+  // Q4: S/N - Learning Style
   {
-    id: "disagreement_style",
-    question: "When there's a disagreement:",
+    id: "q4",
+    question: "When understanding something new, I prefer:",
     options: [
-      {
-        text: "I speak up directly and debate passionately",
-        emoji: "🔥",
-        traitScores: {
-          conflict_navigation: 85,
-          emotional_expressiveness: 80,
-          influence_drive: 75,
-          stability_seeking: 40,
-        },
-      },
-      {
-        text: "I calmly state my view and listen to others",
-        emoji: "🤝",
-        traitScores: {
-          conflict_navigation: 60,
-          emotional_stability: 75,
-          influence_drive: 55,
-          introspection_depth: 65,
-        },
-      },
-      {
-        text: "I prefer to keep peace and find common ground",
-        emoji: "☮️",
-        traitScores: {
-          conflict_navigation: 30,
-          emotional_stability: 65,
-          collaborative_preference: 75,
-          group_size_preference: 50,
-        },
-      },
-      {
-        text: "I avoid conflict and withdraw to process alone",
-        emoji: "🚪",
-        traitScores: {
-          conflict_navigation: 20,
-          introspection_depth: 80,
-          environmental_sensitivity: 70,
-          social_energy: 30,
-        },
-      },
+      { text: "Clear examples, step-by-step guidance, and proven methods", emoji: "🎯" },
+      { text: "Understanding the bigger idea and seeing patterns", emoji: "🗺️" },
+      { text: "A combination of both", emoji: "🔗" },
     ],
   },
 
-  // Q5: Structure vs Improvisation + Pace + Stability
+  // Q5: T/F - Decision Priority
   {
-    id: "planning_style",
-    question: "My approach to plans and schedules:",
+    id: "q5",
+    question: "When making an important decision, my first consideration is:",
     options: [
-      {
-        text: "I plan everything in detail, organized systems",
-        emoji: "📋",
-        traitScores: {
-          structure_preference: 90,
-          stability_seeking: 80,
-          detail_orientation: 75,
-          improvisation_comfort: 25,
-        },
-      },
-      {
-        text: "I have a rough plan but stay flexible",
-        emoji: "🗺️",
-        traitScores: {
-          structure_preference: 60,
-          improvisation_comfort: 60,
-          stability_seeking: 55,
-          novelty_seeking: 60,
-        },
-      },
-      {
-        text: "I prefer spontaneity, figure things out as I go",
-        emoji: "🎲",
-        traitScores: {
-          structure_preference: 25,
-          improvisation_comfort: 85,
-          novelty_seeking: 80,
-          stability_seeking: 30,
-        },
-      },
-      {
-        text: "I follow natural rhythms, no strict schedule",
-        emoji: "🌊",
-        traitScores: {
-          structure_preference: 35,
-          pace_preference: 70,
-          present_moment_focus: 75,
-          improvisation_comfort: 70,
-        },
-      },
+      { text: "What makes the most logical sense and solves the problem effectively", emoji: "🧠" },
+      { text: "How it affects people's feelings and whether it feels right to me", emoji: "❤️" },
+      { text: "Both logic and people matter equally", emoji: "⚖️" },
     ],
   },
 
-  // Q6: Sensory Appreciation + Craftsmanship + Detail
+  // Q6: T/F - Conflict Response
   {
-    id: "aesthetic_awareness",
-    question: "When choosing objects or spaces:",
+    id: "q6",
+    question: "When there's a disagreement, I focus more on:",
     options: [
-      {
-        text: "Texture, quality, beauty matter deeply to me",
-        emoji: "✨",
-        traitScores: {
-          sensory_appreciation: 90,
-          craftsmanship_drive: 75,
-          detail_orientation: 70,
-          meaning_orientation: 65,
-        },
-      },
-      {
-        text: "I notice aesthetics but function comes first",
-        emoji: "⚙️",
-        traitScores: {
-          sensory_appreciation: 55,
-          craftsmanship_drive: 55,
-          output_orientation: 75,
-          detail_orientation: 60,
-        },
-      },
-      {
-        text: "I'm pretty indifferent to how things look",
-        emoji: "🤷",
-        traitScores: {
-          sensory_appreciation: 30,
-          abstract_thinking: 65,
-          output_orientation: 70,
-          detail_orientation: 40,
-        },
-      },
-      {
-        text: "I love rich sensory experiences - colors, sounds, tastes",
-        emoji: "🎨",
-        traitScores: {
-          sensory_appreciation: 85,
-          present_moment_focus: 70,
-          emotional_expressiveness: 70,
-          environmental_sensitivity: 60,
-        },
-      },
+      { text: "Getting to the right answer and resolving the issue", emoji: "✅" },
+      { text: "Understanding everyone's perspective and keeping relationships intact", emoji: "🤝" },
+      { text: "Depends on the situation", emoji: "🔄" },
     ],
   },
 
-  // Q7: Abstract vs Concrete + Meaning Orientation
+  // Q7: J/P - Planning Preference
   {
-    id: "thinking_style",
-    question: "I'm most interested in:",
+    id: "q7",
+    question: "When approaching tasks or activities, I prefer to:",
     options: [
-      {
-        text: "Big ideas, philosophy, deeper meaning",
-        emoji: "🧠",
-        traitScores: {
-          abstract_thinking: 85,
-          meaning_orientation: 85,
-          introspection_depth: 75,
-          tradition_orientation: 60,
-        },
-      },
-      {
-        text: "Practical solutions and concrete results",
-        emoji: "🔧",
-        traitScores: {
-          abstract_thinking: 30,
-          output_orientation: 85,
-          detail_orientation: 70,
-          craftsmanship_drive: 65,
-        },
-      },
-      {
-        text: "Patterns, systems, how things connect",
-        emoji: "🔗",
-        traitScores: {
-          abstract_thinking: 75,
-          pattern_recognition: 80,
-          introspection_depth: 70,
-          detail_orientation: 65,
-        },
-      },
-      {
-        text: "Experiences and feelings in the moment",
-        emoji: "💫",
-        traitScores: {
-          abstract_thinking: 50,
-          present_moment_focus: 80,
-          emotional_expressiveness: 75,
-          sensory_appreciation: 75,
-        },
-      },
+      { text: "Plan ahead with clear structure - I like knowing what to expect", emoji: "📅" },
+      { text: "Keep things flexible and adapt as I go", emoji: "🎲" },
+      { text: "Some structure with room to adjust", emoji: "🗂️" },
     ],
   },
 
-  // Q8: Novelty vs Tradition + Stability
+  // Q8: J/P - Work Style
   {
-    id: "change_approach",
-    question: "My relationship with tradition and change:",
+    id: "q8",
+    question: "I'm most comfortable when:",
     options: [
-      {
-        text: "I honor tradition and proven methods",
-        emoji: "📜",
-        traitScores: {
-          tradition_orientation: 85,
-          stability_seeking: 80,
-          novelty_seeking: 30,
-          meaning_orientation: 70,
-        },
-      },
-      {
-        text: "I respect the past but embrace innovation",
-        emoji: "⚖️",
-        traitScores: {
-          tradition_orientation: 55,
-          novelty_seeking: 65,
-          stability_seeking: 55,
-          abstract_thinking: 70,
-        },
-      },
-      {
-        text: "I constantly seek new experiences and ideas",
-        emoji: "🚀",
-        traitScores: {
-          novelty_seeking: 90,
-          tradition_orientation: 25,
-          stability_seeking: 30,
-          optimism_baseline: 75,
-        },
-      },
-      {
-        text: "I question traditions and reimagine possibilities",
-        emoji: "💡",
-        traitScores: {
-          novelty_seeking: 80,
-          tradition_orientation: 30,
-          abstract_thinking: 80,
-          influence_drive: 70,
-        },
-      },
+      { text: "Things are organized, decided, and settled", emoji: "✔️" },
+      { text: "Options stay open and I can adjust as needed", emoji: "🔓" },
+      { text: "Mix of structure and flexibility", emoji: "⚖️" },
     ],
   },
 
-  // Q9: Pace Preference + Output vs Process
+  // ==========================================
+  // SECTION 2: BIG 5 PROFILE (Q9-23)
+  // ==========================================
+
+  // Q9-11: OPENNESS
   {
-    id: "work_rhythm",
-    question: "My natural work rhythm:",
+    id: "q9",
+    question: "How often do you find yourself diving deep into topics just for curiosity?",
     options: [
-      {
-        text: "Slow and steady, savoring the process",
-        emoji: "🐌",
-        traitScores: {
-          pace_preference: 90,
-          craftsmanship_drive: 75,
-          present_moment_focus: 75,
-          output_orientation: 35,
-        },
-      },
-      {
-        text: "Moderate pace, balance process and results",
-        emoji: "🚶",
-        traitScores: {
-          pace_preference: 55,
-          output_orientation: 60,
-          craftsmanship_drive: 60,
-          emotional_stability: 65,
-        },
-      },
-      {
-        text: "Fast and efficient, driven by deadlines",
-        emoji: "⚡",
-        traitScores: {
-          pace_preference: 25,
-          output_orientation: 85,
-          structure_preference: 70,
-          influence_drive: 65,
-        },
-      },
-      {
-        text: "Bursts of intense focus then rest",
-        emoji: "🌊",
-        traitScores: {
-          pace_preference: 50,
-          improvisation_comfort: 70,
-          present_moment_focus: 65,
-          emotional_expressiveness: 60,
-        },
-      },
+      { text: "Rarely - I prefer practical, useful knowledge", emoji: "🔧" },
+      { text: "Sometimes - if it's relevant to my life", emoji: "📖" },
+      { text: "Often - I love learning new ideas and perspectives", emoji: "🌟" },
+    ],
+  },
+  {
+    id: "q10",
+    question: "My approach to problems is:",
+    options: [
+      { text: "Use what has worked before - tried and true methods", emoji: "🛠️" },
+      { text: "Sometimes traditional, sometimes try something different", emoji: "🔄" },
+      { text: "I enjoy finding new ways to do things", emoji: "💡" },
+    ],
+  },
+  {
+    id: "q11",
+    question: "Beauty, meaning, and artistic expression:",
+    options: [
+      { text: "Are not central to how I live", emoji: "⚙️" },
+      { text: "Matter to me but aren't my main focus", emoji: "🎨" },
+      { text: "Deeply affect me - I seek beauty and meaning in life", emoji: "✨" },
     ],
   },
 
-  // Q10: Emotional Expression + Stability + Introspection
+  // Q12-14: CONSCIENTIOUSNESS
   {
-    id: "emotional_style",
-    question: "With my emotions, I:",
+    id: "q12",
+    question: "Given the choice, I naturally keep things:",
     options: [
-      {
-        text: "Express them openly and passionately",
-        emoji: "❤️",
-        traitScores: {
-          emotional_expressiveness: 90,
-          emotional_stability: 45,
-          social_energy: 70,
-          meaning_orientation: 70,
-        },
-      },
-      {
-        text: "Share with close people, process deeply inside",
-        emoji: "🤗",
-        traitScores: {
-          emotional_expressiveness: 60,
-          introspection_depth: 80,
-          group_size_preference: 30,
-          environmental_sensitivity: 70,
-        },
-      },
-      {
-        text: "Stay calm and composed, rarely show feelings",
-        emoji: "😌",
-        traitScores: {
-          emotional_expressiveness: 25,
-          emotional_stability: 85,
-          introspection_depth: 60,
-          conflict_navigation: 50,
-        },
-      },
-      {
-        text: "Feel deeply but keep private, reflective",
-        emoji: "🌙",
-        traitScores: {
-          emotional_expressiveness: 35,
-          introspection_depth: 90,
-          emotional_stability: 55,
-          meaning_orientation: 75,
-        },
-      },
+      { text: "Loose and flexible - I don't need much order", emoji: "🌊" },
+      { text: "Somewhat organized - manageable but not rigid", emoji: "📂" },
+      { text: "Very organized - I create systems and structure", emoji: "📋" },
+    ],
+  },
+  {
+    id: "q13",
+    question: "When I set a goal, I:",
+    options: [
+      { text: "Often don't follow through - I get distracted or lose interest", emoji: "🎈" },
+      { text: "Usually complete it, though sometimes I need reminders", emoji: "✓" },
+      { text: "Almost always see it through with consistent effort", emoji: "🎯" },
+    ],
+  },
+  {
+    id: "q14",
+    question: "How much do small details and quality matter to you?",
+    options: [
+      { text: "Not much - I focus on the big picture and move fast", emoji: "⚡" },
+      { text: "Moderately - I notice them but don't obsess", emoji: "👁️" },
+      { text: "Very much - I care deeply about precision and excellence", emoji: "💎" },
     ],
   },
 
-  // Q11: Influence + Collaboration + Conflict
+  // Q15-17: EXTRAVERSION
   {
-    id: "leadership_style",
-    question: "In groups, I naturally:",
+    id: "q15",
+    question: "Being around many people:",
     options: [
-      {
-        text: "Take charge and guide decisions",
-        emoji: "👑",
-        traitScores: {
-          influence_drive: 90,
-          conflict_navigation: 70,
-          output_orientation: 80,
-          social_energy: 75,
-        },
-      },
-      {
-        text: "Contribute ideas and collaborate equally",
-        emoji: "🤝",
-        traitScores: {
-          influence_drive: 55,
-          collaborative_preference: 80,
-          conflict_navigation: 50,
-          social_energy: 65,
-        },
-      },
-      {
-        text: "Support others and work behind the scenes",
-        emoji: "🎭",
-        traitScores: {
-          influence_drive: 30,
-          collaborative_preference: 75,
-          conflict_navigation: 35,
-          introspection_depth: 65,
-        },
-      },
-      {
-        text: "Prefer to work independently",
-        emoji: "🦅",
-        traitScores: {
-          influence_drive: 50,
-          collaborative_preference: 25,
-          social_energy: 30,
-          introspection_depth: 75,
-        },
-      },
+      { text: "Tires me - I prefer quiet or small groups", emoji: "🏠" },
+      { text: "Is fine in moderation", emoji: "⚖️" },
+      { text: "Energizes me - I enjoy social activity", emoji: "🎉" },
+    ],
+  },
+  {
+    id: "q16",
+    question: "In group settings, I tend to:",
+    options: [
+      { text: "Observe more, speak when I have something important to say", emoji: "👂" },
+      { text: "Participate equally with others", emoji: "🤝" },
+      { text: "Naturally speak up, suggest ideas, or guide discussion", emoji: "💬" },
+    ],
+  },
+  {
+    id: "q17",
+    question: "I'm drawn to:",
+    options: [
+      { text: "Calm, predictable experiences - I avoid intense stimulation", emoji: "🕊️" },
+      { text: "A balanced mix of calm and excitement", emoji: "⚖️" },
+      { text: "Adventure, novelty, and high-energy experiences", emoji: "🚀" },
     ],
   },
 
-  // Q12: Optimism + Stability + Emotional
+  // Q18-20: AGREEABLENESS
   {
-    id: "outlook_style",
-    question: "My general outlook on life:",
+    id: "q18",
+    question: "When someone shares a struggle, I naturally:",
     options: [
-      {
-        text: "Optimistic and hopeful about the future",
-        emoji: "☀️",
-        traitScores: {
-          optimism_baseline: 90,
-          emotional_stability: 70,
-          novelty_seeking: 70,
-          social_energy: 70,
-        },
-      },
-      {
-        text: "Realistic but open to possibilities",
-        emoji: "⚖️",
-        traitScores: {
-          optimism_baseline: 55,
-          emotional_stability: 70,
-          abstract_thinking: 65,
-          introspection_depth: 65,
-        },
-      },
-      {
-        text: "Cautious and prepared for challenges",
-        emoji: "🛡️",
-        traitScores: {
-          optimism_baseline: 35,
-          stability_seeking: 80,
-          detail_orientation: 70,
-          structure_preference: 75,
-        },
-      },
-      {
-        text: "Accepting of life's impermanence and flow",
-        emoji: "🌊",
-        traitScores: {
-          optimism_baseline: 55,
-          emotional_stability: 75,
-          meaning_orientation: 75,
-          present_moment_focus: 80,
-        },
-      },
+      { text: "Focus on solutions - how to fix or improve the situation", emoji: "🔧" },
+      { text: "Listen and offer both understanding and practical help", emoji: "🤝" },
+      { text: "Focus on emotional support - feeling with them", emoji: "❤️" },
+    ],
+  },
+  {
+    id: "q19",
+    question: "When my needs differ from others', I tend to:",
+    options: [
+      { text: "Hold firm to what I think is right or best", emoji: "🛡️" },
+      { text: "Find middle ground that works for everyone", emoji: "⚖️" },
+      { text: "Adjust to maintain harmony and relationships", emoji: "🕊️" },
+    ],
+  },
+  {
+    id: "q20",
+    question: "My default assumption about people's intentions is:",
+    options: [
+      { text: "Skeptical - prove yourself first", emoji: "🔍" },
+      { text: "Cautiously optimistic", emoji: "🤔" },
+      { text: "Trusting - I assume good intentions", emoji: "🤗" },
     ],
   },
 
-  // Q13: Detail vs Big Picture + Pattern Recognition
+  // Q21-23: NEUROTICISM (Emotional Stability)
   {
-    id: "focus_style",
-    question: "When observing or analyzing:",
+    id: "q21",
+    question: "Under pressure or stress, I:",
     options: [
-      {
-        text: "I notice every small detail and nuance",
-        emoji: "🔍",
-        traitScores: {
-          detail_orientation: 90,
-          pattern_recognition: 70,
-          environmental_sensitivity: 70,
-          craftsmanship_drive: 75,
-        },
-      },
-      {
-        text: "I see the big picture and overall patterns",
-        emoji: "🗺️",
-        traitScores: {
-          detail_orientation: 35,
-          pattern_recognition: 85,
-          abstract_thinking: 80,
-          influence_drive: 65,
-        },
-      },
-      {
-        text: "I balance details with broader context",
-        emoji: "👁️",
-        traitScores: {
-          detail_orientation: 60,
-          pattern_recognition: 75,
-          abstract_thinking: 65,
-          introspection_depth: 70,
-        },
-      },
-      {
-        text: "I focus on what's useful and actionable",
-        emoji: "🎯",
-        traitScores: {
-          detail_orientation: 55,
-          output_orientation: 80,
-          abstract_thinking: 40,
-          structure_preference: 70,
-        },
-      },
+      { text: "Stay calm and grounded - stress doesn't shake me much", emoji: "🧘" },
+      { text: "Feel stress but manage it fairly well", emoji: "⚖️" },
+      { text: "Feel anxious or overwhelmed easily", emoji: "😰" },
+    ],
+  },
+  {
+    id: "q22",
+    question: "My emotions are:",
+    options: [
+      { text: "Steady and even-keeled - I don't have big swings", emoji: "📏" },
+      { text: "Fluctuate but stay manageable", emoji: "🌊" },
+      { text: "Intense and changeable - I feel things deeply", emoji: "🎭" },
+    ],
+  },
+  {
+    id: "q23",
+    question: "How much do you worry about others' opinions of you?",
+    options: [
+      { text: "Rarely - I'm confident in who I am", emoji: "💪" },
+      { text: "Sometimes - depends on the situation", emoji: "🤷" },
+      { text: "Often - I'm very aware of how I'm perceived", emoji: "👀" },
     ],
   },
 
-  // Q14: Present Moment vs Future/Past
+  // ==========================================
+  // SECTION 3: ENNEAGRAM DISCOVERY (Q24-35)
+  // ==========================================
+
+  // Q24-32: Core Type (1 question per type)
   {
-    id: "time_orientation",
-    question: "My attention tends to be on:",
+    id: "q24",
+    question: "Having strong internal standards and noticing what's wrong:",
     options: [
-      {
-        text: "Right here, right now - fully present",
-        emoji: "🧘",
-        traitScores: {
-          present_moment_focus: 90,
-          introspection_depth: 75,
-          sensory_appreciation: 75,
-          pace_preference: 70,
-        },
-      },
-      {
-        text: "The future - planning and possibilities",
-        emoji: "🔮",
-        traitScores: {
-          present_moment_focus: 30,
-          novelty_seeking: 80,
-          abstract_thinking: 75,
-          optimism_baseline: 70,
-        },
-      },
-      {
-        text: "The past - memories and lessons learned",
-        emoji: "📖",
-        traitScores: {
-          present_moment_focus: 35,
-          tradition_orientation: 75,
-          introspection_depth: 80,
-          meaning_orientation: 70,
-        },
-      },
-      {
-        text: "All of it - past, present, and future interweave",
-        emoji: "♾️",
-        traitScores: {
-          present_moment_focus: 55,
-          abstract_thinking: 80,
-          meaning_orientation: 80,
-          pattern_recognition: 80,
-        },
-      },
+      { text: "Not really - I'm flexible about how things are done", emoji: "🌊" },
+      { text: "Somewhat - I care about quality but not perfection", emoji: "✓" },
+      { text: "Very much - I have clear ideas of how things should be", emoji: "📐" },
+    ],
+  },
+  {
+    id: "q25",
+    question: "How much does helping others and being appreciated for it matter?",
+    options: [
+      { text: "It's nice but not central to my identity", emoji: "🤷" },
+      { text: "I like helping when asked", emoji: "🤝" },
+      { text: "I deeply need to be helpful and valued by others", emoji: "❤️" },
+    ],
+  },
+  {
+    id: "q26",
+    question: "Success, accomplishment, and being effective:",
+    options: [
+      { text: "Not my main focus - other things matter more", emoji: "🌿" },
+      { text: "Important, but balanced with other priorities", emoji: "⚖️" },
+      { text: "Very important - I'm driven to achieve and do well", emoji: "🏆" },
+    ],
+  },
+  {
+    id: "q27",
+    question: "Being true to my inner self and expressing what makes me 'me':",
+    options: [
+      { text: "Not particularly important - I adapt to situations", emoji: "🔄" },
+      { text: "Matters to me but I balance it with belonging", emoji: "⚖️" },
+      { text: "Essential - I need to honor my authentic feelings and identity", emoji: "🦋" },
+    ],
+  },
+  {
+    id: "q28",
+    question: "I need time alone to think, observe, and understand:",
+    options: [
+      { text: "Not really - I prefer action and connection", emoji: "🏃" },
+      { text: "Sometimes - I enjoy learning", emoji: "📖" },
+      { text: "Yes - I need solitude to process and master knowledge", emoji: "🧠" },
+    ],
+  },
+  {
+    id: "q29",
+    question: "Loyalty, trust, and preparation for worst-case scenarios matter to me:",
+    options: [
+      { text: "Not particularly - I'm fairly relaxed", emoji: "😌" },
+      { text: "Moderately - I like being prepared", emoji: "🛡️" },
+      { text: "Very much - I need security and reliable people", emoji: "🏰" },
+    ],
+  },
+  {
+    id: "q30",
+    question: "I'm drawn to new possibilities, variety, and positive experiences:",
+    options: [
+      { text: "Not really - I value stability and what's familiar", emoji: "🏡" },
+      { text: "I enjoy some variety while maintaining stability", emoji: "⚖️" },
+      { text: "Very much - I seek new experiences and keep my options open", emoji: "🎈" },
+    ],
+  },
+  {
+    id: "q31",
+    question: "I need to be strong, autonomous, and protect what matters:",
+    options: [
+      { text: "Not particularly - I'm comfortable with softness and depending on others", emoji: "🤗" },
+      { text: "Somewhat - I value strength but can be vulnerable", emoji: "⚖️" },
+      { text: "Very much - I need to stay strong and in control", emoji: "💪" },
+    ],
+  },
+  {
+    id: "q32",
+    question: "Avoiding conflict and maintaining inner/outer peace is my priority:",
+    options: [
+      { text: "Not really - I don't mind conflict", emoji: "⚔️" },
+      { text: "Somewhat - I prefer harmony", emoji: "🕊️" },
+      { text: "Yes - I go out of my way to keep peace", emoji: "☮️" },
     ],
   },
 
-  // Q15: Meaning vs Pragmatic + Purpose
+  // Q33-35: Wing Identification
   {
-    id: "motivation_source",
-    question: "What drives me most:",
+    id: "q33",
+    question: "In how you relate to others, you tend to be:",
     options: [
-      {
-        text: "Deep meaning and purpose",
-        emoji: "🕊️",
-        traitScores: {
-          meaning_orientation: 95,
-          introspection_depth: 80,
-          abstract_thinking: 75,
-          tradition_orientation: 65,
-        },
-      },
-      {
-        text: "Practical results and tangible impact",
-        emoji: "🔨",
-        traitScores: {
-          meaning_orientation: 40,
-          output_orientation: 85,
-          craftsmanship_drive: 70,
-          detail_orientation: 70,
-        },
-      },
-      {
-        text: "Joy, pleasure, and enjoyment",
-        emoji: "🎉",
-        traitScores: {
-          meaning_orientation: 45,
-          optimism_baseline: 80,
-          present_moment_focus: 75,
-          sensory_appreciation: 75,
-        },
-      },
-      {
-        text: "Creating beauty and excellence",
-        emoji: "💎",
-        traitScores: {
-          meaning_orientation: 70,
-          craftsmanship_drive: 85,
-          sensory_appreciation: 85,
-          detail_orientation: 80,
-        },
-      },
+      { text: "More reserved, independent, or self-contained", emoji: "🧊" },
+      { text: "Present and engaged but not overwhelming", emoji: "⚖️" },
+      { text: "Warm, expressive, or actively supportive", emoji: "🔥" },
     ],
   },
-
-  // Q16: Sensory Environment Preference
   {
-    id: "environment_preference",
-    question: "I thrive in environments that are:",
+    id: "q34",
+    question: "I naturally gravitate toward:",
     options: [
-      {
-        text: "Stimulating - colors, sounds, activity, energy",
-        emoji: "🎪",
-        traitScores: {
-          environmental_sensitivity: 25,
-          sensory_appreciation: 80,
-          social_energy: 80,
-          novelty_seeking: 75,
-        },
-      },
-      {
-        text: "Calm - quiet, soft, minimal, peaceful",
-        emoji: "🤍",
-        traitScores: {
-          environmental_sensitivity: 85,
-          introspection_depth: 75,
-          pace_preference: 80,
-          emotional_stability: 75,
-        },
-      },
-      {
-        text: "Natural - organic, earthy, connected to nature",
-        emoji: "🌿",
-        traitScores: {
-          environmental_sensitivity: 65,
-          nature_connection: 90,
-          sensory_appreciation: 70,
-          meaning_orientation: 65,
-        },
-      },
-      {
-        text: "Refined - curated beauty, intentional design",
-        emoji: "🏛️",
-        traitScores: {
-          environmental_sensitivity: 60,
-          sensory_appreciation: 90,
-          craftsmanship_drive: 75,
-          detail_orientation: 75,
-        },
-      },
+      { text: "Order, rules, and doing things correctly", emoji: "📏" },
+      { text: "Balance between structure and flow", emoji: "⚖️" },
+      { text: "Going with the flow and keeping options open", emoji: "🌊" },
     ],
   },
-
-  // Q17: Stability vs Risk + Adventure
   {
-    id: "risk_comfort",
-    question: "When it comes to uncertainty:",
+    id: "q35",
+    question: "What fuels you most?",
     options: [
-      {
-        text: "I need security and predictability",
-        emoji: "🏰",
-        traitScores: {
-          stability_seeking: 90,
-          structure_preference: 80,
-          tradition_orientation: 70,
-          optimism_baseline: 45,
-        },
-      },
-      {
-        text: "I'm comfortable with some uncertainty",
-        emoji: "🎈",
-        traitScores: {
-          stability_seeking: 55,
-          improvisation_comfort: 65,
-          novelty_seeking: 60,
-          emotional_stability: 65,
-        },
-      },
-      {
-        text: "I embrace risk and adventure",
-        emoji: "🪂",
-        traitScores: {
-          stability_seeking: 25,
-          novelty_seeking: 90,
-          improvisation_comfort: 85,
-          optimism_baseline: 80,
-        },
-      },
-      {
-        text: "I accept impermanence as natural",
-        emoji: "🍂",
-        traitScores: {
-          stability_seeking: 45,
-          emotional_stability: 80,
-          meaning_orientation: 80,
-          present_moment_focus: 75,
-        },
-      },
-    ],
-  },
-
-  // Q18: Collaborative vs Independent
-  {
-    id: "work_preference",
-    question: "I do my best work:",
-    options: [
-      {
-        text: "Collaborating closely with others",
-        emoji: "👥",
-        traitScores: {
-          collaborative_preference: 90,
-          social_energy: 75,
-          conflict_navigation: 50,
-          emotional_expressiveness: 70,
-        },
-      },
-      {
-        text: "With occasional input from others",
-        emoji: "🤝",
-        traitScores: {
-          collaborative_preference: 60,
-          social_energy: 55,
-          influence_drive: 55,
-          introspection_depth: 60,
-        },
-      },
-      {
-        text: "Completely independently and alone",
-        emoji: "🧗",
-        traitScores: {
-          collaborative_preference: 20,
-          social_energy: 25,
-          introspection_depth: 80,
-          craftsmanship_drive: 75,
-        },
-      },
-      {
-        text: "In parallel - alone but with others nearby",
-        emoji: "☕",
-        traitScores: {
-          collaborative_preference: 45,
-          social_energy: 50,
-          environmental_sensitivity: 55,
-          present_moment_focus: 65,
-        },
-      },
+      { text: "Excellence, achievement, or mastery", emoji: "🏆" },
+      { text: "Connection, understanding, or harmony", emoji: "🤝" },
+      { text: "Freedom, experience, or intensity", emoji: "🚀" },
     ],
   },
 ];
