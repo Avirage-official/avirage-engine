@@ -44,6 +44,82 @@ export interface FrameworkScores {
   astrology: AstrologyData;
 }
 
+/* ============================
+   HELPERS
+============================ */
+
+/**
+ * For MBTI questions:
+ * - 0 means left letter
+ * - 1 means right letter
+ * - 2 means "both" (split vote)
+ * - undefined also treated as split vote (so no default bias)
+ */
+function voteSplit(answer: number | undefined): { left: number; right: number } {
+  if (answer === 0) return { left: 1, right: 0 };
+  if (answer === 1) return { left: 0, right: 1 };
+  // answer === 2 OR undefined
+  return { left: 0.5, right: 0.5 };
+}
+
+function pickDichotomy(
+  answers: QuizAnswers,
+  qA: string,
+  qB: string,
+  left: string,
+  right: string
+): "I" | "E" | "S" | "N" | "T" | "F" | "J" | "P" {
+  const a = voteSplit(answers[qA]);
+  const b = voteSplit(answers[qB]);
+
+  const leftScore = a.left + b.left;
+  const rightScore = a.right + b.right;
+
+  // If perfectly tied, pick deterministically based on answers (no "always-left" bias)
+  if (leftScore === rightScore) {
+    const tiePick = deterministicTiePick(answers, `${qA}|${qB}|${left}|${right}`);
+    return (tiePick === 0 ? left : right) as any;
+  }
+
+  return (leftScore > rightScore ? left : right) as any;
+}
+
+/**
+ * Deterministic 0/1 pick from answers + salt
+ * (stable per exact answer set; not random, not biased toward lower IDs)
+ */
+function deterministicTiePick(answers: QuizAnswers, salt: string): 0 | 1 {
+  const keys = Object.keys(answers).sort();
+  let str = salt;
+  for (const k of keys) str += `|${k}:${answers[k]}`;
+
+  // Simple hash
+  let hash = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    hash ^= str.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash & 1) as 0 | 1;
+}
+
+/**
+ * For Enneagram core-type tie breaks:
+ * choose deterministically from tied types using the same stable hash approach.
+ */
+function breakCoreTypeTie(tiedTypes: number[], answers: QuizAnswers): number {
+  if (tiedTypes.length === 1) return tiedTypes[0];
+
+  // deterministic index
+  const pickBit = deterministicTiePick(answers, `ennea-core-${tiedTypes.join(",")}`);
+  // Use pickBit to select from two halves so it distributes across ties
+  const idx = pickBit === 0 ? 0 : tiedTypes.length - 1;
+  return tiedTypes[idx];
+}
+
+/* ============================
+   BIG 5
+============================ */
+
 /**
  * Calculate Big 5 scores from questions 9-23 (15 questions, 3 per trait)
  */
@@ -80,7 +156,7 @@ function calculateBig5(answers: QuizAnswers): Big5Scores {
   ];
   const agreeableness = Math.round(aScores.reduce((a, b) => a + b, 0) / aScores.length);
 
-  // Q21-23: Neuroticism (Emotional Stability reversed)
+  // Q21-23: Neuroticism
   const nScores = [
     answers["q21"] !== undefined ? [20, 50, 80][answers["q21"]] : 50,
     answers["q22"] !== undefined ? [20, 50, 80][answers["q22"]] : 50,
@@ -97,37 +173,22 @@ function calculateBig5(answers: QuizAnswers): Big5Scores {
   };
 }
 
+/* ============================
+   MBTI
+============================ */
+
 /**
  * Calculate MBTI type from questions 1-8 (8 questions, 2 per dichotomy)
+ *
+ * Key improvement:
+ * Option 2 ("both/depends") is now treated as 0.5 vote each side,
+ * preventing the old "defaults-to-left" bias.
  */
 function calculateMBTI(answers: QuizAnswers): MBTIType {
-  // Q1-2: I/E (Introversion/Extraversion)
-  const ieVotes = [
-    answers["q1"] === 0 ? "I" : answers["q1"] === 1 ? "E" : null,
-    answers["q2"] === 0 ? "I" : answers["q2"] === 1 ? "E" : null,
-  ].filter(Boolean);
-  const IE = ieVotes.filter(v => v === "I").length >= ieVotes.filter(v => v === "E").length ? "I" : "E";
-
-  // Q3-4: S/N (Sensing/Intuition)
-  const snVotes = [
-    answers["q3"] === 0 ? "S" : answers["q3"] === 1 ? "N" : null,
-    answers["q4"] === 0 ? "S" : answers["q4"] === 1 ? "N" : null,
-  ].filter(Boolean);
-  const SN = snVotes.filter(v => v === "S").length >= snVotes.filter(v => v === "N").length ? "S" : "N";
-
-  // Q5-6: T/F (Thinking/Feeling)
-  const tfVotes = [
-    answers["q5"] === 0 ? "T" : answers["q5"] === 1 ? "F" : null,
-    answers["q6"] === 0 ? "T" : answers["q6"] === 1 ? "F" : null,
-  ].filter(Boolean);
-  const TF = tfVotes.filter(v => v === "T").length >= tfVotes.filter(v => v === "F").length ? "T" : "F";
-
-  // Q7-8: J/P (Judging/Perceiving)
-  const jpVotes = [
-    answers["q7"] === 0 ? "J" : answers["q7"] === 1 ? "P" : null,
-    answers["q8"] === 0 ? "J" : answers["q8"] === 1 ? "P" : null,
-  ].filter(Boolean);
-  const JP = jpVotes.filter(v => v === "J").length >= jpVotes.filter(v => v === "P").length ? "J" : "P";
+  const IE = pickDichotomy(answers, "q1", "q2", "I", "E");
+  const SN = pickDichotomy(answers, "q3", "q4", "S", "N");
+  const TF = pickDichotomy(answers, "q5", "q6", "T", "F");
+  const JP = pickDichotomy(answers, "q7", "q8", "J", "P");
 
   return {
     type: `${IE}${SN}${TF}${JP}`,
@@ -135,62 +196,48 @@ function calculateMBTI(answers: QuizAnswers): MBTIType {
   };
 }
 
+/* ============================
+   ENNEAGRAM
+============================ */
+
 /**
  * Calculate Enneagram type from questions 24-35 (12 questions)
  */
 function calculateEnneagram(answers: QuizAnswers): EnneagramType {
-  // Q24-32: Core type questions (9 questions, 1 per type)
   const typeScores: Record<number, number> = {
     1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0,
   };
 
-  // Score each type based on responses
-  // Option 0 = Not type, Option 1 = Mild, Option 2 = Strong
   const typeQuestions = [
-    { q: "q24", type: 1 }, // Type 1
-    { q: "q25", type: 2 }, // Type 2
-    { q: "q26", type: 3 }, // Type 3
-    { q: "q27", type: 4 }, // Type 4
-    { q: "q28", type: 5 }, // Type 5
-    { q: "q29", type: 6 }, // Type 6
-    { q: "q30", type: 7 }, // Type 7
-    { q: "q31", type: 8 }, // Type 8
-    { q: "q32", type: 9 }, // Type 9
+    { q: "q24", type: 1 },
+    { q: "q25", type: 2 },
+    { q: "q26", type: 3 },
+    { q: "q27", type: 4 },
+    { q: "q28", type: 5 },
+    { q: "q29", type: 6 },
+    { q: "q30", type: 7 },
+    { q: "q31", type: 8 },
+    { q: "q32", type: 9 },
   ];
 
   typeQuestions.forEach(({ q, type }) => {
     const answer = answers[q];
-    if (answer === 0) typeScores[type] += 0;      // Not this type
-    if (answer === 1) typeScores[type] += 1;      // Mild signal
-    if (answer === 2) typeScores[type] += 3;      // Strong signal
+    if (answer === 0) typeScores[type] += 0;
+    if (answer === 1) typeScores[type] += 1;
+    if (answer === 2) typeScores[type] += 3;
   });
 
-  // Find highest scoring type
-  const coreType = (Object.entries(typeScores)
-    .sort((a, b) => b[1] - a[1])[0][0] as unknown) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  // Find highest score
+  const entries = Object.entries(typeScores).map(([k, v]) => ({ type: Number(k), score: v }));
+  const maxScore = Math.max(...entries.map(e => e.score));
 
-  // Determine wing from Q33-35
-  // Simplified wing logic based on question patterns
-  const wingIndicators = {
-    toward_structured: 0,  // Wing toward 1, 3, 6
-    toward_flowing: 0,     // Wing toward 4, 7, 9
-    toward_social: 0,      // Wing toward 2, 3, 7
-    toward_withdrawn: 0,   // Wing toward 4, 5, 8
-  };
+  // ✅ Tie-safe selection (no "always type 1" bias)
+  const tied = entries.filter(e => e.score === maxScore).map(e => e.type).sort((a, b) => a - b);
+  const chosenCore = breakCoreTypeTie(tied, answers);
 
-  if (answers["q33"] === 0) wingIndicators.toward_withdrawn += 1;
-  if (answers["q33"] === 2) wingIndicators.toward_social += 1;
-  
-  if (answers["q34"] === 0) wingIndicators.toward_structured += 1;
-  if (answers["q34"] === 2) wingIndicators.toward_flowing += 1;
-  
-  if (answers["q35"] === 0) wingIndicators.toward_structured += 1;
-  if (answers["q35"] === 2) wingIndicators.toward_flowing += 1;
+  const coreType = chosenCore as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-  // Determine wing direction based on core type
-  let wingNum: number;
-  
-  // Simple wing logic: adjacent types
+  // Determine wing (adjacent types)
   const wingMap: Record<number, [number, number]> = {
     1: [9, 2],
     2: [1, 3],
@@ -202,13 +249,40 @@ function calculateEnneagram(answers: QuizAnswers): EnneagramType {
     8: [7, 9],
     9: [8, 1],
   };
-
   const [lowerWing, higherWing] = wingMap[coreType];
-  
-  // Pick wing based on indicators (simplified)
-  wingNum = wingIndicators.toward_structured > wingIndicators.toward_flowing
-    ? (coreType === 1 ? lowerWing : higherWing)
-    : lowerWing;
+
+  /**
+   * Your wing questions are broad (q33-35), so keep it simple but less biased:
+   * - q34 and q35 indicate "structured vs flowing"
+   * - if tied/neutral, pick deterministically.
+   */
+  let structured = 0;
+  let flowing = 0;
+
+  // q34: 0 structured, 1 balanced, 2 flowing
+  if (answers["q34"] === 0) structured += 1;
+  if (answers["q34"] === 2) flowing += 1;
+
+  // q35: 0 excellence/mastery (structured), 1 connection (neutral-ish), 2 freedom/intensity (flowing)
+  if (answers["q35"] === 0) structured += 1;
+  if (answers["q35"] === 2) flowing += 1;
+
+  let wingNum: number;
+  if (structured > flowing) {
+    // pick the wing that is "more structured" if possible, else default to higherWing
+    const structuredTypes = new Set([1, 3, 6]);
+    if (structuredTypes.has(lowerWing) && !structuredTypes.has(higherWing)) wingNum = lowerWing;
+    else if (structuredTypes.has(higherWing) && !structuredTypes.has(lowerWing)) wingNum = higherWing;
+    else wingNum = higherWing;
+  } else if (flowing > structured) {
+    const flowingTypes = new Set([4, 7, 9]);
+    if (flowingTypes.has(lowerWing) && !flowingTypes.has(higherWing)) wingNum = lowerWing;
+    else if (flowingTypes.has(higherWing) && !flowingTypes.has(lowerWing)) wingNum = higherWing;
+    else wingNum = lowerWing;
+  } else {
+    // tie: pick deterministically
+    wingNum = deterministicTiePick(answers, `ennea-wing-${coreType}`) === 0 ? lowerWing : higherWing;
+  }
 
   const wing = `${coreType}w${wingNum}`;
 
@@ -219,6 +293,10 @@ function calculateEnneagram(answers: QuizAnswers): EnneagramType {
   };
 }
 
+/* ============================
+   ASTROLOGY
+============================ */
+
 /**
  * Calculate astrology from birth date
  */
@@ -226,7 +304,6 @@ function calculateAstrology(birthDate: Date): AstrologyData {
   const month = birthDate.getMonth() + 1;
   const day = birthDate.getDate();
 
-  // Sun sign calculation
   let sunSign = "";
   if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) sunSign = "Aries";
   else if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) sunSign = "Taurus";
@@ -241,7 +318,6 @@ function calculateAstrology(birthDate: Date): AstrologyData {
   else if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) sunSign = "Aquarius";
   else sunSign = "Pisces";
 
-  // Element mapping
   const elementMap: Record<string, string> = {
     Aries: "Fire", Leo: "Fire", Sagittarius: "Fire",
     Taurus: "Earth", Virgo: "Earth", Capricorn: "Earth",
@@ -249,7 +325,6 @@ function calculateAstrology(birthDate: Date): AstrologyData {
     Cancer: "Water", Scorpio: "Water", Pisces: "Water",
   };
 
-  // Modality mapping
   const modalityMap: Record<string, string> = {
     Aries: "Cardinal", Cancer: "Cardinal", Libra: "Cardinal", Capricorn: "Cardinal",
     Taurus: "Fixed", Leo: "Fixed", Scorpio: "Fixed", Aquarius: "Fixed",
@@ -262,6 +337,10 @@ function calculateAstrology(birthDate: Date): AstrologyData {
     modality: modalityMap[sunSign],
   };
 }
+
+/* ============================
+   MAIN
+============================ */
 
 /**
  * MAIN FUNCTION: Calculate all framework scores
