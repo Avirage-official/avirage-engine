@@ -62,27 +62,27 @@ function voteSplit(answer: number | undefined): { left: number; right: number } 
   return { left: 0.5, right: 0.5 };
 }
 
-function pickDichotomy(
+function pickDichotomy<L extends string, R extends string>(
   answers: QuizAnswers,
   qA: string,
   qB: string,
-  left: string,
-  right: string
-): "I" | "E" | "S" | "N" | "T" | "F" | "J" | "P" {
+  left: L,
+  right: R
+): L | R {
   const a = voteSplit(answers[qA]);
   const b = voteSplit(answers[qB]);
 
   const leftScore = a.left + b.left;
   const rightScore = a.right + b.right;
 
-  // If perfectly tied, pick deterministically based on answers (no "always-left" bias)
   if (leftScore === rightScore) {
     const tiePick = deterministicTiePick(answers, `${qA}|${qB}|${left}|${right}`);
-    return (tiePick === 0 ? left : right) as any;
+    return tiePick === 0 ? left : right;
   }
 
-  return (leftScore > rightScore ? left : right) as any;
+  return leftScore > rightScore ? left : right;
 }
+
 
 /**
  * Deterministic 0/1 pick from answers + salt
