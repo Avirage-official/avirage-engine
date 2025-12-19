@@ -1,42 +1,33 @@
 "use client";
 
-import type React from "react";
-import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { QUIZ_QUESTIONS } from "@/lib/quizQuestions";
 
 /* ============================
-   THEME (Premium / Trust)
+   THEME
 ============================ */
 
 const THEME = {
   bg: {
-    info: "linear-gradient(180deg, #070A0E 0%, #0B1118 60%, #0A0F14 100%)",
-    quiz: "linear-gradient(180deg, #070A0E 0%, #0C121B 55%, #0A0F14 100%)",
-    loading: "linear-gradient(180deg, #070A0E 0%, #0B121A 60%, #0A0F14 100%)",
-    result: "linear-gradient(180deg, #070A0E 0%, #0B1118 60%, #0A0F14 100%)",
+    info: "linear-gradient(180deg, #0b0f14 0%, #121820 100%)",
+    quiz: "linear-gradient(180deg, #0e141b 0%, #161d27 100%)",
+    loading: "linear-gradient(180deg, #0c1117 0%, #141b24 100%)",
+    result: "linear-gradient(180deg, #0a0f14 0%, #121922 100%)",
   },
   panel: "rgba(255,255,255,0.04)",
   panelStrong: "rgba(255,255,255,0.06)",
-  border: "rgba(255,255,255,0.12)",
+  border: "rgba(255,255,255,0.14)",
   softBorder: "rgba(255,255,255,0.08)",
-  textPrimary: "#E9EDF3",
-  textSecondary: "rgba(233, 237, 243, 0.64)",
-  textMuted: "rgba(233, 237, 243, 0.48)",
-  accent: "#C9A96A",
-  accentSoft: "rgba(201,169,106,0.16)",
-  danger: "#FF6B6B",
+  textPrimary: "#e6e9ee",
+  textSecondary: "#9aa3ad",
+  textMuted: "rgba(154,163,173,0.75)",
+  accent: "#c9a96a",
+  danger: "#ff6b6b",
 };
 
-const DISPLAY_FONT = "var(--font-cinzel), ui-serif, Georgia, serif";
-const BODY_FONT = "var(--font-geist-sans), system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
-
-const PANEL_STYLE: React.CSSProperties = {
-  background: THEME.panel,
-  borderRadius: 20,
-  border: `1px solid ${THEME.border}`,
-  backdropFilter: "blur(14px)",
-  boxShadow: "0 18px 60px rgba(0,0,0,0.45)",
-};
+const DISPLAY_FONT = "'Cinzel', serif";
+const BODY_FONT = "'Inter', system-ui, sans-serif";
 
 /* ============================
    TYPES
@@ -53,11 +44,11 @@ interface AnalysisResult {
 }
 
 /* ============================
-   CODE VISUALS (No accents required)
-   - Still supports accented inputs via normalization.
+   COLORS + EMBLEMS
 ============================ */
 
-const CODE_GRADIENTS: Record<string, string> = {
+// Keep whatever you already use here (no need to be perfect for every code)
+const CODE_COLORS: Record<string, string> = {
   Enzuka: "linear-gradient(135deg, #CD853F 0%, #8B0000 100%)",
   Siyuane: "linear-gradient(135deg, #00A86B 0%, #FFFFF0 100%)",
   Namsea: "linear-gradient(135deg, #4682B4 0%, #F5F5DC 100%)",
@@ -103,99 +94,29 @@ const CODE_EMBLEM_COUNTS: Record<string, number> = {
   Yatevar: 3,
 };
 
-// Helper: remove accents + normalize keys
-function normalizeKey(str: string): string {
+// Accent-safe string cleaning for paths / slugs
+function stripAccents(str: string): string {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-function getCodeGradient(codeName: string): string {
-  const raw = CODE_GRADIENTS[codeName];
-  if (raw) return raw;
-  const normalized = CODE_GRADIENTS[normalizeKey(codeName)];
-  if (normalized) return normalized;
-  return "linear-gradient(135deg, #2c3e50 0%, #34495e 100%)";
+// This controls the ROUTE: /codepages/<slug>
+// Example: "Shokunin" -> "shokunin"
+function toCodeSlug(codeName: string): string {
+  const base = stripAccents(codeName).toLowerCase().trim();
+  return base
+    .replace(/['"]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
-function clampEmblemPick(codeName: string, requested: number) {
-  const max = CODE_EMBLEM_COUNTS[codeName] ?? CODE_EMBLEM_COUNTS[normalizeKey(codeName)] ?? 2;
-  return Math.min(Math.max(1, requested), max);
-}
-
-/* ============================
-   COMPONENTS (small, local)
-============================ */
-
-function FieldLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{ fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", color: THEME.textMuted }}>
-      {children}
-    </div>
-  );
-}
-
-function SoftPill({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 8,
-        padding: "8px 12px",
-        borderRadius: 999,
-        border: `1px solid ${THEME.softBorder}`,
-        background: "rgba(255,255,255,0.03)",
-        color: THEME.textSecondary,
-        fontSize: 12,
-        lineHeight: 1,
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
-function PrimaryButton(props: React.ButtonHTMLAttributes<HTMLButtonElement> & { loading?: boolean }) {
-  const { loading, disabled, children, style, ...rest } = props;
-
-  return (
-    <button
-      {...rest}
-      disabled={disabled || loading}
-      style={{
-        width: "100%",
-        padding: "14px 16px",
-        borderRadius: 12,
-        border: `1px solid ${THEME.accent}`,
-        background: `linear-gradient(180deg, rgba(201,169,106,0.22) 0%, rgba(201,169,106,0.06) 100%)`,
-        color: THEME.textPrimary,
-        fontWeight: 700,
-        letterSpacing: "0.14em",
-        textTransform: "uppercase",
-        cursor: disabled || loading ? "not-allowed" : "pointer",
-        transition: "transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease",
-        boxShadow: "0 18px 40px rgba(201,169,106,0.10)",
-        ...style,
-      }}
-      onMouseEnter={(e) => {
-        if (!disabled && !loading) {
-          e.currentTarget.style.transform = "translateY(-1px)";
-          e.currentTarget.style.boxShadow = "0 22px 55px rgba(201,169,106,0.16)";
-          e.currentTarget.style.background = `linear-gradient(180deg, rgba(201,169,106,0.28) 0%, rgba(201,169,106,0.08) 100%)`;
-        }
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0px)";
-        e.currentTarget.style.boxShadow = "0 18px 40px rgba(201,169,106,0.10)";
-        e.currentTarget.style.background = `linear-gradient(180deg, rgba(201,169,106,0.22) 0%, rgba(201,169,106,0.06) 100%)`;
-      }}
-    >
-      {loading ? "Processing..." : children}
-    </button>
-  );
+function clampEmblemPick(codeName: string, pick: number): number {
+  const key = stripAccents(codeName);
+  const max = CODE_EMBLEM_COUNTS[key] ?? 2;
+  return Math.min(Math.max(1, pick), max);
 }
 
 /* ============================
-   MAIN
+   COMPONENT
 ============================ */
 
 export default function Home() {
@@ -231,8 +152,17 @@ export default function Home() {
     return "Your Results";
   }, [step]);
 
+  // (Optional) keep last result in session so you can restore later if needed
+  useEffect(() => {
+    try {
+      if (result) sessionStorage.setItem("avirage:lastResult", JSON.stringify(result));
+    } catch {
+      // ignore
+    }
+  }, [result]);
+
   /* ============================
-     HANDLERS (unchanged behavior)
+     HANDLERS
   ============================ */
 
   function startQuiz() {
@@ -286,12 +216,12 @@ export default function Home() {
         throw new Error(errorData.error || "Analysis failed");
       }
 
-      const data = await response.json();
+      const data: AnalysisResult = await response.json();
 
       setTimeout(() => {
         setResult(data);
 
-        // Same behavior: random emblem selection (still only 1 or 2), but safe-clamped per code
+        // Random emblem pick (1 or 2), clamped if a code has different count
         const p = clampEmblemPick(data.primary?.code_name || "Namsea", Math.floor(Math.random() * 2) + 1);
         const s = clampEmblemPick(data.secondary?.code_name || "Namsea", Math.floor(Math.random() * 2) + 1);
         const t = clampEmblemPick(data.tertiary?.code_name || "Namsea", Math.floor(Math.random() * 2) + 1);
@@ -344,7 +274,7 @@ export default function Home() {
         overflow: "hidden",
       }}
     >
-      {/* Background texture + grid */}
+      {/* Background texture */}
       <div
         aria-hidden
         style={{
@@ -366,664 +296,418 @@ export default function Home() {
           opacity: 0.25,
           pointerEvents: "none",
           maskImage: "radial-gradient(circle at 50% 30%, black 0%, transparent 60%)",
-          WebkitMaskImage: "radial-gradient(circle at 50% 30%, black 0%, transparent 60%)",
         }}
       />
 
-      <div
-        style={{
-          maxWidth: 920,
-          margin: "0 auto",
-          padding: "44px 20px 80px",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          gap: 18,
-          justifyContent: "center",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        {/* Top bar (brand + trust cues) */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 12,
-            padding: "10px 6px",
-            opacity: step === "result" ? 0.9 : 1,
-            flexWrap: "wrap",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <div style={{ maxWidth: 980, margin: "0 auto", padding: "64px 20px", position: "relative", zIndex: 1 }}>
+        {/* Top header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 16, marginBottom: 18 }}>
+          <div>
             <div
               style={{
-                width: 34,
-                height: 34,
-                borderRadius: 10,
-                border: `1px solid ${THEME.softBorder}`,
-                background: "rgba(255,255,255,0.03)",
-                display: "grid",
-                placeItems: "center",
-                boxShadow: "0 12px 30px rgba(0,0,0,0.35)",
+                fontFamily: DISPLAY_FONT,
+                letterSpacing: "0.28em",
+                textTransform: "uppercase",
+                fontSize: 18,
+                color: THEME.textPrimary,
               }}
             >
-              <span style={{ color: THEME.accent, fontWeight: 800, fontFamily: DISPLAY_FONT }}>A</span>
+              Avirage
             </div>
-            <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
-              <div style={{ fontFamily: DISPLAY_FONT, letterSpacing: "0.22em", textTransform: "uppercase", color: THEME.textPrimary }}>
-                Avirage
-              </div>
-              <div style={{ fontSize: 12, color: THEME.textMuted }}>Archetypal lens matching</div>
-            </div>
+            <div style={{ color: THEME.textMuted, fontSize: 12, marginTop: 6 }}>{stepTitle}</div>
           </div>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
-            <SoftPill>🔒 Private</SoftPill>
-            <SoftPill>⏱️ ~10 min</SoftPill>
-            <SoftPill>🧭 Not diagnosis</SoftPill>
+            <SoftPill>Private</SoftPill>
+            <SoftPill>Evidence-style</SoftPill>
+            <SoftPill>Explainable</SoftPill>
           </div>
         </div>
 
-        {/* Main card */}
-        <div style={{ ...PANEL_STYLE, padding: 26 }}>
-          {/* Header */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 16, marginBottom: 18, flexWrap: "wrap" }}>
-            <div>
-              <div
-                style={{
-                  fontSize: 12,
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase",
-                  color: THEME.textMuted,
-                  marginBottom: 6,
-                }}
-              >
-                {stepTitle}
+        {/* INFO STEP */}
+        {step === "info" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 16 }}>
+            <div style={{ ...glassCard, padding: 24 }}>
+              <div style={{ color: THEME.textPrimary, fontSize: 28, fontWeight: 950, marginBottom: 8, letterSpacing: "-0.02em" }}>
+                Enter the archive.
               </div>
-              <div
-                style={{
-                  fontFamily: DISPLAY_FONT,
-                  color: THEME.textPrimary,
-                  fontSize: 34,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {step === "result" ? "Archive Match" : "Avirage"}
-              </div>
-            </div>
-
-            {/* Quiz progress badge */}
-            {step === "quiz" && (
-              <div
-                style={{
-                  border: `1px solid ${THEME.softBorder}`,
-                  background: "rgba(255,255,255,0.03)",
-                  borderRadius: 16,
-                  padding: "10px 12px",
-                  minWidth: 160,
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", color: THEME.textSecondary, fontSize: 12 }}>
-                  <span>Progress</span>
-                  <span style={{ color: THEME.accent, fontWeight: 800 }}>{progress}%</span>
-                </div>
-                <div style={{ height: 6, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden", marginTop: 8 }}>
-                  <div style={{ height: "100%", width: `${progress}%`, background: THEME.accent, transition: "width 0.4s ease" }} />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* INFO STEP */}
-          {step === "info" && (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.1fr 0.9fr",
-                gap: 18,
-              }}
-            >
-              {/* Left: form */}
-              <div style={{ ...glassCard, padding: 20 }}>
-                <div style={{ color: THEME.textSecondary, fontSize: 14, lineHeight: 1.7, marginBottom: 18 }}>
-                  This is a <strong>lens</strong>, not a label: a structured match between your behavioral signals and a set of archetypal traditions.
-                  You’ll get <strong>primary / secondary / tertiary</strong> matches with a short explanation.
-                </div>
-
-                <div style={{ display: "grid", gap: 14 }}>
-                  <div style={{ display: "grid", gap: 8 }}>
-                    <FieldLabel>Full name</FieldLabel>
-                    <input
-                      placeholder="Your name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      style={inputStyle}
-                      autoComplete="name"
-                    />
-                  </div>
-
-                  <div style={{ display: "grid", gap: 8 }}>
-                    <FieldLabel>Gender</FieldLabel>
-                    <select
-                      value={gender}
-                      onChange={(e) => {
-                        setGender(e.target.value);
-                        if (e.target.value !== "other") setGenderOther("");
-                      }}
-                      style={inputStyle}
-                    >
-                      <option value="">Select</option>
-                      <option value="female">Female</option>
-                      <option value="male">Male</option>
-                      <option value="non-binary">Non-binary</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-
-                  {gender === "other" && (
-                    <div style={{ display: "grid", gap: 8 }}>
-                      <FieldLabel>Specify gender</FieldLabel>
-                      <input placeholder="Type here" value={genderOther} onChange={(e) => setGenderOther(e.target.value)} style={inputStyle} />
-                    </div>
-                  )}
-
-                  <div style={{ display: "grid", gap: 8 }}>
-                    <FieldLabel>Birth date</FieldLabel>
-                    <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} style={inputStyle} />
-                  </div>
-
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                    <div style={{ display: "grid", gap: 8 }}>
-                      <FieldLabel>City</FieldLabel>
-                      <input placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} style={inputStyle} autoComplete="address-level2" />
-                    </div>
-                    <div style={{ display: "grid", gap: 8 }}>
-                      <FieldLabel>Ethnicity</FieldLabel>
-                      <input placeholder="Ethnicity" value={ethnicity} onChange={(e) => setEthnicity(e.target.value)} style={inputStyle} />
-                    </div>
-                  </div>
-
-                  {error && (
-                    <div
-                      style={{
-                        color: THEME.danger,
-                        fontSize: 13,
-                        border: `1px solid rgba(255,107,107,0.28)`,
-                        background: "rgba(255,107,107,0.06)",
-                        padding: 10,
-                        borderRadius: 12,
-                      }}
-                      role="alert"
-                      aria-live="polite"
-                    >
-                      {error}
-                    </div>
-                  )}
-
-                  <PrimaryButton onClick={startQuiz}>Enter the Archive</PrimaryButton>
-
-                  <div style={{ color: THEME.textMuted, fontSize: 12, lineHeight: 1.6 }}>
-                    We store the minimum needed to generate your match. This experience is informational and not medical, legal, or employment advice.
-                  </div>
-                </div>
+              <div style={{ color: THEME.textSecondary, fontSize: 14, lineHeight: 1.7, marginBottom: 18 }}>
+                This is a structured lens match: frameworks → patterns → archetypal traditions. Not a label — a map.
               </div>
 
-              {/* Right: credibility / what you get */}
-              <div style={{ ...glassCard, padding: 20 }}>
-                <div style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: THEME.textMuted, marginBottom: 10 }}>
-                  What you’ll receive
-                </div>
+              <div style={{ display: "grid", gap: 12 }}>
+                <input placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
 
-                <div style={{ display: "grid", gap: 12 }}>
-                  <div style={bulletRow}>
-                    <span style={bulletIcon}>①</span>
-                    <div>
-                      <div style={bulletTitle}>Primary / Secondary / Tertiary Code</div>
-                      <div style={bulletDesc}>A ranked lens match (not a permanent label).</div>
-                    </div>
-                  </div>
-
-                  <div style={bulletRow}>
-                    <span style={bulletIcon}>②</span>
-                    <div>
-                      <div style={bulletTitle}>Why it matched</div>
-                      <div style={bulletDesc}>A short explanation tied to your pattern signals.</div>
-                    </div>
-                  </div>
-
-                  <div style={bulletRow}>
-                    <span style={bulletIcon}>③</span>
-                    <div>
-                      <div style={bulletTitle}>Defining traits</div>
-                      <div style={bulletDesc}>A clean, readable summary you can act on.</div>
-                    </div>
-                  </div>
-
-                  <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "8px 0" }} />
-
-                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                    <SoftPill>Evidence-style output</SoftPill>
-                    <SoftPill>Consistent scoring</SoftPill>
-                    <SoftPill>Easy to explain</SoftPill>
-                  </div>
-
-                  <div style={{ marginTop: 8, padding: 14, borderRadius: 16, border: `1px solid ${THEME.softBorder}`, background: THEME.panelStrong }}>
-                    <div style={{ color: THEME.textPrimary, fontWeight: 700, marginBottom: 6 }}>Built for teams (later)</div>
-                    <div style={{ color: THEME.textSecondary, fontSize: 13, lineHeight: 1.6 }}>
-                      This foundation can power team fit, role mapping, and customer resonance — using the same archetypal “code language.”
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Mobile: stack columns */}
-              <style jsx>{`
-                @media (max-width: 860px) {
-                  div[style*="grid-template-columns: 1.1fr 0.9fr"] {
-                    grid-template-columns: 1fr !important;
-                  }
-                }
-              `}</style>
-            </div>
-          )}
-
-          {/* QUIZ STEP */}
-          {step === "quiz" && !loading && (
-            <div style={{ ...glassCard, padding: 20 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, marginBottom: 14, flexWrap: "wrap" }}>
-                <div style={{ color: THEME.textSecondary, fontSize: 13 }}>
-                  Question <span style={{ color: THEME.textPrimary, fontWeight: 800 }}>{currentQuestionIndex + 1}</span> of{" "}
-                  <span style={{ color: THEME.textPrimary, fontWeight: 800 }}>{QUIZ_QUESTIONS.length}</span>
-                </div>
-
-                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                  <span style={{ color: THEME.textMuted, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>Lens calibration</span>
-                  <span style={{ color: THEME.accent, fontWeight: 900 }}>{progress}%</span>
-                </div>
-              </div>
-
-              {currentQuestionIndex === 9 && (
-                <div
-                  style={{
-                    textAlign: "center",
-                    padding: "12px 14px",
-                    background: THEME.accentSoft,
-                    borderRadius: 14,
-                    marginBottom: 16,
-                    border: `1px solid rgba(201,169,106,0.24)`,
-                    color: THEME.textPrimary,
-                    fontSize: 13,
+                <select
+                  value={gender}
+                  onChange={(e) => {
+                    setGender(e.target.value);
+                    if (e.target.value !== "other") setGenderOther("");
                   }}
+                  style={inputStyle}
                 >
-                  ✨ You’re building a consistent signal. Keep going.
-                </div>
-              )}
+                  <option value="">Select gender</option>
+                  <option value="female">Female</option>
+                  <option value="male">Male</option>
+                  <option value="non-binary">Non-binary</option>
+                  <option value="other">Other</option>
+                </select>
 
-              <h2 style={{ fontSize: 22, marginBottom: 16, lineHeight: 1.5, color: THEME.textPrimary, fontWeight: 800 }}>
-                {QUIZ_QUESTIONS[currentQuestionIndex].question}
-              </h2>
+                {gender === "other" && (
+                  <input placeholder="Specify gender" value={genderOther} onChange={(e) => setGenderOther(e.target.value)} style={inputStyle} />
+                )}
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {QUIZ_QUESTIONS[currentQuestionIndex].options.map((option, index) => {
-                  const isSelected = selectedOption === index;
-                  return (
-                    <button
-                      key={index}
-                      onClick={() => answerQuestion(index)}
-                      disabled={selectedOption !== null}
-                      style={{
-                        padding: "16px 16px",
-                        fontSize: 14,
-                        background: isSelected ? "rgba(201, 169, 106, 0.14)" : "rgba(255,255,255,0.02)",
-                        color: THEME.textPrimary,
-                        border: isSelected ? `1px solid rgba(201,169,106,0.55)` : `1px solid ${THEME.softBorder}`,
-                        borderRadius: 14,
-                        cursor: selectedOption !== null ? "not-allowed" : "pointer",
-                        textAlign: "left",
-                        transition: "transform 0.12s ease, border-color 0.2s ease, background 0.2s ease",
-                        fontWeight: 650,
-                        display: "flex",
-                        gap: 12,
-                        alignItems: "center",
-                        outline: "none",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (selectedOption === null) e.currentTarget.style.transform = "translateY(-1px)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = "translateY(0px)";
-                      }}
-                    >
-                      <span style={{ fontSize: 22, width: 28, textAlign: "center" }}>{option.emoji}</span>
-                      <span style={{ flex: 1 }}>{option.text}</span>
-                      <span
-                        style={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: 999,
-                          background: isSelected ? THEME.accent : "rgba(255,255,255,0.18)",
-                        }}
-                      />
-                    </button>
-                  );
-                })}
-              </div>
+                <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} style={inputStyle} />
+                <input placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} style={inputStyle} />
+                <input placeholder="Ethnicity" value={ethnicity} onChange={(e) => setEthnicity(e.target.value)} style={inputStyle} />
 
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, marginTop: 16, flexWrap: "wrap" }}>
-                <button
-                  onClick={previousQuestion}
-                  disabled={selectedOption !== null || currentQuestionIndex === 0}
-                  style={{
-                    padding: "12px 14px",
-                    borderRadius: 12,
-                    border: `1px solid ${THEME.softBorder}`,
-                    background: "rgba(255,255,255,0.02)",
-                    color: THEME.textSecondary,
-                    cursor: selectedOption !== null || currentQuestionIndex === 0 ? "not-allowed" : "pointer",
-                    fontWeight: 700,
-                  }}
-                >
-                  ← Back
+                {error && <div style={{ color: THEME.danger, fontSize: 13 }}>{error}</div>}
+
+                <button onClick={startQuiz} style={primaryBtn}>
+                  Enter the Archive
                 </button>
 
-                <div style={{ color: THEME.textMuted, fontSize: 12, display: "flex", alignItems: "center" }}>
-                  Tip: answer how you <em>usually</em> are, not the “ideal” version.
+                <div style={{ color: THEME.textMuted, fontSize: 12, display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <span>⏱️ ~10 minutes</span>
+                  <span>🔒 private</span>
+                  <span>📌 consistent scoring</span>
                 </div>
               </div>
-
-              {error && (
-                <div style={{ marginTop: 14, color: THEME.danger, fontSize: 13 }} role="alert" aria-live="polite">
-                  {error}
-                </div>
-              )}
             </div>
-          )}
 
-          {/* LOADING */}
-          {step === "loading" && (
+            {/* Right: credibility */}
+            <div style={{ ...glassCard, padding: 20 }}>
+              <div style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: THEME.textMuted, marginBottom: 10 }}>
+                What you’ll receive
+              </div>
+
+              <div style={{ display: "grid", gap: 12 }}>
+                <div style={bulletRow}>
+                  <span style={bulletIcon}>①</span>
+                  <div>
+                    <div style={bulletTitle}>Primary / Secondary / Tertiary Code</div>
+                    <div style={bulletDesc}>A ranked lens match (not a permanent identity).</div>
+                  </div>
+                </div>
+
+                <div style={bulletRow}>
+                  <span style={bulletIcon}>②</span>
+                  <div>
+                    <div style={bulletTitle}>Why it matched</div>
+                    <div style={bulletDesc}>A short explanation tied to detected patterns.</div>
+                  </div>
+                </div>
+
+                <div style={bulletRow}>
+                  <span style={bulletIcon}>③</span>
+                  <div>
+                    <div style={bulletTitle}>Defining traits</div>
+                    <div style={bulletDesc}>A readable summary you can act on (places, habits, activities later).</div>
+                  </div>
+                </div>
+
+                <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "8px 0" }} />
+
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <SoftPill>Clean UI</SoftPill>
+                  <SoftPill>Explainable output</SoftPill>
+                  <SoftPill>Built for teams later</SoftPill>
+                </div>
+
+                <div style={{ marginTop: 8, padding: 14, borderRadius: 16, border: `1px solid ${THEME.softBorder}`, background: THEME.panelStrong }}>
+                  <div style={{ color: THEME.textPrimary, fontWeight: 800, marginBottom: 6 }}>Trust note</div>
+                  <div style={{ color: THEME.textSecondary, fontSize: 13, lineHeight: 1.6 }}>
+                    This is a lens match using multiple frameworks combined. It’s designed to be consistent + interpretable, not mystical.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* QUIZ STEP */}
+        {step === "quiz" && !loading && (
+          <div style={{ ...glassCard, padding: 20 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, marginBottom: 14 }}>
+              <div style={{ color: THEME.textSecondary, fontSize: 13 }}>
+                Question <span style={{ color: THEME.textPrimary, fontWeight: 900 }}>{currentQuestionIndex + 1}</span> of{" "}
+                <span style={{ color: THEME.textPrimary, fontWeight: 900 }}>{QUIZ_QUESTIONS.length}</span>
+              </div>
+
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <span style={{ color: THEME.textMuted, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                  calibration
+                </span>
+                <span style={{ color: THEME.accent, fontWeight: 900 }}>{progress}%</span>
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div style={{ height: 6, background: "rgba(255,255,255,0.07)", borderRadius: 999, overflow: "hidden", marginBottom: 16 }}>
+              <div style={{ height: "100%", width: `${progress}%`, background: THEME.accent, transition: "width 0.45s ease" }} />
+            </div>
+
+            {/* Question */}
+            <div style={{ color: THEME.textPrimary, fontSize: 18, fontWeight: 800, lineHeight: 1.55, marginBottom: 14 }}>
+              {QUIZ_QUESTIONS[currentQuestionIndex].question}
+            </div>
+
+            {/* Options */}
+            <div style={{ display: "grid", gap: 10 }}>
+              {QUIZ_QUESTIONS[currentQuestionIndex].options.map((option, index) => {
+                const isSelected = selectedOption === index;
+
+                return (
+                  <button
+                    key={index}
+                    onClick={() => answerQuestion(index)}
+                    disabled={selectedOption !== null}
+                    style={{
+                      padding: "14px 14px",
+                      borderRadius: 14,
+                      textAlign: "left",
+                      cursor: selectedOption !== null ? "not-allowed" : "pointer",
+                      background: isSelected ? "rgba(201,169,106,0.10)" : "rgba(255,255,255,0.02)",
+                      border: isSelected ? `1px solid rgba(201,169,106,0.45)` : `1px solid ${THEME.softBorder}`,
+                      color: isSelected ? THEME.textPrimary : THEME.textSecondary,
+                      display: "flex",
+                      gap: 10,
+                      alignItems: "center",
+                      transition: "transform 0.12s ease, border-color 0.18s ease, background 0.18s ease",
+                      fontWeight: 650,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (selectedOption !== null) return;
+                      e.currentTarget.style.transform = "translateY(-1px)";
+                      e.currentTarget.style.borderColor = THEME.border;
+                    }}
+                    onMouseLeave={(e) => {
+                      if (selectedOption !== null) return;
+                      e.currentTarget.style.transform = "translateY(0px)";
+                      e.currentTarget.style.borderColor = THEME.softBorder;
+                    }}
+                  >
+                    <span style={{ width: 28, textAlign: "center", fontSize: 20 }}>{option.emoji}</span>
+                    <span style={{ flex: 1 }}>{option.text}</span>
+                    <span
+                      style={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: 999,
+                        background: isSelected ? THEME.accent : "rgba(255,255,255,0.18)",
+                      }}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, marginTop: 16 }}>
+              <button
+                onClick={previousQuestion}
+                disabled={selectedOption !== null || currentQuestionIndex === 0}
+                style={{
+                  padding: "12px 14px",
+                  borderRadius: 12,
+                  border: `1px solid ${THEME.softBorder}`,
+                  background: "rgba(255,255,255,0.02)",
+                  color: THEME.textSecondary,
+                  cursor: selectedOption !== null || currentQuestionIndex === 0 ? "not-allowed" : "pointer",
+                  fontWeight: 800,
+                }}
+              >
+                ← Back
+              </button>
+
+              <div style={{ color: THEME.textMuted, fontSize: 12, display: "flex", alignItems: "center" }}>
+                Tip: answer how you <span style={{ color: THEME.textSecondary, marginLeft: 4 }}>usually</span> are.
+              </div>
+            </div>
+
+            {error && <div style={{ marginTop: 14, color: THEME.danger, fontSize: 13 }}>{error}</div>}
+          </div>
+        )}
+
+        {/* LOADING */}
+        {step === "loading" && (
+          <div style={{ ...glassCard, padding: 26, textAlign: "center" }}>
+            <div style={{ fontSize: 54, marginBottom: 14, animation: "float 3s ease-in-out infinite" }}>✦</div>
             <div
               style={{
-                ...glassCard,
-                padding: 26,
-                textAlign: "center",
-                animation: "pulse 2s ease infinite",
+                fontFamily: DISPLAY_FONT,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: THEME.textPrimary,
+                fontSize: 20,
+                marginBottom: 10,
               }}
             >
-              <div style={{ fontSize: 54, marginBottom: 14, animation: "float 3s ease-in-out infinite" }}>✦</div>
-              <div
-                style={{
-                  fontFamily: DISPLAY_FONT,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: THEME.textPrimary,
-                  fontSize: 20,
-                  marginBottom: 10,
-                }}
-              >
-                Triangulating Your Lens
+              Triangulating Your Lens
+            </div>
+            <div style={{ color: THEME.textSecondary, fontSize: 13, lineHeight: 1.7 }}>
+              Mapping frameworks → patterns → archetypal traditions…
+              <br />
+              Producing a clean, explainable result.
+            </div>
+          </div>
+        )}
+
+        {/* RESULT */}
+        {step === "result" && result && (
+          <div style={{ display: "grid", gap: 16 }}>
+            {/* Header */}
+            <div style={{ ...glassCard, padding: 18, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14 }}>
+              <div>
+                <div style={{ color: THEME.textPrimary, fontWeight: 950, fontSize: 16 }}>{result.userName}</div>
+                <div style={{ color: THEME.textMuted, fontSize: 12 }}>
+                  {result.astrologyData.sunSign} • {result.astrologyData.element} • {result.astrologyData.modality}
+                </div>
               </div>
-              <div style={{ color: THEME.textSecondary, fontSize: 13, lineHeight: 1.7 }}>
-                Mapping frameworks → patterns → archetypal traditions…
-                <br />
-                Producing a clean, explainable result.
+
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                <SoftPill>Primary + 2 matches</SoftPill>
+                <SoftPill>Explainable</SoftPill>
               </div>
             </div>
-          )}
 
-          {/* RESULT */}
-          {step === "result" && result && (
-            <div style={{ display: "grid", gap: 16 }}>
-              {/* Header */}
-              <div style={{ ...glassCard, padding: 18, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+            {/* Primary card */}
+            <div
+              style={{
+                borderRadius: 22,
+                padding: 22,
+                border: `1px solid rgba(255,255,255,0.10)`,
+                boxShadow: "0 20px 70px rgba(0,0,0,0.45)",
+                background: CODE_COLORS[stripAccents(result.primary.code_name)] || "linear-gradient(135deg, #2c3e50 0%, #34495e 100%)",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "radial-gradient(circle at 30% 20%, rgba(255,255,255,0.10) 0%, transparent 55%)",
+                  pointerEvents: "none",
+                }}
+              />
+
+              <div style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: 18, position: "relative", zIndex: 1 }}>
+                {/* Emblem */}
+                <div style={{ display: "grid", placeItems: "center" }}>
+                  <img
+                    src={`/emblems/${stripAccents(result.primary.code_name)} ${selectedEmblems.primary}.jpg`}
+                    alt={`${result.primary.code_name} emblem`}
+                    style={{
+                      width: 160,
+                      height: 160,
+                      objectFit: "contain",
+                      filter: "drop-shadow(0 12px 34px rgba(0,0,0,0.45))",
+                      animation: "float 3s ease-in-out infinite",
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                </div>
+
                 <div>
-                  <div style={{ color: THEME.textPrimary, fontWeight: 900, fontSize: 16 }}>{result.userName}</div>
-                  <div style={{ color: THEME.textMuted, fontSize: 12 }}>
-                    {result.astrologyData.sunSign} • {result.astrologyData.element} • {result.astrologyData.modality}
+                  <div style={{ fontSize: 12, opacity: 0.92, letterSpacing: "0.22em", fontWeight: 900, color: "#fff" }}>
+                    YOUR PRIMARY CODE
                   </div>
-                </div>
-
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
-                  <SoftPill>Primary + 2 matches</SoftPill>
-                  <SoftPill>Explainable</SoftPill>
-                </div>
-              </div>
-
-              {/* Primary Code */}
-              <div
-                style={{
-                  padding: "34px 22px",
-                  background: getCodeGradient(result.primary.code_name),
-                  borderRadius: 22,
-                  textAlign: "left",
-                  boxShadow: "0 30px 90px rgba(0,0,0,0.55)",
-                  position: "relative",
-                  overflow: "hidden",
-                  animation: "scaleIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                  border: "1px solid rgba(255,255,255,0.14)",
-                }}
-              >
-                <div
-                  aria-hidden
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background:
-                      "radial-gradient(circle at 20% 10%, rgba(255,255,255,0.12) 0%, transparent 45%), radial-gradient(circle at 90% 70%, rgba(0,0,0,0.25) 0%, transparent 55%)",
-                    pointerEvents: "none",
-                  }}
-                />
-
-                <div style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "160px 1fr", gap: 18, alignItems: "center" }}>
-                  {/* Emblem */}
-                  <div style={{ display: "grid", placeItems: "center" }}>
-                    <div
-                      style={{
-                        width: 150,
-                        height: 150,
-                        borderRadius: 20,
-                        background: "rgba(255,255,255,0.10)",
-                        border: "1px solid rgba(255,255,255,0.16)",
-                        display: "grid",
-                        placeItems: "center",
-                        boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
-                        position: "relative",
-                      }}
-                    >
-                      <img
-                        src={`/emblems/${normalizeKey(result.primary.code_name)} ${selectedEmblems.primary}.jpg`}
-                        alt={`${result.primary.code_name} emblem`}
-                        style={{
-                          width: 120,
-                          height: 120,
-                          objectFit: "contain",
-                          filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.35))",
-                          animation: "float 3s ease-in-out infinite",
-                        }}
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                      <div
-                        style={{
-                          position: "absolute",
-                          opacity: 0.12,
-                          fontFamily: DISPLAY_FONT,
-                          letterSpacing: "0.18em",
-                          textTransform: "uppercase",
-                          color: "#fff",
-                          fontSize: 36,
-                          userSelect: "none",
-                        }}
-                      >
-                        {result.primary.code_name.slice(0, 1)}
-                      </div>
-                    </div>
+                  <div style={{ fontFamily: DISPLAY_FONT, fontSize: 44, fontWeight: 900, color: "#fff", marginTop: 8 }}>
+                    {result.primary.code_name}
+                  </div>
+                  <div style={{ fontSize: 14, color: "rgba(255,255,255,0.92)", fontWeight: 650, marginTop: 8 }}>
+                    {result.primary.full_name} • {result.primary.matchPercentage}% resonance
+                  </div>
+                  <div style={{ color: "rgba(255,255,255,0.88)", fontSize: 14, lineHeight: 1.75, marginTop: 12, maxWidth: 680 }}>
+                    {result.primary.description}
                   </div>
 
-                  {/* Copy */}
-                  <div>
-                    <div style={{ fontSize: 12, opacity: 0.9, letterSpacing: "0.22em", fontWeight: 800, color: "#fff", textTransform: "uppercase" }}>
-                      Your Primary Lens
-                    </div>
+                  {/* NEW: Buttons to read code pages */}
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
+                    <CodeLinkButton codeName={result.primary.code_name} label="Read Primary" />
+                    <CodeLinkButton codeName={result.secondary.code_name} label="Read Secondary" />
+                    <CodeLinkButton codeName={result.tertiary.code_name} label="Read Tertiary" />
+                  </div>
 
-                    <div
-                      style={{
-                        fontFamily: DISPLAY_FONT,
-                        fontSize: 40,
-                        margin: "10px 0 6px",
-                        fontWeight: 900,
-                        letterSpacing: "0.05em",
-                        color: "#fff",
-                        lineHeight: 1.1,
-                      }}
-                    >
-                      {result.primary.code_name}
-                    </div>
-
-                    <div style={{ fontSize: 14, opacity: 0.95, fontWeight: 700, color: "#fff" }}>
-                      {result.primary.full_name} • {result.primary.matchPercentage}% resonance
-                    </div>
-
-                    <div style={{ height: 10 }} />
-
-                    <div style={{ fontSize: 14, lineHeight: 1.75, opacity: 0.92, maxWidth: 560, color: "#fff" }}>{result.primary.description}</div>
+                  <div style={{ color: "rgba(255,255,255,0.70)", fontSize: 12, marginTop: 10 }}>
+                    These open your code pages at <span style={{ opacity: 0.9 }}>/codepages/&lt;slug&gt;</span>.
                   </div>
                 </div>
-
-                <style jsx>{`
-                  @media (max-width: 700px) {
-                    div[style*="grid-template-columns: 160px 1fr"] {
-                      grid-template-columns: 1fr !important;
-                    }
-                  }
-                `}</style>
               </div>
-
-              {/* Secondary & Tertiary */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                <MiniCodeCard
-                  label="Secondary"
-                  codeName={result.secondary.code_name}
-                  fullName={result.secondary.full_name}
-                  match={result.secondary.matchPercentage}
-                  emblemPick={selectedEmblems.secondary}
-                />
-                <MiniCodeCard
-                  label="Tertiary"
-                  codeName={result.tertiary.code_name}
-                  fullName={result.tertiary.full_name}
-                  match={result.tertiary.matchPercentage}
-                  emblemPick={selectedEmblems.tertiary}
-                />
-              </div>
-
-              {/* Explanation */}
-              <div style={{ ...glassCard, padding: 20 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
-                  <div style={{ color: THEME.textPrimary, fontWeight: 900, fontSize: 16 }}>Why you resonate</div>
-                  <div style={{ color: THEME.textMuted, fontSize: 12 }}>Explainable output</div>
-                </div>
-                <div style={{ lineHeight: 1.8, color: THEME.textSecondary, fontSize: 14 }}>{result.explanation}</div>
-              </div>
-
-              {/* Key Traits */}
-              <div style={{ ...glassCard, padding: 20 }}>
-                <div style={{ color: THEME.textPrimary, fontWeight: 900, fontSize: 16, marginBottom: 12 }}>Defining traits</div>
-                <div style={{ display: "grid", gap: 10 }}>
-                  {result.keyTraits.map((trait, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: 14,
-                        background: "rgba(255,255,255,0.02)",
-                        borderRadius: 14,
-                        border: `1px solid ${THEME.softBorder}`,
-                        gap: 12,
-                      }}
-                    >
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontWeight: 800, marginBottom: 3, color: THEME.textPrimary, fontSize: 14 }}>{trait.trait}</div>
-                        <div style={{ fontSize: 12, color: THEME.textSecondary, lineHeight: 1.4 }}>{trait.description}</div>
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 22,
-                          fontWeight: 950,
-                          color: trait.score >= 55 ? THEME.accent : "rgba(120,170,255,0.85)",
-                          minWidth: 52,
-                          textAlign: "right",
-                          flex: "0 0 auto",
-                        }}
-                      >
-                        {trait.score}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Restart */}
-              <div style={{ display: "grid", gap: 10 }}>
-                <PrimaryButton onClick={restart}>Discover Another Code</PrimaryButton>
-                <div style={{ color: THEME.textMuted, fontSize: 12, textAlign: "center", lineHeight: 1.6 }}>
-                  Your result is a lens match (a stable “lean”), not a daily mood. You can still explore — this just gives you a clearer starting point.
-                </div>
-              </div>
-
-              <style jsx>{`
-                @media (max-width: 860px) {
-                  div[style*="grid-template-columns: 1fr 1fr"] {
-                    grid-template-columns: 1fr !important;
-                  }
-                }
-              `}</style>
             </div>
-          )}
-        </div>
 
-        {/* Bottom small note */}
-        <div style={{ textAlign: "center", color: THEME.textMuted, fontSize: 12 }}>
-          © {new Date().getFullYear()} Avirage • Built to be explainable, not mystical.
-        </div>
+            {/* Secondary + Tertiary */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <MiniCodeCard
+                title="Secondary"
+                codeName={result.secondary.code_name}
+                fullName={result.secondary.full_name}
+                match={result.secondary.matchPercentage}
+                emblemPick={selectedEmblems.secondary}
+              />
+              <MiniCodeCard
+                title="Tertiary"
+                codeName={result.tertiary.code_name}
+                fullName={result.tertiary.full_name}
+                match={result.tertiary.matchPercentage}
+                emblemPick={selectedEmblems.tertiary}
+              />
+            </div>
+
+            {/* Explanation */}
+            <div style={{ ...glassCard, padding: 18 }}>
+              <div style={{ color: THEME.textPrimary, fontWeight: 950, marginBottom: 8 }}>Why you matched</div>
+              <div style={{ color: THEME.textSecondary, fontSize: 14, lineHeight: 1.8 }}>{result.explanation}</div>
+            </div>
+
+            {/* Traits */}
+            <div style={{ ...glassCard, padding: 18 }}>
+              <div style={{ color: THEME.textPrimary, fontWeight: 950, marginBottom: 10 }}>Defining traits</div>
+              <div style={{ display: "grid", gap: 10 }}>
+                {result.keyTraits.map((t, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: 14,
+                      padding: 14,
+                      borderRadius: 16,
+                      border: `1px solid ${THEME.softBorder}`,
+                      background: "rgba(255,255,255,0.02)",
+                    }}
+                  >
+                    <div>
+                      <div style={{ color: THEME.textPrimary, fontWeight: 850 }}>{t.trait}</div>
+                      <div style={{ color: THEME.textSecondary, fontSize: 13, marginTop: 4 }}>{t.description}</div>
+                    </div>
+                    <div style={{ textAlign: "right", minWidth: 78 }}>
+                      <div style={{ fontSize: 12, color: THEME.textMuted }}>Score</div>
+                      <div style={{ fontSize: 18, fontWeight: 950, color: t.score >= 50 ? THEME.accent : "#6b95c9" }}>{t.score}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Restart */}
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button onClick={restart} style={secondaryBtn}>
+                Discover another code
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Animations + focus styling */}
-      <style jsx>{`
-        @keyframes scaleIn {
-          from {
-            opacity: 0;
-            transform: scale(0.97);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @keyframes pulse {
-          0%,
-          100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.82;
-          }
-        }
-
+      {/* NOTE: plain <style> (NOT styled-jsx) to avoid nested styled-jsx build errors */}
+      <style>{`
         @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-12px); }
         }
       `}</style>
     </main>
@@ -1031,46 +715,83 @@ export default function Home() {
 }
 
 /* ============================
-   MINI CARD
+   SUBCOMPONENTS
 ============================ */
 
-function MiniCodeCard(props: { label: string; codeName: string; fullName: string; match: number; emblemPick: number }) {
-  const { label, codeName, fullName, match, emblemPick } = props;
-
+function SoftPill({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ ...glassCard, padding: 16, display: "flex", gap: 12, alignItems: "center" }}>
-      <div
-        style={{
-          width: 56,
-          height: 56,
-          borderRadius: 16,
-          border: `1px solid ${THEME.softBorder}`,
-          background: "rgba(255,255,255,0.03)",
-          display: "grid",
-          placeItems: "center",
-          overflow: "hidden",
-          flex: "0 0 auto",
+    <span
+      style={{
+        padding: "8px 10px",
+        borderRadius: 999,
+        border: `1px solid rgba(255,255,255,0.10)`,
+        background: "rgba(255,255,255,0.03)",
+        color: "rgba(230,233,238,0.80)",
+        fontSize: 12,
+        fontWeight: 700,
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function CodeLinkButton({ codeName, label }: { codeName: string; label: string }) {
+  const slug = toCodeSlug(codeName);
+  return (
+    <Link
+      href={`/codepages/${slug}`}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 8,
+        padding: "10px 12px",
+        borderRadius: 14,
+        border: "1px solid rgba(255,255,255,0.20)",
+        background: "rgba(0,0,0,0.18)",
+        color: "#fff",
+        textDecoration: "none",
+        fontWeight: 850,
+        fontSize: 13,
+      }}
+    >
+      {label}
+      <span style={{ opacity: 0.9 }}>→</span>
+    </Link>
+  );
+}
+
+function MiniCodeCard({
+  title,
+  codeName,
+  fullName,
+  match,
+  emblemPick,
+}: {
+  title: string;
+  codeName: string;
+  fullName: string;
+  match: number;
+  emblemPick: number;
+}) {
+  return (
+    <div style={{ ...glassCard, padding: 16, display: "grid", gridTemplateColumns: "66px 1fr", gap: 12, alignItems: "center" }}>
+      <img
+        src={`/emblems/${stripAccents(codeName)} ${emblemPick}.jpg`}
+        alt={`${codeName} emblem`}
+        style={{ width: 56, height: 56, objectFit: "contain", filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.35))" }}
+        onError={(e) => {
+          e.currentTarget.style.display = "none";
         }}
-      >
-        <img
-          src={`/emblems/${normalizeKey(codeName)} ${emblemPick}.jpg`}
-          alt={`${codeName} emblem`}
-          style={{ width: 44, height: 44, objectFit: "contain", filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.2))" }}
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
-        />
-      </div>
+      />
 
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 11, color: THEME.textMuted, letterSpacing: "0.14em", fontWeight: 800, textTransform: "uppercase" }}>{label}</div>
-        <div style={{ fontSize: 18, fontWeight: 950, color: THEME.textPrimary }}>{codeName}</div>
-        <div style={{ fontSize: 12, color: THEME.textSecondary, lineHeight: 1.4 }}>{fullName}</div>
-      </div>
-
-      <div style={{ textAlign: "right", minWidth: 78 }}>
-        <div style={{ fontSize: 12, color: THEME.textMuted }}>Match</div>
-        <div style={{ fontSize: 18, fontWeight: 950, color: THEME.accent }}>{match}%</div>
+      <div>
+        <div style={{ fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: THEME.textMuted, fontWeight: 900 }}>
+          {title}
+        </div>
+        <div style={{ color: THEME.textPrimary, fontWeight: 950, fontSize: 18, marginTop: 4 }}>{codeName}</div>
+        <div style={{ color: THEME.textSecondary, fontSize: 13, marginTop: 4, lineHeight: 1.5 }}>{fullName}</div>
+        <div style={{ color: THEME.accent, fontWeight: 950, marginTop: 8, fontSize: 13 }}>{match}% match</div>
       </div>
     </div>
   );
@@ -1098,6 +819,31 @@ const inputStyle: React.CSSProperties = {
   outline: "none",
 };
 
+const primaryBtn: React.CSSProperties = {
+  marginTop: 6,
+  padding: "14px 14px",
+  borderRadius: 14,
+  border: `1px solid rgba(201,169,106,0.45)`,
+  background: "rgba(201,169,106,0.10)",
+  color: THEME.textPrimary,
+  fontWeight: 900,
+  letterSpacing: "0.10em",
+  textTransform: "uppercase",
+  cursor: "pointer",
+};
+
+const secondaryBtn: React.CSSProperties = {
+  padding: "12px 16px",
+  borderRadius: 14,
+  border: `1px solid rgba(201,169,106,0.35)`,
+  background: "transparent",
+  color: THEME.accent,
+  fontWeight: 900,
+  letterSpacing: "0.10em",
+  textTransform: "uppercase",
+  cursor: "pointer",
+};
+
 const bulletRow: React.CSSProperties = {
   display: "flex",
   gap: 12,
@@ -1115,7 +861,7 @@ const bulletIcon: React.CSSProperties = {
   border: `1px solid rgba(201,169,106,0.30)`,
   background: "rgba(201,169,106,0.10)",
   color: THEME.accent,
-  fontWeight: 900,
+  fontWeight: 950,
   display: "grid",
   placeItems: "center",
   flex: "0 0 auto",
@@ -1123,7 +869,7 @@ const bulletIcon: React.CSSProperties = {
 
 const bulletTitle: React.CSSProperties = {
   color: THEME.textPrimary,
-  fontWeight: 900,
+  fontWeight: 950,
   fontSize: 13,
   marginBottom: 2,
 };
