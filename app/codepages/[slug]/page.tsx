@@ -1,234 +1,269 @@
-// app/codepages/[slug]/page.tsx
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { CODE_PAGES, isCodeSlug, type CodeSlug } from "@/lib/codePages";
 
-type PageProps = {
-  params: { slug: string };
-};
+type Params = { slug?: string; Slug?: string };
 
-function getPage(slug: string) {
-  if (!isCodeSlug(slug)) return null;
-  return CODE_PAGES[slug as CodeSlug];
+export function generateStaticParams() {
+  // Important for static builds / safe for server builds
+  return (Object.keys(CODE_PAGES) as CodeSlug[]).map((slug) => ({ slug }));
 }
 
-export function generateMetadata({ params }: PageProps): Metadata {
-  const page = getPage(params.slug);
-  if (!page) return { title: "Not Found • Avirage" };
-
-  const title = `${page.codeName} • Avirage`;
- const description =
-  page.tagline ||
-  "Explore your archetypal tradition match and what it means for your life lens.";
-
-
-  return { title, description };
-}
-
-export default function CodePage({ params }: PageProps) {
-  const page = getPage(params.slug);
-
-  if (!page) {
-    return (
-      <main style={wrap}>
-        <div style={card}>
-          <div style={{ color: "rgba(255,255,255,0.75)", fontWeight: 800, fontSize: 18 }}>
-            404 — Code page not found
-          </div>
-          <p style={{ color: "rgba(255,255,255,0.65)", marginTop: 10, lineHeight: 1.6 }}>
-            This slug doesn’t exist in <code style={code}>lib/codePages.ts</code>.
-          </p>
-
-          <div style={{ marginTop: 18 }}>
-            <Link href="/" style={linkBtn}>
-              ← Back to Archive
-            </Link>
-          </div>
-        </div>
-      </main>
-    );
+export function generateMetadata({ params }: { params: Params }): Metadata {
+  const raw = params.slug ?? params.Slug;
+  if (!raw || !isCodeSlug(raw)) {
+    return {
+      title: "Code Page • Avirage",
+      description: "Archetypal code page",
+    };
   }
 
-  const origin = page.origin;
+  const page = CODE_PAGES[raw];
+  return {
+    title: `${page.codeName} • Avirage`,
+    description:
+      page.tagline ||
+      "Explore your archetypal tradition match and what it means for your life lens.",
+  };
+}
+
+export default function CodePage({ params }: { params: Params }) {
+  const raw = params.slug ?? params.Slug; // handles [slug] and [Slug]
+  if (!raw || !isCodeSlug(raw)) notFound();
+
+  const slug = raw as CodeSlug;
+  const page = CODE_PAGES[slug];
+
+  const wrap: React.CSSProperties = {
+    minHeight: "100vh",
+    background: "radial-gradient(1200px 600px at 20% 10%, rgba(201,169,106,0.14), transparent 60%), linear-gradient(180deg, #070a0e 0%, #0b1119 100%)",
+    color: "#e6e9ee",
+    padding: "48px 18px",
+  };
+
+  const container: React.CSSProperties = {
+    maxWidth: 980,
+    margin: "0 auto",
+  };
+
+  const card: React.CSSProperties = {
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.12)",
+    borderRadius: 18,
+    padding: 28,
+    backdropFilter: "blur(14px)",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.55)",
+  };
+
+  const headerRow: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 14,
+    flexWrap: "wrap",
+    marginBottom: 18,
+  };
+
+  const badge: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    padding: "8px 12px",
+    borderRadius: 999,
+    border: "1px solid rgba(201,169,106,0.35)",
+    background: "rgba(201,169,106,0.10)",
+    color: "#c9a96a",
+    fontSize: 12,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase",
+    fontWeight: 700,
+  };
+
+  const title: React.CSSProperties = {
+    fontSize: "2.2rem",
+    lineHeight: 1.15,
+    margin: "6px 0 8px",
+    letterSpacing: "0.02em",
+    fontWeight: 800,
+  };
+
+  const subtitle: React.CSSProperties = {
+    color: "rgba(230,233,238,0.72)",
+    margin: 0,
+    fontSize: 14,
+    lineHeight: 1.7,
+    maxWidth: 760,
+  };
+
+  const grid: React.CSSProperties = {
+    display: "grid",
+    gridTemplateColumns: "1.1fr 0.9fr",
+    gap: 18,
+    marginTop: 18,
+  };
+
+  const sectionTitle: React.CSSProperties = {
+    margin: "0 0 10px",
+    fontSize: 14,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase",
+    color: "rgba(230,233,238,0.72)",
+    fontWeight: 800,
+  };
+
+  const list: React.CSSProperties = {
+    margin: 0,
+    paddingLeft: 18,
+    color: "rgba(230,233,238,0.86)",
+    lineHeight: 1.8,
+    fontSize: 14,
+  };
+
+  const liMuted: React.CSSProperties = {
+    color: "rgba(230,233,238,0.55)",
+    fontStyle: "italic",
+  };
+
+  const hr: React.CSSProperties = {
+    border: "none",
+    borderTop: "1px solid rgba(255,255,255,0.08)",
+    margin: "20px 0",
+  };
+
+  const heroImgWrap: React.CSSProperties = {
+    borderRadius: 16,
+    overflow: "hidden",
+    border: "1px solid rgba(255,255,255,0.10)",
+    background: "rgba(255,255,255,0.02)",
+    minHeight: 220,
+    display: "grid",
+    placeItems: "center",
+  };
+
+  // Your convention: public/codepages/shokunin/... etc
+  // I’m assuming each page has hero image at:
+  // /codepages/<slug>/hero.jpg
+  // If you use another name, tell me your exact filename and I’ll match it.
+  const heroSrc = `/codepages/${slug}/hero.jpg`;
 
   return (
     <main style={wrap}>
-      <div style={{ width: "min(980px, 92vw)", margin: "0 auto", padding: "56px 0" }}>
-        {/* Top bar */}
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 18 }}>
-          <Link href="/" style={linkGhost}>
-            ← Back
-          </Link>
-
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
-            <span style={pill}>{page.codeName}</span>
-            {page.levels?.level1 && <span style={pill}>Level 1: {page.levels.level1}</span>}
-            {page.levels?.level2 && <span style={pill}>Level 2: {page.levels.level2}</span>}
-          </div>
+      <div style={container}>
+        <div style={{ marginBottom: 16 }}>
+          <a
+            href="/"
+            style={{
+              color: "rgba(230,233,238,0.75)",
+              textDecoration: "none",
+              fontSize: 13,
+            }}
+          >
+            ← Back to results
+          </a>
         </div>
 
-        {/* Hero */}
-        <section style={heroCard}>
-          <div style={{ display: "grid", gap: 10 }}>
-            <div style={{ fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.68)", fontWeight: 800 }}>
-              Cultural Code Page
-            </div>
-
-            <div style={{ fontSize: 44, fontWeight: 950, letterSpacing: "-0.02em", color: "#fff", lineHeight: 1.05 }}>
-              {page.codeName}
-            </div>
-
-            {page.fullName && (
-              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.78)", fontWeight: 700 }}>
-                {page.fullName}
-              </div>
-            )}
-
-            {(page.tagline || page.summary) && (
-              <p style={{ marginTop: 8, color: "rgba(255,255,255,0.78)", lineHeight: 1.7, fontSize: 15, maxWidth: 760 }}>
-                {page.summary || page.tagline}
-              </p>
-            )}
-
-            {/* Hero Image (optional) */}
-            <div style={{ marginTop: 18, borderRadius: 18, overflow: "hidden", border: "1px solid rgba(255,255,255,0.10)" }}>
-              {/* Put: public/codepages/<slug>/hero.jpg */}
-              {/* Example: public/codepages/shokunin/hero.jpg */}
-              <img
-                src={`/codepages/${params.slug}/hero.jpg`}
-                alt={`${page.codeName} visual`}
-                style={{ width: "100%", height: 320, objectFit: "cover", display: "block" }}
-                onError={(e) => {
-                  // Hide if missing
-                  (e.currentTarget as HTMLImageElement).style.display = "none";
-                }}
-              />
+        <div style={card}>
+          <div style={headerRow}>
+            <div style={badge}>Avirage Code Page</div>
+            <div style={{ color: "rgba(230,233,238,0.55)", fontSize: 13 }}>
+              Slug: <span style={{ color: "rgba(230,233,238,0.9)" }}>{slug}</span>
             </div>
           </div>
-        </section>
 
-        {/* Content grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 18, marginTop: 18 }}>
-          {/* Left: main explanation */}
-          <section style={card}>
-            <h2 style={h2}>What this code is (in plain terms)</h2>
-            <p style={p}>{page.whatItIs ?? "—"}</p>
+          <h1 style={title}>{page.codeName}</h1>
+          <p style={subtitle}>
+            <span style={{ color: "#c9a96a", fontWeight: 700 }}>{page.origin.level1}</span>
+            {" • "}
+            {page.origin.lineage?.length ? page.origin.lineage.join(" → ") : "Lineage coming soon"}
+          </p>
 
-            <h2 style={h2}>Core traits</h2>
-            <ul style={ul}>
-              {(page.coreTraits ?? []).map((t: string, i: number) => (
-                <li key={i} style={li}>
-                  {t}
-                </li>
-              ))}
-              {(!page.coreTraits || page.coreTraits.length === 0) && (
-  <li style={liMuted}>No traits added yet.</li>
-)}
+          {page.tagline && (
+            <>
+              <hr style={hr} />
+              <p style={{ ...subtitle, fontSize: 15 }}>{page.tagline}</p>
+            </>
+          )}
 
-            </ul>
+          <div style={grid}>
+            <div>
+              <div style={sectionTitle}>Core traits</div>
+              <ul style={list}>
+                {(page.coreTraits || []).map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
+                {(!page.coreTraits || page.coreTraits.length === 0) && (
+                  <li style={liMuted}>No traits added yet.</li>
+                )}
+              </ul>
 
-            <h2 style={h2}>How it shows up in lifestyle</h2>
-            <p style={p}>{page.lifestyle ?? "—"}</p>
+              <hr style={hr} />
 
-            <h2 style={h2}>Good environments</h2>
-            <ul style={ul}>
-              {(page.goodEnvironments ?? []).map((t: string, i: number) => (
-                <li key={i} style={li}>
-                  {t}
-                </li>
-              ))}
-              {(!page.goodEnvironments || page.goodEnvironments.length === 0) && (
-  <li style={liMuted}>No environments added yet.</li>
-)}
+              <div style={sectionTitle}>Lifestyle signals</div>
+              <ul style={list}>
+                {(page.goodEnvironments || []).map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
+                {(!page.goodEnvironments || page.goodEnvironments.length === 0) && (
+                  <li style={liMuted}>No environments added yet.</li>
+                )}
+              </ul>
 
-            </ul>
+              <hr style={hr} />
 
-            <h2 style={h2}>Activities that fit</h2>
-            <ul style={ul}>
-              {(page.activities ?? []).map((t: string, i: number) => (
-                <li key={i} style={li}>
-                  {t}
-                </li>
-              ))}
-             {(!page.goodEnvironments || page.goodEnvironments.length === 0) && (
-  <li style={liMuted}>No environments added yet.</li>
-)}
-
-            </ul>
-          </section>
-
-          {/* Right: origin + images */}
-          <aside style={card}>
-            <h3 style={h3}>Origin & lineage</h3>
-
-            {/* origin can be string OR object */}
-            {typeof origin === "string" ? (
-              <p style={pSmall}>{origin}</p>
-            ) : origin ? (
-              <div style={{ display: "grid", gap: 10 }}>
-                <div style={kvRow}>
-                  <div style={kvKey}>Level 1</div>
-                  <div style={kvVal}>{origin.level1}</div>
-                </div>
-
-                {origin.lineage?.length ? (
-                  <div>
-                    <div style={{ ...kvKey, marginBottom: 6 }}>Lineage</div>
-                    <ul style={{ ...ul, marginTop: 0 }}>
-                      {origin.lineage.map((x: string, i: number) => (
-                        <li key={i} style={li}>
-                          {x}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-
-                {origin.notes ? <p style={pSmall}>{origin.notes}</p> : null}
-              </div>
-            ) : (
-              <p style={pSmall}>—</p>
-            )}
-
-            <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "18px 0" }} />
-
-            <h3 style={h3}>Images (optional)</h3>
-            <p style={pSmall}>
-              Put images here:
-              <br />
-              <code style={code}>public/codepages/{params.slug}/</code>
-              <br />
-              Suggested names:
-              <br />
-              <code style={code}>hero.jpg</code>, <code style={code}>a.jpg</code>, <code style={code}>b.jpg</code>
-            </p>
-
-            <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
-              <img
-                src={`/codepages/${params.slug}/a.jpg`}
-                alt=""
-                style={sideImg}
-                onError={(e) => ((e.currentTarget as HTMLImageElement).style.display = "none")}
-              />
-              <img
-                src={`/codepages/${params.slug}/b.jpg`}
-                alt=""
-                style={sideImg}
-                onError={(e) => ((e.currentTarget as HTMLImageElement).style.display = "none")}
-              />
+              <div style={sectionTitle}>Activities that fit</div>
+              <ul style={list}>
+                {(page.activities || []).map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
+                {(!page.activities || page.activities.length === 0) && (
+                  <li style={liMuted}>No activities added yet.</li>
+                )}
+              </ul>
             </div>
-          </aside>
-        </div>
 
-        <div style={{ marginTop: 18, textAlign: "center" }}>
-          <Link href="/" style={linkBtn}>
-            Back to results
-          </Link>
+            <div>
+              <div style={sectionTitle}>Visual</div>
+              <div style={heroImgWrap}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={heroSrc}
+                  alt={`${page.codeName} hero`}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  onError={(e) => {
+                    // If the image doesn't exist yet, show a tasteful placeholder
+                    const el = e.currentTarget;
+                    el.style.display = "none";
+                    const parent = el.parentElement;
+                    if (parent) {
+                      parent.innerHTML =
+                        `<div style="padding:22px;text-align:center;color:rgba(230,233,238,0.65);font-size:13px;line-height:1.6">
+                          Add an image at<br/>
+                          <span style="color:rgba(201,169,106,0.95);font-weight:700">${heroSrc}</span>
+                        </div>`;
+                    }
+                  }}
+                />
+              </div>
+
+              <div style={{ marginTop: 12, color: "rgba(230,233,238,0.55)", fontSize: 12, lineHeight: 1.6 }}>
+                Tip: If you already decided different filenames inside <code>public/codepages/{slug}</code>, tell me your naming convention and I’ll align this exactly.
+              </div>
+            </div>
+          </div>
+
+          {page.notes && (
+            <>
+              <hr style={hr} />
+              <div style={sectionTitle}>Notes</div>
+              <p style={{ ...subtitle, marginTop: 8 }}>{page.notes}</p>
+            </>
+          )}
         </div>
       </div>
     </main>
   );
 }
+
 
 /* ============================
    STYLES
