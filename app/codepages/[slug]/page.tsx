@@ -1,33 +1,28 @@
-// app/codepages/[slug]/page.tsx
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import {
+  CODE_PAGES,
+  getAllCodeSlugs,
+  isCodeSlug,
+  type CodeSlug,
+  type CodePage,
+} from "@/lib/codePages";
 
-import { CODE_PAGES } from "@/lib/codePages";
+type PageProps = {
+  params: { slug: string };
+};
 
-/**
- * IMPORTANT:
- * Your URL uses lowercase slugs like /codepages/enzuka
- * So your CODE_PAGES keys MUST be lowercase too:
- *   CODE_PAGES = { enzuka: {...}, shokunin: {...}, ... }
- */
-
-type Params = { slug: string };
-
-// Make sure Next can statically discover pages (optional, but helps).
+// If your project is ever set to static export later, this prevents 404s.
+// It also helps Next prebuild the pages.
 export function generateStaticParams() {
-  return Object.keys(CODE_PAGES).map((slug) => ({ slug }));
+  return getAllCodeSlugs().map((slug) => ({ slug }));
 }
 
-function isValidSlug(slug: string): slug is keyof typeof CODE_PAGES {
-  return Object.prototype.hasOwnProperty.call(CODE_PAGES, slug);
-}
+export function generateMetadata({ params }: PageProps): Metadata {
+  const raw = params.slug ?? "";
+  const slug = decodeURIComponent(raw).toLowerCase();
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
-  const slug = params.slug?.toLowerCase?.() ?? params.slug;
-
-  if (!isValidSlug(slug)) {
+  if (!isCodeSlug(slug)) {
     return {
       title: "Code Page • Avirage",
       description:
@@ -35,16 +30,11 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
     };
   }
 
-  const page: any = (CODE_PAGES as any)[slug];
-
-  const title = `${page?.codeName ?? slug} • Avirage`;
-  const description =
-    page?.tagline ||
-    page?.summary ||
-    page?.description ||
-    "Explore your archetypal tradition match and what it means for your life lens.";
-
-  return { title, description };
+  const page = CODE_PAGES[slug];
+  return {
+    title: `${page.codeName} • Avirage`,
+    description: page.snapshot,
+  };
 }
 
 function Section({
@@ -55,343 +45,320 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section
-      style={{
-        background: "rgba(255,255,255,0.04)",
-        border: "1px solid rgba(255,255,255,0.10)",
-        borderRadius: 18,
-        padding: 18,
-      }}
-    >
-      <h2
+    <section style={{ marginTop: 22 }}>
+      <div
         style={{
-          fontSize: 16,
-          letterSpacing: "0.08em",
+          fontSize: 12,
+          letterSpacing: "0.16em",
           textTransform: "uppercase",
-          margin: 0,
+          color: "rgba(255,255,255,0.66)",
           marginBottom: 10,
-          color: "rgba(233,237,243,0.85)",
         }}
       >
         {title}
-      </h2>
-      <div style={{ color: "rgba(233,237,243,0.70)", lineHeight: 1.6 }}>
+      </div>
+      <div
+        style={{
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.10)",
+          borderRadius: 16,
+          padding: 18,
+          backdropFilter: "blur(10px)",
+        }}
+      >
         {children}
       </div>
     </section>
   );
 }
 
-function List({
-  items,
-  emptyLabel,
+function Img({
+  src,
+  alt,
+  caption,
 }: {
-  items?: unknown;
-  emptyLabel: string;
+  src: string;
+  alt: string;
+  caption?: string;
 }) {
-  const arr = Array.isArray(items) ? items : [];
-  if (arr.length === 0) {
+  return (
+    <figure style={{ margin: 0 }}>
+      {/* Using <img> keeps it simple (no next/image config needed). */}
+      <img
+        src={src}
+        alt={alt}
+        style={{
+          width: "100%",
+          height: "auto",
+          borderRadius: 16,
+          border: "1px solid rgba(255,255,255,0.10)",
+          display: "block",
+        }}
+        onError={(e) => {
+          // Hide broken images gracefully
+          (e.currentTarget as HTMLImageElement).style.display = "none";
+        }}
+      />
+      {caption ? (
+        <figcaption
+          style={{
+            marginTop: 10,
+            fontSize: 13,
+            color: "rgba(255,255,255,0.66)",
+            lineHeight: 1.6,
+          }}
+        >
+          {caption}
+        </figcaption>
+      ) : null}
+    </figure>
+  );
+}
+
+function BulletList({ items }: { items: string[] }) {
+  if (!items || items.length === 0) {
     return (
-      <div style={{ color: "rgba(233,237,243,0.48)" }}>{emptyLabel}</div>
+      <div style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>
+        Nothing added yet.
+      </div>
     );
   }
 
   return (
-    <ul style={{ margin: 0, paddingLeft: 18 }}>
-      {arr.map((x, i) => (
-        <li key={i} style={{ marginBottom: 6 }}>
-          {typeof x === "string" ? x : JSON.stringify(x)}
+    <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.75 }}>
+      {items.map((t, i) => (
+        <li key={i} style={{ color: "rgba(255,255,255,0.78)", fontSize: 14 }}>
+          {t}
         </li>
       ))}
     </ul>
   );
 }
 
-function Paragraph({ text }: { text?: unknown }) {
-  if (!text) return null;
-  if (Array.isArray(text)) {
-    // If you store paragraphs as string[]
-    return (
-      <div style={{ display: "grid", gap: 10 }}>
-        {text.map((t, i) => (
-          <p key={i} style={{ margin: 0 }}>
-            {String(t)}
-          </p>
-        ))}
-      </div>
-    );
-  }
-  return <p style={{ margin: 0 }}>{String(text)}</p>;
-}
+export default function CodePageRoute({ params }: PageProps) {
+  const raw = params.slug ?? "";
+  const slug = decodeURIComponent(raw).toLowerCase();
 
-function ImagesStrip({ slug, count }: { slug: string; count?: unknown }) {
-  const n = typeof count === "number" ? count : 0;
-  if (!n || n <= 0) return null;
+  if (!isCodeSlug(slug)) notFound();
 
-  // Your convention: public/codepages/<slug>/<slug>-1.jpg ... etc
-  // (We won't force extensions; we'll try jpg)
-  return (
-    <div style={{ display: "grid", gap: 10 }}>
-      <div style={{ color: "rgba(233,237,243,0.55)", fontSize: 13 }}>
-        Visuals
-      </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-          gap: 10,
-        }}
-      >
-        {Array.from({ length: n }).map((_, idx) => {
-          const i = idx + 1;
-          const src = `/codepages/${slug}/${slug}-${i}.jpg`;
-          return (
-            <div
-              key={src}
-              style={{
-                borderRadius: 16,
-                overflow: "hidden",
-                border: "1px solid rgba(255,255,255,0.10)",
-                background: "rgba(0,0,0,0.25)",
-              }}
-            >
-              <Image
-                src={src}
-                alt={`${slug} visual ${i}`}
-                width={900}
-                height={600}
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+  const page: CodePage = CODE_PAGES[slug as CodeSlug];
 
-export default function CodePage({ params }: { params: Params }) {
-  const slugRaw = params.slug;
-  const slug = slugRaw?.toLowerCase?.() ?? slugRaw;
-
-  if (!isValidSlug(slug)) return notFound();
-
-  // IMPORTANT: treat as any so the renderer never fights your evolving schema
-  const page: any = (CODE_PAGES as any)[slug];
-
-  const codeName = page?.codeName ?? slug;
-  const fullName = page?.fullName ?? "";
-  const tagline = page?.tagline ?? page?.summary ?? page?.description ?? "";
-
-  // Pull a few *common* fields if you have them, but never require them.
-  const origin = page?.origin; // could be string OR object
-  const traits = page?.coreTraits ?? page?.traits ?? page?.keyTraits;
-  const environments = page?.goodEnvironments ?? page?.environments;
-  const activities = page?.activities ?? page?.recommendedActivities;
-  const places = page?.places ?? page?.destinations;
-  const music = page?.music ?? page?.musicVibe;
-  const imageCount = page?.imageCount ?? page?.images?.count ?? 0;
-
-  // If you have sections[] (optional), we’ll render them too.
-  const sections = Array.isArray(page?.sections) ? page.sections : [];
+  const bg =
+    "radial-gradient(1200px 800px at 20% 0%, rgba(201,169,106,0.14), transparent 60%), linear-gradient(180deg, #0b0f14 0%, #121820 100%)";
 
   return (
     <main
       style={{
         minHeight: "100vh",
-        background:
-          "linear-gradient(180deg, #070A0E 0%, #0B1118 60%, #0A0F14 100%)",
-        color: "#E9EDF3",
-        padding: "28px 18px",
+        background: bg,
+        color: "rgba(255,255,255,0.92)",
       }}
     >
-      <div style={{ maxWidth: 980, margin: "0 auto", display: "grid", gap: 16 }}>
+      <div
+        style={{
+          maxWidth: 980,
+          margin: "0 auto",
+          padding: "64px 20px",
+        }}
+      >
         {/* Top nav */}
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <Link
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
+          <a
             href="/"
             style={{
-              color: "rgba(233,237,243,0.75)",
               textDecoration: "none",
-              fontSize: 14,
+              color: "rgba(255,255,255,0.78)",
+              border: "1px solid rgba(255,255,255,0.14)",
+              padding: "10px 14px",
+              borderRadius: 12,
+              background: "rgba(255,255,255,0.03)",
             }}
           >
             ← Back to quiz
-          </Link>
+          </a>
 
-          <div style={{ fontSize: 13, color: "rgba(233,237,243,0.55)" }}>
-            /codepages/{slug}
+          <div
+            style={{
+              border: "1px solid rgba(255,255,255,0.10)",
+              background: "rgba(255,255,255,0.03)",
+              padding: "10px 14px",
+              borderRadius: 12,
+              color: "rgba(255,255,255,0.66)",
+              fontSize: 13,
+            }}
+          >
+            /codepages/{page.slug}
           </div>
         </div>
 
-        {/* Hero */}
-        <header
-          style={{
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            borderRadius: 22,
-            padding: 22,
-          }}
-        >
+        {/* Header */}
+        <header style={{ marginTop: 28 }}>
           <div
             style={{
-              fontSize: 13,
-              letterSpacing: "0.12em",
+              display: "inline-flex",
+              gap: 10,
+              alignItems: "center",
+              padding: "8px 12px",
+              borderRadius: 999,
+              border: "1px solid rgba(201,169,106,0.28)",
+              background: "rgba(201,169,106,0.08)",
+              color: "rgba(201,169,106,0.95)",
+              fontSize: 12,
+              letterSpacing: "0.14em",
               textTransform: "uppercase",
-              color: "rgba(233,237,243,0.55)",
+              fontWeight: 700,
             }}
           >
-            Code Page
+            Archetypal tradition match
           </div>
 
-          <h1 style={{ margin: "8px 0 0 0", fontSize: 34, lineHeight: 1.1 }}>
-            {codeName}
+          <h1
+            style={{
+              marginTop: 14,
+              fontSize: 46,
+              lineHeight: 1.06,
+              letterSpacing: "-0.02em",
+              marginBottom: 10,
+            }}
+          >
+            {page.codeName}
           </h1>
 
-          {fullName ? (
-            <div style={{ marginTop: 8, color: "rgba(233,237,243,0.70)" }}>
-              {fullName}
-            </div>
-          ) : null}
-
-          {tagline ? (
-            <p
-              style={{
-                marginTop: 12,
-                marginBottom: 0,
-                color: "rgba(233,237,243,0.68)",
-                lineHeight: 1.6,
-                maxWidth: 820,
-              }}
-            >
-              {tagline}
-            </p>
-          ) : null}
-        </header>
-
-        {/* Images (optional) */}
-        <Section title="Gallery">
-          <ImagesStrip slug={slug} count={imageCount} />
-          {!imageCount ? (
-            <div style={{ color: "rgba(233,237,243,0.48)" }}>
-              Add images by placing files here:{" "}
-              <span style={{ color: "rgba(233,237,243,0.72)" }}>
-                public/codepages/{slug}/{slug}-1.jpg
-              </span>
-              , {slug}-2.jpg, etc. Then set <code>imageCount</code> for that
-              code in <code>lib/codePages.ts</code>.
-            </div>
-          ) : null}
-        </Section>
-
-        {/* Origin */}
-        <Section title="Origin & lineage">
-          {typeof origin === "string" ? (
-            <Paragraph text={origin} />
-          ) : origin ? (
-            <div style={{ display: "grid", gap: 10 }}>
-              {origin.level1 ? (
-                <div>
-                  <div style={{ color: "rgba(233,237,243,0.55)", fontSize: 13 }}>
-                    Level 1 culture
-                  </div>
-                  <div>{String(origin.level1)}</div>
-                </div>
-              ) : null}
-
-              {Array.isArray(origin.lineage) && origin.lineage.length ? (
-                <div>
-                  <div style={{ color: "rgba(233,237,243,0.55)", fontSize: 13 }}>
-                    Lineage
-                  </div>
-                  <List items={origin.lineage} emptyLabel="No lineage yet." />
-                </div>
-              ) : null}
-
-              {origin.notes ? (
-                <div>
-                  <div style={{ color: "rgba(233,237,243,0.55)", fontSize: 13 }}>
-                    Notes
-                  </div>
-                  <Paragraph text={origin.notes} />
-                </div>
-              ) : null}
-            </div>
-          ) : (
-            <div style={{ color: "rgba(233,237,243,0.48)" }}>
-              No origin info yet.
-            </div>
-          )}
-        </Section>
-
-        {/* Traits */}
-        <Section title="Core traits">
-          <List items={traits} emptyLabel="No traits added yet." />
-        </Section>
-
-        {/* Lifestyle */}
-        <Section title="Good environments">
-          <List items={environments} emptyLabel="No environments added yet." />
-        </Section>
-
-        <Section title="Activities that fit">
-          <List items={activities} emptyLabel="No activities added yet." />
-        </Section>
-
-        <Section title="Places & atmospheres">
-          <List items={places} emptyLabel="No places added yet." />
-        </Section>
-
-        <Section title="Music & mood">
-          {typeof music === "string" ? (
-            <Paragraph text={music} />
-          ) : (
-            <List items={music} emptyLabel="No music notes added yet." />
-          )}
-        </Section>
-
-        {/* Optional custom sections[] */}
-        {sections.length > 0 ? (
-          <div style={{ display: "grid", gap: 16 }}>
-            {sections.map((s: any, i: number) => (
-              <Section key={i} title={String(s?.title ?? `Section ${i + 1}`)}>
-                {s?.body ? <Paragraph text={s.body} /> : null}
-                {s?.bullets ? (
-                  <div style={{ marginTop: 10 }}>
-                    <List items={s.bullets} emptyLabel="" />
-                  </div>
-                ) : null}
-              </Section>
-            ))}
-          </div>
-        ) : null}
-
-        {/* Debug block (safe, optional) */}
-        <details
-          style={{
-            marginTop: 6,
-            borderRadius: 16,
-            border: "1px solid rgba(255,255,255,0.10)",
-            background: "rgba(255,255,255,0.03)",
-            padding: 14,
-          }}
-        >
-          <summary style={{ cursor: "pointer", color: "rgba(233,237,243,0.70)" }}>
-            Developer: view raw page object
-          </summary>
-          <pre
+          <div
             style={{
-              marginTop: 12,
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-word",
-              color: "rgba(233,237,243,0.65)",
-              fontSize: 12,
-              lineHeight: 1.5,
+              color: "rgba(255,255,255,0.70)",
+              fontSize: 16,
+              lineHeight: 1.6,
+              maxWidth: 840,
             }}
           >
-            {JSON.stringify(page, null, 2)}
-          </pre>
-        </details>
+            <span style={{ color: "rgba(255,255,255,0.86)", fontWeight: 600 }}>
+              Origin:
+            </span>{" "}
+            {page.fullName} •{" "}
+            <span style={{ color: "rgba(255,255,255,0.86)", fontWeight: 600 }}>
+              Level 1:
+            </span>{" "}
+            {page.origin.level1}
+          </div>
+
+          <div style={{ marginTop: 18 }}>
+            {page.images?.cover ? (
+              <Img
+                src={page.images.cover.src}
+                alt={page.images.cover.alt}
+                caption={page.images.cover.caption}
+              />
+            ) : null}
+          </div>
+        </header>
+
+        {/* Content */}
+        <Section title="Overview">
+          <p style={{ margin: 0, lineHeight: 1.75, color: "rgba(255,255,255,0.80)", fontSize: 15 }}>
+            {page.snapshot}
+          </p>
+        </Section>
+
+        <Section title="Origin lineage">
+          <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.75 }}>
+            {page.origin.lineage.map((x, i) => (
+              <li key={i} style={{ color: "rgba(255,255,255,0.78)", fontSize: 14 }}>
+                {x}
+              </li>
+            ))}
+          </ul>
+          {page.origin.notes ? (
+            <p style={{ marginTop: 12, marginBottom: 0, color: "rgba(255,255,255,0.68)", fontSize: 14, lineHeight: 1.7 }}>
+              {page.origin.notes}
+            </p>
+          ) : null}
+        </Section>
+
+        <Section title="Lens">
+          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+            {page.lens.title}
+          </div>
+          <p style={{ marginTop: 0, color: "rgba(255,255,255,0.78)", lineHeight: 1.75, fontSize: 14 }}>
+            {page.lens.description}
+          </p>
+          <BulletList items={page.lens.inPlainEnglish} />
+        </Section>
+
+        <Section title="Traits">
+          <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 12 }}>
+            {page.traits.headline}
+          </div>
+
+          <div style={{ display: "grid", gap: 10 }}>
+            {page.traits.highlights.map((h, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: 14,
+                  borderRadius: 14,
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "rgba(255,255,255,0.02)",
+                }}
+              >
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>
+                  {h.label}
+                </div>
+                <div style={{ color: "rgba(255,255,255,0.70)", fontSize: 14, lineHeight: 1.7 }}>
+                  {h.meaning}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section title="Lifestyle">
+          <BulletList items={page.recommendations.lifestyle} />
+        </Section>
+
+        <Section title="Places">
+          <BulletList items={page.recommendations.places} />
+        </Section>
+
+        <Section title="Music">
+          <BulletList items={page.recommendations.music} />
+        </Section>
+
+        <Section title="Activities">
+          <BulletList items={page.recommendations.activities} />
+        </Section>
+
+        <Section title="Strengths">
+          <BulletList items={page.strengths} />
+        </Section>
+
+        <Section title="Watchouts">
+          <BulletList items={page.watchouts} />
+        </Section>
+
+        <Section title="Try this week">
+          <BulletList items={page.tryThisWeek} />
+        </Section>
+
+        {page.images?.gallery && page.images.gallery.length > 0 ? (
+          <Section title="Gallery">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 14 }}>
+              {page.images.gallery.map((im, i) => (
+                <Img key={i} src={im.src} alt={im.alt} caption={im.caption} />
+              ))}
+            </div>
+          </Section>
+        ) : null}
+
+        {page.notes && page.notes.length > 0 ? (
+          <Section title="Notes">
+            <BulletList items={page.notes} />
+          </Section>
+        ) : null}
+
+        <footer style={{ marginTop: 34, color: "rgba(255,255,255,0.45)", fontSize: 12, lineHeight: 1.6 }}>
+          Avirage pages describe an archetypal lens (not identity or diagnosis). Recommendations are guidance, not fate.
+        </footer>
       </div>
     </main>
   );
