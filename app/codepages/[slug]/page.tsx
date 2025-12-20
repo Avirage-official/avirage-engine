@@ -137,7 +137,10 @@ export default function CodePage({ params }: PageProps) {
                   {t}
                 </li>
               ))}
-              {(!page.goodEnvironments || page.goodEnvironments.length === 0) && <li style={liMuted}>No environments added yet.</liMuted>}
+              {(!page.goodEnvironments || page.goodEnvironments.length === 0) && (
+  <li style={liMuted}>No environments added yet.</li>
+)}
+
             </ul>
 
             <h2 style={h2}>Activities that fit</h2>
