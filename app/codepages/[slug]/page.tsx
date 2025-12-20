@@ -150,7 +150,10 @@ export default function CodePage({ params }: PageProps) {
                   {t}
                 </li>
               ))}
-              {(!page.activities || page.activities.length === 0) && <li style={liMuted}>No activities added yet.</liMuted>}
+             {(!page.goodEnvironments || page.goodEnvironments.length === 0) && (
+  <li style={liMuted}>No environments added yet.</li>
+)}
+
             </ul>
           </section>
 
