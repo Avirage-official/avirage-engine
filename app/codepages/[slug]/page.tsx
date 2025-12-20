@@ -17,10 +17,10 @@ export function generateMetadata({ params }: PageProps): Metadata {
   if (!page) return { title: "Not Found • Avirage" };
 
   const title = `${page.codeName} • Avirage`;
-  const description =
-    page.summary ||
-    page.tagline ||
-    "Explore your archetypal tradition match and what it means for your life lens.";
+ const description =
+  page.tagline ||
+  "Explore your archetypal tradition match and what it means for your life lens.";
+
 
   return { title, description };
 }
