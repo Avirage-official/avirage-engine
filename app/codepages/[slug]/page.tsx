@@ -121,7 +121,10 @@ export default function CodePage({ params }: PageProps) {
                   {t}
                 </li>
               ))}
-              {(!page.coreTraits || page.coreTraits.length === 0) && <li style={liMuted}>No traits added yet.</liMuted>}
+              {(!page.coreTraits || page.coreTraits.length === 0) && (
+  <li style={liMuted}>No traits added yet.</li>
+)}
+
             </ul>
 
             <h2 style={h2}>How it shows up in lifestyle</h2>
