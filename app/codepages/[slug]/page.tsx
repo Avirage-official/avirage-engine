@@ -5,12 +5,12 @@ import { CODE_PAGES, isCodeSlug, type CodeSlug } from "@/lib/codePages";
 type Params = { slug?: string; Slug?: string };
 
 export function generateStaticParams() {
-  // Important for static builds / safe for server builds
   return (Object.keys(CODE_PAGES) as CodeSlug[]).map((slug) => ({ slug }));
 }
 
 export function generateMetadata({ params }: { params: Params }): Metadata {
   const raw = params.slug ?? params.Slug;
+
   if (!raw || !isCodeSlug(raw)) {
     return {
       title: "Code Page • Avirage",
@@ -22,13 +22,13 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
   return {
     title: `${page.codeName} • Avirage`,
     description:
-      page.tagline ||
+      (page.origin?.notes && String(page.origin.notes)) ||
       "Explore your archetypal tradition match and what it means for your life lens.",
   };
 }
 
 export default function CodePage({ params }: { params: Params }) {
-  const raw = params.slug ?? params.Slug; // handles [slug] and [Slug]
+  const raw = params.slug ?? params.Slug; // supports [slug] and [Slug]
   if (!raw || !isCodeSlug(raw)) notFound();
 
   const slug = raw as CodeSlug;
@@ -36,7 +36,8 @@ export default function CodePage({ params }: { params: Params }) {
 
   const wrap: React.CSSProperties = {
     minHeight: "100vh",
-    background: "radial-gradient(1200px 600px at 20% 10%, rgba(201,169,106,0.14), transparent 60%), linear-gradient(180deg, #070a0e 0%, #0b1119 100%)",
+    background:
+      "radial-gradient(1200px 600px at 20% 10%, rgba(201,169,106,0.14), transparent 60%), linear-gradient(180deg, #070a0e 0%, #0b1119 100%)",
     color: "#e6e9ee",
     padding: "48px 18px",
   };
@@ -140,10 +141,7 @@ export default function CodePage({ params }: { params: Params }) {
     placeItems: "center",
   };
 
-  // Your convention: public/codepages/shokunin/... etc
-  // I’m assuming each page has hero image at:
-  // /codepages/<slug>/hero.jpg
-  // If you use another name, tell me your exact filename and I’ll match it.
+  // Your convention: public/codepages/<slug>/hero.jpg
   const heroSrc = `/codepages/${slug}/hero.jpg`;
 
   return (
@@ -166,23 +164,22 @@ export default function CodePage({ params }: { params: Params }) {
           <div style={headerRow}>
             <div style={badge}>Avirage Code Page</div>
             <div style={{ color: "rgba(230,233,238,0.55)", fontSize: 13 }}>
-              Slug: <span style={{ color: "rgba(230,233,238,0.9)" }}>{slug}</span>
+              Slug:{" "}
+              <span style={{ color: "rgba(230,233,238,0.9)" }}>{slug}</span>
             </div>
           </div>
 
           <h1 style={title}>{page.codeName}</h1>
-          <p style={subtitle}>
-            <span style={{ color: "#c9a96a", fontWeight: 700 }}>{page.origin.level1}</span>
-            {" • "}
-            {page.origin.lineage?.length ? page.origin.lineage.join(" → ") : "Lineage coming soon"}
-          </p>
 
-          {page.tagline && (
-            <>
-              <hr style={hr} />
-              <p style={{ ...subtitle, fontSize: 15 }}>{page.tagline}</p>
-            </>
-          )}
+          <p style={subtitle}>
+            <span style={{ color: "#c9a96a", fontWeight: 700 }}>
+              {page.origin?.level1 || "Origin"}
+            </span>
+            {" • "}
+            {page.origin?.lineage?.length
+              ? page.origin.lineage.join(" → ")
+              : "Lineage coming soon"}
+          </p>
 
           <div style={grid}>
             <div>
@@ -230,32 +227,26 @@ export default function CodePage({ params }: { params: Params }) {
                   alt={`${page.codeName} hero`}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   onError={(e) => {
-                    // If the image doesn't exist yet, show a tasteful placeholder
                     const el = e.currentTarget;
                     el.style.display = "none";
                     const parent = el.parentElement;
                     if (parent) {
-                      parent.innerHTML =
-                        `<div style="padding:22px;text-align:center;color:rgba(230,233,238,0.65);font-size:13px;line-height:1.6">
-                          Add an image at<br/>
-                          <span style="color:rgba(201,169,106,0.95);font-weight:700">${heroSrc}</span>
-                        </div>`;
+                      parent.innerHTML = `<div style="padding:22px;text-align:center;color:rgba(230,233,238,0.65);font-size:13px;line-height:1.6">
+                        Add an image at<br/>
+                        <span style="color:rgba(201,169,106,0.95);font-weight:700">${heroSrc}</span>
+                      </div>`;
                     }
                   }}
                 />
               </div>
-
-              <div style={{ marginTop: 12, color: "rgba(230,233,238,0.55)", fontSize: 12, lineHeight: 1.6 }}>
-                Tip: If you already decided different filenames inside <code>public/codepages/{slug}</code>, tell me your naming convention and I’ll align this exactly.
-              </div>
             </div>
           </div>
 
-          {page.notes && (
+          {page.origin?.notes && (
             <>
               <hr style={hr} />
               <div style={sectionTitle}>Notes</div>
-              <p style={{ ...subtitle, marginTop: 8 }}>{page.notes}</p>
+              <p style={{ ...subtitle, marginTop: 8 }}>{page.origin.notes}</p>
             </>
           )}
         </div>
@@ -263,151 +254,3 @@ export default function CodePage({ params }: { params: Params }) {
     </main>
   );
 }
-
-
-/* ============================
-   STYLES
-============================ */
-
-const wrap: React.CSSProperties = {
-  minHeight: "100vh",
-  background: "linear-gradient(180deg, #070a0f 0%, #0c1118 60%, #070a0f 100%)",
-  color: "white",
-};
-
-const card: React.CSSProperties = {
-  background: "rgba(255,255,255,0.03)",
-  border: "1px solid rgba(255,255,255,0.10)",
-  borderRadius: 18,
-  padding: 18,
-  boxShadow: "0 18px 60px rgba(0,0,0,0.45)",
-  backdropFilter: "blur(14px)",
-};
-
-const heroCard: React.CSSProperties = {
-  ...card,
-  padding: 22,
-};
-
-const h2: React.CSSProperties = {
-  fontSize: 16,
-  fontWeight: 900,
-  letterSpacing: "0.01em",
-  marginTop: 16,
-  marginBottom: 8,
-};
-
-const h3: React.CSSProperties = {
-  fontSize: 14,
-  fontWeight: 900,
-  letterSpacing: "0.06em",
-  textTransform: "uppercase",
-  color: "rgba(255,255,255,0.78)",
-  marginBottom: 10,
-};
-
-const p: React.CSSProperties = {
-  color: "rgba(255,255,255,0.78)",
-  lineHeight: 1.7,
-  fontSize: 14,
-  marginTop: 0,
-};
-
-const pSmall: React.CSSProperties = {
-  color: "rgba(255,255,255,0.70)",
-  lineHeight: 1.7,
-  fontSize: 13,
-  marginTop: 0,
-};
-
-const ul: React.CSSProperties = {
-  margin: "0 0 8px 0",
-  paddingLeft: 18,
-  color: "rgba(255,255,255,0.78)",
-};
-
-const li: React.CSSProperties = {
-  marginBottom: 6,
-  lineHeight: 1.6,
-  fontSize: 14,
-};
-
-const liMuted: React.CSSProperties = {
-  marginBottom: 6,
-  lineHeight: 1.6,
-  fontSize: 14,
-  color: "rgba(255,255,255,0.55)",
-};
-
-const pill: React.CSSProperties = {
-  border: "1px solid rgba(255,255,255,0.12)",
-  background: "rgba(255,255,255,0.04)",
-  padding: "8px 10px",
-  borderRadius: 999,
-  fontSize: 12,
-  color: "rgba(255,255,255,0.78)",
-  fontWeight: 800,
-};
-
-const linkGhost: React.CSSProperties = {
-  color: "rgba(255,255,255,0.80)",
-  textDecoration: "none",
-  fontSize: 13,
-  fontWeight: 900,
-  border: "1px solid rgba(255,255,255,0.12)",
-  background: "rgba(255,255,255,0.03)",
-  padding: "10px 12px",
-  borderRadius: 12,
-};
-
-const linkBtn: React.CSSProperties = {
-  display: "inline-block",
-  color: "#0b0f14",
-  textDecoration: "none",
-  fontSize: 13,
-  fontWeight: 950,
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
-  background: "linear-gradient(135deg, #c9a96a 0%, #e6d2a2 100%)",
-  padding: "12px 14px",
-  borderRadius: 12,
-};
-
-const code: React.CSSProperties = {
-  padding: "2px 6px",
-  borderRadius: 8,
-  border: "1px solid rgba(255,255,255,0.12)",
-  background: "rgba(0,0,0,0.25)",
-  color: "rgba(255,255,255,0.85)",
-};
-
-const kvRow: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: 10,
-  alignItems: "baseline",
-};
-
-const kvKey: React.CSSProperties = {
-  fontSize: 12,
-  fontWeight: 900,
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
-  color: "rgba(255,255,255,0.58)",
-};
-
-const kvVal: React.CSSProperties = {
-  fontSize: 13,
-  fontWeight: 800,
-  color: "rgba(255,255,255,0.86)",
-  textAlign: "right",
-};
-
-const sideImg: React.CSSProperties = {
-  width: "100%",
-  height: 160,
-  objectFit: "cover",
-  borderRadius: 14,
-  border: "1px solid rgba(255,255,255,0.10)",
-  display: "block",
-};
