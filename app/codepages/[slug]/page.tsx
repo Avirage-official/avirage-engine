@@ -2,20 +2,20 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   CODE_PAGES,
-  getAllCodeSlugs,
-  isCodeSlug,
-  type CodeSlug,
+  getAllCodes,
+  isCode,
+  type Code,
   type CodePage,
 } from "@/lib/codePages";
 
 type PageProps = {
-  params: { slug: string };
+  params: { : string };
 };
 
 // If your project is ever set to static export later, this prevents 404s.
 // It also helps Next prebuild the pages.
 export function generateStaticParams() {
-  return getAllCodeSlugs().map((slug) => ({ slug }));
+  return getAllCodes().map(() => ({ slug }));
 }
 
 export function generateMetadata({ params }: PageProps): Metadata {
@@ -136,12 +136,12 @@ function BulletList({ items }: { items: string[] }) {
 }
 
 export default function CodePageRoute({ params }: PageProps) {
-  const raw = params.slug ?? "";
-  const slug = decodeURIComponent(raw).toLowerCase();
+  const raw = params. ?? "";
+  const  = decodeURIComponent(raw).toLowerCase();
 
-  if (!isCodeSlug(slug)) notFound();
+  if (!isCode()) notFound();
 
-  const page: CodePage = CODE_PAGES[slug as CodeSlug];
+  const page: CodePage = CODE_PAGES[ as Code];
 
   const bg =
     "radial-gradient(1200px 800px at 20% 0%, rgba(201,169,106,0.14), transparent 60%), linear-gradient(180deg, #0b0f14 0%, #121820 100%)";
@@ -187,7 +187,7 @@ export default function CodePageRoute({ params }: PageProps) {
               fontSize: 13,
             }}
           >
-            /codepages/{page.slug}
+            /codepages/{page.}
           </div>
         </div>
 
