@@ -1347,7 +1347,6 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
     },
   },
 };
-
 /**
  * Helpers
  */
@@ -1361,6 +1360,4 @@ export function getAllCodeSlugs(): CodeSlug[] {
 
 export function isCodeSlug(slug: string): slug is CodeSlug {
   return slug in CODE_PAGES;
-}
-
 }
