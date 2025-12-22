@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { CSSProperties } from "react";
-
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'; 
 /* ============================
    THEME (matching your existing style)
 ============================ */
@@ -46,9 +46,15 @@ export default function LandingPage() {
             <Link href="/faq" style={navLink}>
               FAQ
             </Link>
-            <Link href="/quiz" style={signInBtn}>
-              Sign In
-            </Link>
+            <SignedOut>
+  <SignInButton mode="modal">
+    <button style={signInBtn}>Sign In</button>
+  </SignInButton>
+</SignedOut>
+
+<SignedIn>
+  <UserButton />
+</SignedIn>
           </div>
         </div>
       </nav>
