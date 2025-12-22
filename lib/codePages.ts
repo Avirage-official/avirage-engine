@@ -14,8 +14,31 @@
  * If an image doesn’t exist, your page can simply hide it (recommended).
  */
 
-export type CodeSlug = keyof typeof CODE_PAGES;
+// ✅ Define slugs FIRST (no circular types)
+export const CODE_SLUGS = [
+  "khoisan",
+  "kayori",
+  "sahen",
+  "enzuka",
+  "siyuane",
+  "jaejin",
+  "namsea",
+  "shokunin",
+  "khoruun",
+  "lhumir",
+  "yatevar",
+  "renara",
+  "karayni",
+  "wohaka",
+  "tjukari",
+  "kinmora",
+  "siljoa",
+  "skenari",
+  "ashkara",
+  "alethir",
+] as const;
 
+export type CodeSlug = (typeof CODE_SLUGS)[number];
 
 export type CodePageSection =
   | "Overview"
