@@ -1,5 +1,6 @@
 "use client";
 
+import { isCodeSlug, type CodeSlug } from "@/lib/codePages";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { QUIZ_QUESTIONS } from "@/lib/quizQuestions";
@@ -101,12 +102,11 @@ function stripAccents(str: string): string {
 
 // This controls the ROUTE: /codepages/<slug>
 // Example: "Shokunin" -> "shokunin"
-function toCodeSlug(codeName: string): string {
-  const base = stripAccents(codeName).toLowerCase().trim();
-  return base
-    .replace(/['"]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+// This controls the ROUTE: /codepages/<slug>
+function toCodeSlug(codeName: string | null | undefined): CodeSlug | null {
+  if (!codeName) return null;
+  const normalized = stripAccents(codeName).toLowerCase().trim();
+  return isCodeSlug(normalized) ? (normalized as CodeSlug) : null;
 }
 
 function clampEmblemPick(codeName: string, pick: number): number {
@@ -738,23 +738,32 @@ function SoftPill({ children }: { children: React.ReactNode }) {
 
 function CodeLinkButton({ codeName, label }: { codeName: string; label: string }) {
   const slug = toCodeSlug(codeName);
+
+  const baseStyle: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    padding: "10px 12px",
+    borderRadius: 14,
+    border: "1px solid rgba(255,255,255,0.20)",
+    background: "rgba(0,0,0,0.18)",
+    color: "#fff",
+    textDecoration: "none",
+    fontWeight: 850,
+    fontSize: 13,
+  };
+
+  if (!slug) {
+    return (
+      <button style={{ ...baseStyle, cursor: "not-allowed", opacity: 0.6 }} disabled aria-disabled="true" title="Unavailable">
+        {label}
+        <span style={{ opacity: 0.9 }}>→</span>
+      </button>
+    );
+  }
+
   return (
-    <Link
-      href={`/codepages/${slug}`}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 8,
-        padding: "10px 12px",
-        borderRadius: 14,
-        border: "1px solid rgba(255,255,255,0.20)",
-        background: "rgba(0,0,0,0.18)",
-        color: "#fff",
-        textDecoration: "none",
-        fontWeight: 850,
-        fontSize: 13,
-      }}
-    >
+    <Link href={`/codepages/${slug}`} style={baseStyle}>
       {label}
       <span style={{ opacity: 0.9 }}>→</span>
     </Link>
