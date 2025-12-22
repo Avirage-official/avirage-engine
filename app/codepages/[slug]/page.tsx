@@ -1,365 +1,318 @@
-import type { Metadata } from "next";
+// app/codepages/[slug]/page.tsx
 import { notFound } from "next/navigation";
-import {
-  CODE_PAGES,
-  getAllCodes,
-  isCode,
-  type Code,
-  type CodePage,
-} from "@/lib/codePages";
+import type { Metadata } from "next";
+import { CODE_PAGES, type CodeSlug } from "@/lib/codePages";
 
-type PageProps = {
-  params: { : string };
-};
+type Params = { slug: string };
 
-// If your project is ever set to static export later, this prevents 404s.
-// It also helps Next prebuild the pages.
-export function generateStaticParams() {
-  return getAllCodes().map(() => ({ slug }));
+function normalizeSlug(input: string): string {
+  // Handle URL encoding + casing
+  return decodeURIComponent(input).trim().toLowerCase();
 }
 
-export function generateMetadata({ params }: PageProps): Metadata {
-  const raw = params.slug ?? "";
-  const slug = decodeURIComponent(raw).toLowerCase();
+function isCodeSlug(value: string): value is CodeSlug {
+  return value in CODE_PAGES;
+}
 
-  if (!isCodeSlug(slug)) {
-    return {
-      title: "Code Page • Avirage",
-      description:
-        "Explore your archetypal tradition match and what it means for your life lens.",
-    };
-  }
+// (Optional) helps Next prebuild / recognize these routes
+export function generateStaticParams(): Array<{ slug: CodeSlug }> {
+  return (Object.keys(CODE_PAGES) as CodeSlug[]).map((slug) => ({ slug }));
+}
+
+export function generateMetadata({ params }: { params: Params }): Metadata {
+  const slug = normalizeSlug(params.slug);
+  if (!isCodeSlug(slug)) return { title: "Code Page • Avirage" };
 
   const page = CODE_PAGES[slug];
   return {
     title: `${page.codeName} • Avirage`,
-    description: page.snapshot,
+    description:
+      page.snapshot ||
+      `Explore the ${page.codeName} archetypal tradition lens and what it means for your lifestyle.`,
   };
 }
 
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section style={{ marginTop: 22 }}>
-      <div
-        style={{
-          fontSize: 12,
-          letterSpacing: "0.16em",
-          textTransform: "uppercase",
-          color: "rgba(255,255,255,0.66)",
-          marginBottom: 10,
-        }}
-      >
-        {title}
-      </div>
-      <div
-        style={{
-          background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.10)",
-          borderRadius: 16,
-          padding: 18,
-          backdropFilter: "blur(10px)",
-        }}
-      >
-        {children}
-      </div>
-    </section>
-  );
-}
+export default function CodePage({ params }: { params: Params }) {
+  const slug = normalizeSlug(params.slug);
 
-function Img({
-  src,
-  alt,
-  caption,
-}: {
-  src: string;
-  alt: string;
-  caption?: string;
-}) {
-  return (
-    <figure style={{ margin: 0 }}>
-      {/* Using <img> keeps it simple (no next/image config needed). */}
-      <img
-        src={src}
-        alt={alt}
-        style={{
-          width: "100%",
-          height: "auto",
-          borderRadius: 16,
-          border: "1px solid rgba(255,255,255,0.10)",
-          display: "block",
-        }}
-        onError={(e) => {
-          // Hide broken images gracefully
-          (e.currentTarget as HTMLImageElement).style.display = "none";
-        }}
-      />
-      {caption ? (
-        <figcaption
-          style={{
-            marginTop: 10,
-            fontSize: 13,
-            color: "rgba(255,255,255,0.66)",
-            lineHeight: 1.6,
-          }}
-        >
-          {caption}
-        </figcaption>
-      ) : null}
-    </figure>
-  );
-}
-
-function BulletList({ items }: { items: string[] }) {
-  if (!items || items.length === 0) {
-    return (
-      <div style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>
-        Nothing added yet.
-      </div>
-    );
+  if (!isCodeSlug(slug)) {
+    notFound();
   }
 
-  return (
-    <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.75 }}>
-      {items.map((t, i) => (
-        <li key={i} style={{ color: "rgba(255,255,255,0.78)", fontSize: 14 }}>
-          {t}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-export default function CodePageRoute({ params }: PageProps) {
-  const raw = params. ?? "";
-  const  = decodeURIComponent(raw).toLowerCase();
-
-  if (!isCode()) notFound();
-
-  const page: CodePage = CODE_PAGES[ as Code];
-
-  const bg =
-    "radial-gradient(1200px 800px at 20% 0%, rgba(201,169,106,0.14), transparent 60%), linear-gradient(180deg, #0b0f14 0%, #121820 100%)";
+  const page = CODE_PAGES[slug];
 
   return (
     <main
       style={{
         minHeight: "100vh",
-        background: bg,
-        color: "rgba(255,255,255,0.92)",
+        padding: "64px 20px",
+        background: "linear-gradient(180deg, #0b0f14 0%, #121820 100%)",
+        color: "#e6e9ee",
+        fontFamily: "var(--font-geist-sans), ui-sans-serif, system-ui",
       }}
     >
-      <div
-        style={{
-          maxWidth: 980,
-          margin: "0 auto",
-          padding: "64px 20px",
-        }}
-      >
-        {/* Top nav */}
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-          <a
-            href="/"
-            style={{
-              textDecoration: "none",
-              color: "rgba(255,255,255,0.78)",
-              border: "1px solid rgba(255,255,255,0.14)",
-              padding: "10px 14px",
-              borderRadius: 12,
-              background: "rgba(255,255,255,0.03)",
-            }}
-          >
-            ← Back to quiz
-          </a>
-
-          <div
-            style={{
-              border: "1px solid rgba(255,255,255,0.10)",
-              background: "rgba(255,255,255,0.03)",
-              padding: "10px 14px",
-              borderRadius: 12,
-              color: "rgba(255,255,255,0.66)",
-              fontSize: 13,
-            }}
-          >
-            /codepages/{page.}
+      <div style={{ maxWidth: 920, margin: "0 auto" }}>
+        {/* Header */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ opacity: 0.7, fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase" }}>
+            Avirage Code Page
+          </div>
+          <h1 style={{ fontSize: 46, margin: "10px 0 6px", lineHeight: 1.08 }}>
+            {page.codeName}
+          </h1>
+          <div style={{ opacity: 0.85, fontSize: 15 }}>
+            {page.fullName}
           </div>
         </div>
 
-        {/* Header */}
-        <header style={{ marginTop: 28 }}>
+        {/* Cover image (optional) */}
+        {page.images?.cover?.src ? (
           <div
             style={{
-              display: "inline-flex",
-              gap: 10,
-              alignItems: "center",
-              padding: "8px 12px",
-              borderRadius: 999,
-              border: "1px solid rgba(201,169,106,0.28)",
-              background: "rgba(201,169,106,0.08)",
-              color: "rgba(201,169,106,0.95)",
-              fontSize: 12,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              fontWeight: 700,
+              borderRadius: 18,
+              overflow: "hidden",
+              border: "1px solid rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.04)",
+              marginBottom: 26,
             }}
           >
-            Archetypal tradition match
-          </div>
-
-          <h1
-            style={{
-              marginTop: 14,
-              fontSize: 46,
-              lineHeight: 1.06,
-              letterSpacing: "-0.02em",
-              marginBottom: 10,
-            }}
-          >
-            {page.codeName}
-          </h1>
-
-          <div
-            style={{
-              color: "rgba(255,255,255,0.70)",
-              fontSize: 16,
-              lineHeight: 1.6,
-              maxWidth: 840,
-            }}
-          >
-            <span style={{ color: "rgba(255,255,255,0.86)", fontWeight: 600 }}>
-              Origin:
-            </span>{" "}
-            {page.fullName} •{" "}
-            <span style={{ color: "rgba(255,255,255,0.86)", fontWeight: 600 }}>
-              Level 1:
-            </span>{" "}
-            {page.origin.level1}
-          </div>
-
-          <div style={{ marginTop: 18 }}>
-            {page.images?.cover ? (
-              <Img
-                src={page.images.cover.src}
-                alt={page.images.cover.alt}
-                caption={page.images.cover.caption}
-              />
+            <img
+              src={page.images.cover.src}
+              alt={page.images.cover.alt}
+              style={{ width: "100%", height: "auto", display: "block" }}
+              onError={(e) => {
+                // Hide if missing
+                (e.currentTarget as HTMLImageElement).style.display = "none";
+              }}
+            />
+            {page.images.cover.caption ? (
+              <div style={{ padding: "10px 14px", fontSize: 13, opacity: 0.75 }}>
+                {page.images.cover.caption}
+              </div>
             ) : null}
           </div>
-        </header>
+        ) : null}
 
-        {/* Content */}
-        <Section title="Overview">
-          <p style={{ margin: 0, lineHeight: 1.75, color: "rgba(255,255,255,0.80)", fontSize: 15 }}>
-            {page.snapshot}
-          </p>
-        </Section>
+        {/* Snapshot */}
+        <section style={card}>
+          <div style={sectionKicker}>Snapshot</div>
+          <p style={p}>{page.snapshot}</p>
+        </section>
 
-        <Section title="Origin lineage">
-          <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.75 }}>
+        {/* Origin */}
+        <section style={card}>
+          <div style={sectionKicker}>Origin (Level 1 → 4)</div>
+          <div style={{ fontSize: 15, marginBottom: 10, opacity: 0.9 }}>
+            <strong>Level 1:</strong> {page.origin.level1}
+          </div>
+          <ul style={ul}>
             {page.origin.lineage.map((x, i) => (
-              <li key={i} style={{ color: "rgba(255,255,255,0.78)", fontSize: 14 }}>
+              <li key={i} style={li}>
                 {x}
               </li>
             ))}
           </ul>
-          {page.origin.notes ? (
-            <p style={{ marginTop: 12, marginBottom: 0, color: "rgba(255,255,255,0.68)", fontSize: 14, lineHeight: 1.7 }}>
-              {page.origin.notes}
-            </p>
-          ) : null}
-        </Section>
+          {page.origin.notes ? <p style={{ ...p, opacity: 0.8 }}>{page.origin.notes}</p> : null}
+        </section>
 
-        <Section title="Lens">
-          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-            {page.lens.title}
-          </div>
-          <p style={{ marginTop: 0, color: "rgba(255,255,255,0.78)", lineHeight: 1.75, fontSize: 14 }}>
-            {page.lens.description}
-          </p>
-          <BulletList items={page.lens.inPlainEnglish} />
-        </Section>
+        {/* Lens */}
+        <section style={card}>
+          <div style={sectionKicker}>Lens</div>
+          <h2 style={h2}>{page.lens.title}</h2>
+          <p style={p}>{page.lens.description}</p>
+          <ul style={ul}>
+            {page.lens.inPlainEnglish.map((x, i) => (
+              <li key={i} style={li}>
+                {x}
+              </li>
+            ))}
+          </ul>
+        </section>
 
-        <Section title="Traits">
-          <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 12 }}>
-            {page.traits.headline}
-          </div>
-
-          <div style={{ display: "grid", gap: 10 }}>
-            {page.traits.highlights.map((h, i) => (
-              <div
-                key={i}
-                style={{
-                  padding: 14,
-                  borderRadius: 14,
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.02)",
-                }}
-              >
-                <div style={{ fontWeight: 700, marginBottom: 6 }}>
-                  {h.label}
-                </div>
-                <div style={{ color: "rgba(255,255,255,0.70)", fontSize: 14, lineHeight: 1.7 }}>
-                  {h.meaning}
-                </div>
+        {/* Traits */}
+        <section style={card}>
+          <div style={sectionKicker}>Traits</div>
+          <h2 style={h2}>{page.traits.headline}</h2>
+          <div style={{ display: "grid", gap: 12 }}>
+            {page.traits.highlights.map((t, i) => (
+              <div key={i} style={miniCard}>
+                <div style={{ fontWeight: 700, marginBottom: 4 }}>{t.label}</div>
+                <div style={{ opacity: 0.85, lineHeight: 1.6 }}>{t.meaning}</div>
               </div>
             ))}
           </div>
-        </Section>
+        </section>
 
-        <Section title="Lifestyle">
-          <BulletList items={page.recommendations.lifestyle} />
-        </Section>
+        {/* Lifestyle / Places / Music / Activities */}
+        <section style={card}>
+          <div style={sectionKicker}>Lifestyle fit</div>
+          <Grid4
+            items={[
+              { title: "Lifestyle", list: page.recommendations.lifestyle },
+              { title: "Places", list: page.recommendations.places },
+              { title: "Music", list: page.recommendations.music },
+              { title: "Activities", list: page.recommendations.activities },
+            ]}
+          />
+        </section>
 
-        <Section title="Places">
-          <BulletList items={page.recommendations.places} />
-        </Section>
+        {/* Strengths / Watchouts / Try this week */}
+        <section style={card}>
+          <div style={sectionKicker}>Practical guidance</div>
+          <Grid3
+            items={[
+              { title: "Strengths", list: page.strengths },
+              { title: "Watchouts", list: page.watchouts },
+              { title: "Try this week", list: page.tryThisWeek },
+            ]}
+          />
+        </section>
 
-        <Section title="Music">
-          <BulletList items={page.recommendations.music} />
-        </Section>
-
-        <Section title="Activities">
-          <BulletList items={page.recommendations.activities} />
-        </Section>
-
-        <Section title="Strengths">
-          <BulletList items={page.strengths} />
-        </Section>
-
-        <Section title="Watchouts">
-          <BulletList items={page.watchouts} />
-        </Section>
-
-        <Section title="Try this week">
-          <BulletList items={page.tryThisWeek} />
-        </Section>
-
+        {/* Gallery (optional) */}
         {page.images?.gallery && page.images.gallery.length > 0 ? (
-          <Section title="Gallery">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 14 }}>
-              {page.images.gallery.map((im, i) => (
-                <Img key={i} src={im.src} alt={im.alt} caption={im.caption} />
+          <section style={card}>
+            <div style={sectionKicker}>Gallery</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+              {page.images.gallery.map((img, i) => (
+                <div
+                  key={i}
+                  style={{
+                    borderRadius: 16,
+                    overflow: "hidden",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    background: "rgba(255,255,255,0.03)",
+                  }}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    style={{ width: "100%", height: "auto", display: "block" }}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                  {img.caption ? (
+                    <div style={{ padding: "10px 12px", fontSize: 13, opacity: 0.75 }}>
+                      {img.caption}
+                    </div>
+                  ) : null}
+                </div>
               ))}
             </div>
-          </Section>
+          </section>
         ) : null}
 
+        {/* Notes (optional) */}
         {page.notes && page.notes.length > 0 ? (
-          <Section title="Notes">
-            <BulletList items={page.notes} />
-          </Section>
+          <section style={card}>
+            <div style={sectionKicker}>Notes</div>
+            <ul style={ul}>
+              {page.notes.map((x, i) => (
+                <li key={i} style={li}>
+                  {x}
+                </li>
+              ))}
+            </ul>
+          </section>
         ) : null}
-
-        <footer style={{ marginTop: 34, color: "rgba(255,255,255,0.45)", fontSize: 12, lineHeight: 1.6 }}>
-          Avirage pages describe an archetypal lens (not identity or diagnosis). Recommendations are guidance, not fate.
-        </footer>
       </div>
     </main>
   );
 }
+
+/* ==============
+   Small UI helpers
+============== */
+
+function Grid4({
+  items,
+}: {
+  items: Array<{ title: string; list: string[] }>;
+}) {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 14 }}>
+      {items.map((b, idx) => (
+        <div key={idx} style={miniCard}>
+          <div style={{ fontWeight: 800, marginBottom: 10 }}>{b.title}</div>
+          <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.7, opacity: 0.9 }}>
+            {b.list.map((x, i) => (
+              <li key={i}>{x}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Grid3({
+  items,
+}: {
+  items: Array<{ title: string; list: string[] }>;
+}) {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14 }}>
+      {items.map((b, idx) => (
+        <div key={idx} style={miniCard}>
+          <div style={{ fontWeight: 800, marginBottom: 10 }}>{b.title}</div>
+          <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.7, opacity: 0.9 }}>
+            {b.list.map((x, i) => (
+              <li key={i}>{x}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ==============
+   Styles
+============== */
+
+const card: React.CSSProperties = {
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(255,255,255,0.12)",
+  borderRadius: 18,
+  padding: 22,
+  marginBottom: 16,
+  backdropFilter: "blur(14px)",
+};
+
+const miniCard: React.CSSProperties = {
+  background: "rgba(255,255,255,0.03)",
+  border: "1px solid rgba(255,255,255,0.10)",
+  borderRadius: 16,
+  padding: 16,
+};
+
+const sectionKicker: React.CSSProperties = {
+  fontSize: 12,
+  letterSpacing: "0.16em",
+  textTransform: "uppercase",
+  opacity: 0.7,
+  marginBottom: 10,
+};
+
+const h2: React.CSSProperties = {
+  fontSize: 22,
+  margin: "0 0 8px",
+};
+
+const p: React.CSSProperties = {
+  margin: 0,
+  lineHeight: 1.85,
+  fontSize: 15,
+  opacity: 0.9,
+};
+
+const ul: React.CSSProperties = {
+  margin: "10px 0 0",
+  paddingLeft: 18,
+  lineHeight: 1.8,
+  opacity: 0.9,
+};
+
+const li: React.CSSProperties = {
+  marginBottom: 6,
+};
