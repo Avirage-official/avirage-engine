@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "next": "16.0.10",
-    "react": "19.2.1",
-    "react-dom": "19.2.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "@vercel/postgres": "^0.10.0",
     "@clerk/nextjs": "^6.11.0"
   },
