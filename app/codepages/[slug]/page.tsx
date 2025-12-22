@@ -6,7 +6,7 @@ import type { CSSProperties } from "react";
 
 import { CODE_PAGES, type CodeSlug, type CodePage, type CodePageImage } from "@/lib/codePages";
 
-type Params = { slug: string };
+type Params = Promise<{ slug: string }>; // Changed this line
 
 function normalizeSlug(input: string): string {
   return decodeURIComponent(input).trim().toLowerCase();
@@ -16,13 +16,15 @@ function isCodeSlug(value: string): value is CodeSlug {
   return value in CODE_PAGES;
 }
 
-// Helps Next prebuild / recognize these routes (also reduces 404 weirdness in some deploys)
+// Helps Next prebuild / recognize these routes
 export function generateStaticParams(): Array<{ slug: CodeSlug }> {
   return (Object.keys(CODE_PAGES) as CodeSlug[]).map((slug) => ({ slug }));
 }
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
-  const slug = normalizeSlug(params.slug);
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { slug: rawSlug } = await params; // Added await
+  const slug = normalizeSlug(rawSlug);
+  
   if (!isCodeSlug(slug)) return { title: "Code Page • Avirage" };
 
   const page = CODE_PAGES[slug];
@@ -34,8 +36,9 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
   };
 }
 
-export default function CodePageRoute({ params }: { params: Params }) {
-  const slug = normalizeSlug(params.slug);
+export default async function CodePageRoute({ params }: { params: Params }) {
+  const { slug: rawSlug } = await params; // Added await
+  const slug = normalizeSlug(rawSlug);
 
   if (!isCodeSlug(slug)) notFound();
 
