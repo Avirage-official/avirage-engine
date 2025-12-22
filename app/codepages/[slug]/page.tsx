@@ -6,7 +6,7 @@ import type { CSSProperties } from "react";
 
 import { CODE_PAGES, type CodeSlug, type CodePage, type CodePageImage } from "@/lib/codePages";
 
-type Params = Promise<{ slug: string }>; // Changed this line
+type Params = Promise<{ slug: string }>;
 
 function normalizeSlug(input: string): string {
   return decodeURIComponent(input).trim().toLowerCase();
@@ -16,13 +16,12 @@ function isCodeSlug(value: string): value is CodeSlug {
   return value in CODE_PAGES;
 }
 
-// Helps Next prebuild / recognize these routes
 export function generateStaticParams(): Array<{ slug: CodeSlug }> {
   return (Object.keys(CODE_PAGES) as CodeSlug[]).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { slug: rawSlug } = await params; // Added await
+  const { slug: rawSlug } = await params;
   const slug = normalizeSlug(rawSlug);
   
   if (!isCodeSlug(slug)) return { title: "Code Page • Avirage" };
@@ -37,7 +36,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export default async function CodePageRoute({ params }: { params: Params }) {
-  const { slug: rawSlug } = await params; // Added await
+  const { slug: rawSlug } = await params;
   const slug = normalizeSlug(rawSlug);
 
   if (!isCodeSlug(slug)) notFound();
@@ -65,19 +64,16 @@ export default async function CodePageRoute({ params }: { params: Params }) {
           <h1 style={h1}>{page.codeName}</h1>
           <p style={heroP}>{page.snapshot}</p>
 
-          {/* Optional cover image from codePages.ts (recommended) */}
+          {/* Cover image from codePages.ts */}
           {page.images?.cover?.src ? <CoverImage img={page.images.cover} /> : null}
 
-          {/* Optional “manual” fallback image (keeps your naming convention) */}
+          {/* Fallback image */}
           {!page.images?.cover?.src ? (
             <div style={{ marginTop: 16 }}>
               <img
                 src={`/codepages/${slug}/hero.jpg`}
                 alt={`${page.codeName} visual`}
                 style={heroImg}
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).style.display = "none";
-                }}
               />
             </div>
           ) : null}
@@ -186,9 +182,6 @@ export default async function CodePageRoute({ params }: { params: Params }) {
                         src={img.src}
                         alt={img.alt}
                         style={sideImg}
-                        onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).style.display = "none";
-                        }}
                       />
                       {img.caption ? <figcaption style={caption}>{img.caption}</figcaption> : null}
                     </figure>
@@ -213,17 +206,11 @@ export default async function CodePageRoute({ params }: { params: Params }) {
                     src={`/codepages/${slug}/a.jpg`}
                     alt=""
                     style={sideImg}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.display = "none";
-                    }}
                   />
                   <img
                     src={`/codepages/${slug}/b.jpg`}
                     alt=""
                     style={sideImg}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.display = "none";
-                    }}
                   />
                 </div>
               </>
@@ -252,9 +239,6 @@ function CoverImage({ img }: { img: CodePageImage }) {
         src={img.src}
         alt={img.alt}
         style={coverImg}
-        onError={(e) => {
-          (e.currentTarget as HTMLImageElement).style.display = "none";
-        }}
       />
       {img.caption ? <div style={captionBar}>{img.caption}</div> : null}
     </div>
