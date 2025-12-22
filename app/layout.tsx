@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Inter, Cinzel } from "next/font/google";
+import { ClerkProvider } from '@clerk/nextjs';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,7 +14,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Professional body font + ceremonial headline font (matches your page.tsx vibe)
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -33,7 +33,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://avirage.com"), // change to your real domain later
+  metadataBase: new URL("https://avirage.com"),
   title: {
     default: "Avirage — Cultural Lens Archive",
     template: "%s — Avirage",
@@ -65,11 +65,6 @@ export const metadata: Metadata = {
     description:
       "Discover your archetypal cultural lens through multi-framework triangulation.",
   },
-  // Add icons once you have them in /public
-  // icons: {
-  //   icon: "/favicon.ico",
-  //   apple: "/apple-touch-icon.png",
-  // },
 };
 
 export default function RootLayout({
@@ -78,12 +73,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${cinzel.variable}`}
-      suppressHydrationWarning
-    >
-      <body className="antialiased">{children}</body>
-    </html>
+    <ClerkProvider>
+      <html
+        lang="en"
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${cinzel.variable}`}
+        suppressHydrationWarning
+      >
+        <body className="antialiased">{children}</body>
+      </html>
+    </ClerkProvider>
   );
 }
