@@ -1609,56 +1609,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
       ],
     },
   },
-  /* =========================================================
-     20) ASHKARA
-  ========================================================= */
-  ashkara: {
-    slug: "ashkara",
-    codeName: "Ashkara",
-    fullName: "Persian/Zoroastrian",
-    origin: {
-      level1: "Ancient Persia",
-      lineage: [
-        "Level 1: Asha (truth/order) ethics",
-        "Level 2: Moral choice as sacred action",
-        "Level 3: Fire symbolism (clarity/purity metaphor)",
-        "Level 4: Meaning expressed through deeds",
-      ],
-    },
-    snapshot:
-      "Ashkara is an ethics-in-action lens: you care about truth, integrity, and living your values through what you do—not what you claim.",
-    lens: {
-      title: "The Integrity Lens",
-      description:
-        "You’re motivated by principles and accountability. You want your actions to match your words.",
-      inPlainEnglish: ["You care about truth and order.", "You want ethics expressed through behavior.", "You respect disciplined action."],
-    },
-    traits: {
-      headline: "Truth + Action",
-      highlights: [
-        { label: "Integrity drive", meaning: "You align behavior with values." },
-        { label: "Meaning orientation", meaning: "You want actions to matter." },
-        { label: "High output (when purposeful)", meaning: "You act decisively when it’s meaningful." },
-      ],
-    },
-    recommendations: {
-      lifestyle: ["Clarify principles", "Commit to one purposeful project", "Avoid low-integrity environments"],
-      places: ["Historic spaces", "Quiet high-quality environments", "Workplaces with strong ethics"],
-      music: ["Focused, intense, purposeful sound", "Ceremonial moods", "Low-noise"],
-      activities: ["Volunteering, leadership", "Craft + discipline", "Learning ethics/philosophy"],
-    },
-    strengths: ["Integrity", "Purposeful execution", "Ethical leadership"],
-    watchouts: ["Moral rigidity", "Judgment toward others", "Over-seriousness"],
-    tryThisWeek: ["Write your ‘good thoughts/words/deeds’ practice", "Do one integrity action you’ve delayed", "Remove one low-integrity habit"],
-    images: {
-      cover: img("ashkara", "cover.jpg", "Ashkara cover image"),
-      gallery: [
-        img("ashkara", "detail-1.jpg", "Ashkara detail image 1"),
-        img("ashkara", "detail-2.jpg", "Ashkara detail image 2"),
-      ],
-    },
-  },
-};
+ 
 /**
  * Helpers
  */
