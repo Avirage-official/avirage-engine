@@ -13,7 +13,9 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "@vercel/postgres": "^0.10.0",
-    "@clerk/nextjs": "^6.11.0"
+    "@clerk/nextjs": "^6.11.0",
+    "@tailwindcss/postcss": "^4.0.0",
+    "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
