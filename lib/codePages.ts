@@ -1608,7 +1608,8 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
         img("ashkara", "detail-2.jpg", "Ashkara detail image 2"),
       ],
     },
-  };
+  },
+};
  
 /**
  * Helpers
@@ -1624,7 +1625,3 @@ export function getAllCodeSlugs(): CodeSlug[] {
 export function isCodeSlug(slug: string): slug is CodeSlug {
   return slug in CODE_PAGES;
 }
-
-
-
-
