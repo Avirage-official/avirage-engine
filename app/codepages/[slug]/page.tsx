@@ -121,7 +121,7 @@ export default function CodePage({ params }: { params: Params }) {
           <h2 style={h2}>{page.lens.title}</h2>
           <p style={p}>{page.lens.description}</p>
           <ul style={ul}>
-            {page.lens.inPlainEnglish.map((x, i) => (
+            {page.lens.inPlainEnglish.map((x: string, i: number) => ...) => (
               <li key={i} style={li}>
                 {x}
               </li>
@@ -207,7 +207,7 @@ export default function CodePage({ params }: { params: Params }) {
           <section style={card}>
             <div style={sectionKicker}>Notes</div>
             <ul style={ul}>
-              {page.notes.map((x, i) => (
+              {page.notes.map((x: string, i: number) => ...) => (
                 <li key={i} style={li}>
                   {x}
                 </li>
@@ -235,7 +235,7 @@ function Grid4({
         <div key={idx} style={miniCard}>
           <div style={{ fontWeight: 800, marginBottom: 10 }}>{b.title}</div>
           <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.7, opacity: 0.9 }}>
-            {b.list.map((x, i) => (
+            {b.list.map((x: string, i: number) => ...) => (
               <li key={i}>{x}</li>
             ))}
           </ul>
@@ -256,7 +256,7 @@ function Grid3({
         <div key={idx} style={miniCard}>
           <div style={{ fontWeight: 800, marginBottom: 10 }}>{b.title}</div>
           <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.7, opacity: 0.9 }}>
-            {b.list.map((x, i) => (
+            {b.list.map((x: string, i: number) => ...) => (
               <li key={i}>{x}</li>
             ))}
           </ul>
