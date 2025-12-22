@@ -1608,7 +1608,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
         img("ashkara", "detail-2.jpg", "Ashkara detail image 2"),
       ],
     },
-  },
+  };
  
 /**
  * Helpers
