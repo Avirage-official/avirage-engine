@@ -48,7 +48,6 @@ interface AnalysisResult {
    COLORS + EMBLEMS
 ============================ */
 
-// Keep whatever you already use here (no need to be perfect for every code)
 const CODE_COLORS: Record<string, string> = {
   Enzuka: "linear-gradient(135deg, #CD853F 0%, #8B0000 100%)",
   Siyuane: "linear-gradient(135deg, #00A86B 0%, #FFFFF0 100%)",
@@ -95,18 +94,22 @@ const CODE_EMBLEM_COUNTS: Record<string, number> = {
   Yatevar: 3,
 };
 
+/* ============================
+   HELPER FUNCTIONS
+============================ */
+
 // Accent-safe string cleaning for paths / slugs
 function stripAccents(str: string): string {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-// This controls the ROUTE: /codepages/<slug>
-// Example: "Shokunin" -> "shokunin"
-// This controls the ROUTE: /codepages/<slug>
+// Convert code name to slug and validate it exists in codePages.ts
+// Example: "Shokunin" -> "shokunin" (validated)
 function toCodeSlug(codeName: string | null | undefined): CodeSlug | null {
   if (!codeName) return null;
   const normalized = stripAccents(codeName).toLowerCase().trim();
-  return isCodeSlug(normalized) ? (normalized as CodeSlug) : null;
+  // Use the imported isCodeSlug function from codePages.ts
+  return isCodeSlug(normalized) ? normalized : null;
 }
 
 function clampEmblemPick(codeName: string, pick: number): number {
@@ -378,7 +381,7 @@ export default function Home() {
             {/* Right: credibility */}
             <div style={{ ...glassCard, padding: 20 }}>
               <div style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: THEME.textMuted, marginBottom: 10 }}>
-                What you’ll receive
+                What you'll receive
               </div>
 
               <div style={{ display: "grid", gap: 12 }}>
@@ -417,7 +420,7 @@ export default function Home() {
                 <div style={{ marginTop: 8, padding: 14, borderRadius: 16, border: `1px solid ${THEME.softBorder}`, background: THEME.panelStrong }}>
                   <div style={{ color: THEME.textPrimary, fontWeight: 800, marginBottom: 6 }}>Trust note</div>
                   <div style={{ color: THEME.textSecondary, fontSize: 13, lineHeight: 1.6 }}>
-                    This is a lens match using multiple frameworks combined. It’s designed to be consistent + interpretable, not mystical.
+                    This is a lens match using multiple frameworks combined. It's designed to be consistent + interpretable, not mystical.
                   </div>
                 </div>
               </div>
@@ -625,7 +628,7 @@ export default function Home() {
                     {result.primary.description}
                   </div>
 
-                  {/* NEW: Buttons to read code pages */}
+                  {/* Buttons to read code pages */}
                   <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
                     <CodeLinkButton codeName={result.primary.code_name} label="Read Primary" />
                     <CodeLinkButton codeName={result.secondary.code_name} label="Read Secondary" />
