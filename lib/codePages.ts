@@ -14,27 +14,8 @@
  * If an image doesn’t exist, your page can simply hide it (recommended).
  */
 
-export type CodeSlug =
-  | "khoisan"
-  | "kayori"
-  | "sahen"
-  | "enzuka"
-  | "siyuane"
-  | "jaejin"
-  | "namsea"
-  | "shokunin"
-  | "khoruun"
-  | "lhumir"
-  | "yatevar"
-  | "renara"
-  | "karayni"
-  | "wohaka"
-  | "tjukari"
-  | "kinmora"
-  | "siljoa"
-  | "skenari"
-  | "ashkara"
-  | "alethir";
+export type CodeSlug = keyof typeof CODE_PAGES;
+
 
 export type CodePageSection =
   | "Overview"
@@ -1378,6 +1359,8 @@ export function getAllCodeSlugs(): CodeSlug[] {
   return Object.keys(CODE_PAGES) as CodeSlug[];
 }
 
-export function isCodeSlug(value: string): value is CodeSlug {
-  return (value as CodeSlug) in CODE_PAGES;
+export function isCodeSlug(slug: string): slug is CodeSlug {
+  return slug in CODE_PAGES;
+}
+
 }
