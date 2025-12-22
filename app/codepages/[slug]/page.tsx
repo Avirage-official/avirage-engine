@@ -106,7 +106,7 @@ export default function CodePage({ params }: { params: Params }) {
             <strong>Level 1:</strong> {page.origin.level1}
           </div>
           <ul style={ul}>
-            {page.origin.lineage.map((x, i) => (
+            {page.origin.lineage.map((x: string, i: number) => (
               <li key={i} style={li}>
                 {x}
               </li>
