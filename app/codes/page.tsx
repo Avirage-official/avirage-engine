@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { CSSProperties, useState } from "react";
 import { CODE_PAGES, CODE_SLUGS, type CodeSlug } from "@/lib/codePages";
-
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';  // ← ADD THIS LINE
 /* ============================
    THEME
 ============================ */
@@ -86,6 +86,11 @@ export default function CodesLibraryPage() {
             <Link href="/faq" style={navLink}>
               FAQ
             </Link>
+             <SignedIn>           
+  <Link href="/dashboard" style={navLink}>
+    Dashboard
+  </Link>
+</SignedIn>
             <Link href="/quiz" style={signInBtn}>
               Take Quiz
             </Link>
