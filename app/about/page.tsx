@@ -46,6 +46,11 @@ export default function AboutPage() {
             <Link href="/faq" style={navLink}>
               FAQ
             </Link>
+             <SignedIn>           
+  <Link href="/dashboard" style={navLink}>
+    Dashboard
+  </Link>
+</SignedIn>
             <Link href="/quiz" style={signInBtn}>
               Take Quiz
             </Link>
