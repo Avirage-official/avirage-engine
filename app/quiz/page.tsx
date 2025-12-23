@@ -746,7 +746,6 @@ async function handleSaveResult() {
         }
       `}</style>
     </main>
-  );
 }
 
 /* ============================
