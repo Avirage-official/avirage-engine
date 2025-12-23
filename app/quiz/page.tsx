@@ -254,7 +254,39 @@ export default function Home() {
     setResult(null);
     setError(null);
   }
+async function handleSaveResult() {
+  if (!result) return;
+  
+  try {
+    const response = await fetch('/api/save-result', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        gender: gender === 'other' ? genderOther : gender,
+        birthDate,
+        city,
+        ethnicity,
+        quizAnswers,
+        primary: result.primary,
+        secondary: result.secondary,
+        tertiary: result.tertiary,
+        explanation: result.explanation,
+        keyTraits: result.keyTraits,
+        astrologyData: result.astrologyData,
+      }),
+    });
 
+    if (response.ok) {
+      window.location.href = '/dashboard';
+    } else {
+      alert('Failed to save result. Please try again.');
+    }
+  } catch (error) {
+    console.error('Save error:', error);
+    alert('Failed to save result. Please try again.');
+  }
+}
   /* ============================
      RENDER
   ============================ */
@@ -696,13 +728,15 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Restart */}
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <button onClick={restart} style={secondaryBtn}>
-                Discover another code
-              </button>
-            </div>
-          </div>
+          {/* Actions */}
+<div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+  <button onClick={handleSaveResult} style={primaryBtn}>
+    Save to Dashboard
+  </button>
+  <button onClick={restart} style={secondaryBtn}>
+    Take Quiz Again
+  </button>
+</div>
         )}
       </div>
 
