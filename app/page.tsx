@@ -46,6 +46,11 @@ export default function LandingPage() {
             <Link href="/faq" style={navLink}>
               FAQ
             </Link>
+             <SignedIn>
+  <Link href="/dashboard" style={navLink}>
+    Dashboard
+  </Link>
+</SignedIn>
             <SignedOut>
   <SignInButton mode="modal">
     <button style={signInBtn}>Sign In</button>
