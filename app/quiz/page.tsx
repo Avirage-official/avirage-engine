@@ -737,7 +737,7 @@ async function handleSaveResult() {
     Take Quiz Again
   </button>
 </div>
-        )}
+        }
       </div>
 
       {/* NOTE: plain <style> (NOT styled-jsx) to avoid nested styled-jsx build errors */}
