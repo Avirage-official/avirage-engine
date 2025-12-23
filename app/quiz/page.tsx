@@ -738,6 +738,8 @@ async function handleSaveResult() {
   </button>
 </div>
 
+   </div>
+
       {/* NOTE: plain <style> (NOT styled-jsx) to avoid nested styled-jsx build errors */}
       <style>{`
         @keyframes float {
@@ -746,6 +748,7 @@ async function handleSaveResult() {
         }
       `}</style>
     </main>
+  );
 }
 
 /* ============================
