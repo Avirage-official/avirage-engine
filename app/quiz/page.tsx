@@ -728,7 +728,7 @@ async function handleSaveResult() {
               </div>
             </div>
 
-          {/* Actions */}
+{/* Actions */}
 <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
   <button onClick={handleSaveResult} style={primaryBtn}>
     Save to Dashboard
@@ -737,8 +737,6 @@ async function handleSaveResult() {
     Take Quiz Again
   </button>
 </div>
-        }
-      </div>
 
       {/* NOTE: plain <style> (NOT styled-jsx) to avoid nested styled-jsx build errors */}
       <style>{`
