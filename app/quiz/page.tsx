@@ -726,31 +726,30 @@ async function handleSaveResult() {
                   </div>
                 ))}
               </div>
+            </div> 
+             {/* Actions */}
+            <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+              <button onClick={handleSaveResult} style={primaryBtn}>
+                Save to Dashboard
+              </button>
+              <button onClick={restart} style={secondaryBtn}>
+                Take Quiz Again
+              </button>
             </div>
+          </div>
+        )}
 
-{/* Actions */}
-<div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
-  <button onClick={handleSaveResult} style={primaryBtn}>
-    Save to Dashboard
-  </button>
-  <button onClick={restart} style={secondaryBtn}>
-    Take Quiz Again
-  </button>
-</div>
-
-   </div>
-
-      {/* NOTE: plain <style> (NOT styled-jsx) to avoid nested styled-jsx build errors */}
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-12px); }
-        }
-      `}</style>
+        {/* NOTE: plain <style> (NOT styled-jsx) to avoid nested styled-jsx build errors */}
+        <style>{`
+          @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+          }
+        `}</style>
+      </div>
     </main>
   );
 }
-
 /* ============================
    SUBCOMPONENTS
 ============================ */
