@@ -140,7 +140,6 @@ function LensProfileCard({ result }: { result: any }) {
   alt={`${result.primary_code} emblem`}
   style={emblemImg}
            />
-          />
         </div>
 
         {/* Right: Info */}
