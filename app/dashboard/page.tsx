@@ -187,7 +187,7 @@ function ExploreYourLens({ primaryCode }: { primaryCode: string }) {
     return <div style={exploreEmpty}>No suggestions available yet.</div>
   }
 
-  const lifestyle = codeData.lifestyle
+  const lifestyle = codeData.recommendations  // ← CHANGE THIS LINE
 
   return (
     <div style={exploreGrid}>
