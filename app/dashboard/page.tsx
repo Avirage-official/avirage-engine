@@ -135,13 +135,11 @@ function LensProfileCard({ result }: { result: any }) {
       <div style={lensProfileGrid}>
         {/* Left: Emblem */}
         <div style={lensProfileEmblem}>
-          <img
-            src={`/emblems/${result.primary_code} 1.jpg`}
-            alt={`${result.primary_code} emblem`}
-            style={emblemImg}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none'
-            }}
+         <img
+  src={`/emblems/${result.primary_code} 1.jpg`}
+  alt={`${result.primary_code} emblem`}
+  style={emblemImg}
+           />
           />
         </div>
 
