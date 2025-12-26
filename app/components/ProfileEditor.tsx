@@ -21,10 +21,9 @@ const BODY_FONT = "'Inter', system-ui, sans-serif"
 
 interface ProfileEditorProps {
   result: any
-  onProfileUpdate: () => void
 }
 
-export default function ProfileEditor({ result, onProfileUpdate }: ProfileEditorProps) {
+export default function ProfileEditor({ result }: ProfileEditorProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
@@ -65,7 +64,7 @@ export default function ProfileEditor({ result, onProfileUpdate }: ProfileEditor
 
       if (response.ok) {
         setIsEditing(false)
-        onProfileUpdate() // Refresh the page data
+        window.location.reload()
       } else {
         alert('Failed to save profile')
       }
