@@ -13,14 +13,17 @@ export async function POST(req: Request) {
     const { mbti, big5, enneagram, astrology } = body
 
     // Convert self-reported frameworks into FrameworkScores format
+    const mbtiType = mbti || 'INFP'
+    const enneagramCore = parseInt(enneagram) || 4
+    
     const frameworks: FrameworkScores = {
       mbti: {
-        type: mbti || 'INFP', // Default if not provided
-        scores: {
-          I_vs_E: mbti?.includes('I') ? 0.7 : 0.3,
-          N_vs_S: mbti?.includes('N') ? 0.7 : 0.3,
-          F_vs_T: mbti?.includes('F') ? 0.7 : 0.3,
-          P_vs_J: mbti?.includes('P') ? 0.7 : 0.3,
+        type: mbtiType,
+        preferences: {
+          IE: mbtiType.includes('I') ? 'I' : 'E',
+          SN: mbtiType.includes('N') ? 'N' : 'S',
+          TF: mbtiType.includes('T') ? 'T' : 'F',
+          JP: mbtiType.includes('J') ? 'J' : 'P',
         }
       },
       big5: {
@@ -31,17 +34,18 @@ export async function POST(req: Request) {
         neuroticism: convertBig5ToScore(big5.neuroticism),
       },
       enneagram: {
-        wing: enneagram || '4',
+        coreType: enneagramCore as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+        wing: `${enneagramCore}w${enneagramCore === 9 ? 1 : enneagramCore + 1}`,
         scores: {
-          type1: enneagram === '1' ? 0.8 : 0.2,
-          type2: enneagram === '2' ? 0.8 : 0.2,
-          type3: enneagram === '3' ? 0.8 : 0.2,
-          type4: enneagram === '4' ? 0.8 : 0.2,
-          type5: enneagram === '5' ? 0.8 : 0.2,
-          type6: enneagram === '6' ? 0.8 : 0.2,
-          type7: enneagram === '7' ? 0.8 : 0.2,
-          type8: enneagram === '8' ? 0.8 : 0.2,
-          type9: enneagram === '9' ? 0.8 : 0.2,
+          1: enneagramCore === 1 ? 3 : 0,
+          2: enneagramCore === 2 ? 3 : 0,
+          3: enneagramCore === 3 ? 3 : 0,
+          4: enneagramCore === 4 ? 3 : 0,
+          5: enneagramCore === 5 ? 3 : 0,
+          6: enneagramCore === 6 ? 3 : 0,
+          7: enneagramCore === 7 ? 3 : 0,
+          8: enneagramCore === 8 ? 3 : 0,
+          9: enneagramCore === 9 ? 3 : 0,
         }
       },
       astrology: {
