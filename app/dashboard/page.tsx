@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { CSSProperties } from 'react'
 import { CODE_PAGES } from '@/lib/codePages'
+import ProfileEditor from '@/app/components/ProfileEditor'
 
 const THEME = {
   bg: "linear-gradient(180deg, #0a0d12 0%, #111720 100%)",
@@ -79,13 +80,20 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <>
-            {/* Your Lens Profile Card */}
+           {/* Your Lens Profile Card */}
             {latestResult && (
               <section style={{ marginBottom: 48 }}>
                 <h2 style={sectionTitle}>Your Lens Profile</h2>
                 <LensProfileCard result={latestResult} />
               </section>
             )}
+
+            {/* Profile Editor - NEW! */}
+            {latestResult && (
+              <ProfileEditor result={latestResult} onProfileUpdate={() => window.location.reload()} />
+            )}
+
+            {/* Explore Your Lens */}
 
             {/* Explore Your Lens */}
             {latestResult && (
