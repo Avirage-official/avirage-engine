@@ -80,7 +80,7 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <>
-           {/* Your Lens Profile Card */}
+            {/* Your Lens Profile Card */}
             {latestResult && (
               <section style={{ marginBottom: 48 }}>
                 <h2 style={sectionTitle}>Your Lens Profile</h2>
@@ -88,12 +88,10 @@ export default async function DashboardPage() {
               </section>
             )}
 
-            {/* Profile Editor - NEW! */}
+            {/* Profile Editor */}
             {latestResult && (
-              <ProfileEditor result={latestResult} onProfileUpdate={() => window.location.reload()} />
+              <ProfileEditor result={latestResult} />
             )}
-
-            {/* Explore Your Lens */}
 
             {/* Explore Your Lens */}
             {latestResult && (
@@ -143,11 +141,11 @@ function LensProfileCard({ result }: { result: any }) {
       <div style={lensProfileGrid}>
         {/* Left: Emblem */}
         <div style={lensProfileEmblem}>
-         <img
-  src={`/emblems/${result.primary_code} 1.jpg`}
-  alt={`${result.primary_code} emblem`}
-  style={emblemImg}
-           />
+          <img
+            src={`/emblems/${result.primary_code} 1.jpg`}
+            alt={`${result.primary_code} emblem`}
+            style={emblemImg}
+          />
         </div>
 
         {/* Right: Info */}
@@ -192,7 +190,7 @@ function ExploreYourLens({ primaryCode }: { primaryCode: string }) {
     return <div style={exploreEmpty}>No suggestions available yet.</div>
   }
 
-  const lifestyle = codeData.recommendations  // ← CHANGE THIS LINE
+  const lifestyle = codeData.recommendations
 
   return (
     <div style={exploreGrid}>
