@@ -1707,95 +1707,408 @@ You feel seen for your mind—and your heart softens.`,
   },
 },
 
-  /* ==========================================
-     NAMSEA - SOUTHEAST ASIAN FLOW
-  ========================================== */
-  Namsea: {
-    // Similar comprehensive structure for Namsea
-    // (Placeholder for now)
-    locations: {
-      why: "Namsea content coming next...",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
+/* ==========================================
+   NAMSEA – ISLAND FLOW
+========================================== */
+Namsea: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is regulated by **rhythm**, not pressure. You don’t thrive by forcing yourself into intensity—you thrive when life feels *natural*, breathable, and socially warm. Your nervous system is your compass.
+
+**What this means:**
+You need environments that allow slow integration: nature nearby, gentle pace, community texture, and daily beauty. When your surroundings are too harsh or transactional, you start dissociating or numbing out.
+
+**When you honor this:**
+You feel open, creative, affectionate, and quietly powerful—because you’re finally living in a tempo that matches you.`,
+    greenLight: [
+      {
+        title: "Ocean-Adjacent / Nature-Integrated Places",
+        items: [
+          "Bali – ritual life + softness + community flow",
+          "Hawaii – ocean rhythm, nature-first living",
+          "Sri Lanka (coastal) – warmth, simplicity, ocean proximity",
+          "Portugal (coastal towns) – slow living + beauty + walkability",
+          "New Zealand (coastal) – nature structure + spaciousness",
+        ],
+        reasoning: "Namsea thrives where **nature is a daily regulator** and life isn’t only productivity.",
+      },
+      {
+        title: "Walkable, Human-Scaled Neighborhoods",
+        items: [
+          "Areas with cafés, markets, and morning light",
+          "Neighborhoods where you see familiar faces",
+          "Places with parks, water, or greenery within minutes",
+        ],
+        reasoning: "You need **soft repetition**—the same places, gently re-lived.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Aggressive, status-driven cities with constant competition",
+        "Cold social cultures where people rarely connect",
+        "Places that feel purely transactional (no warmth, no ritual)",
+      ],
+      reasoning: "You’ll still function—but you’ll feel muted, tired, and subtly lonely.",
     },
-    work: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
+    validation: {
+      resonates: [
+        "You become calmer the moment you’re near water or nature",
+        "Harsh cities make you feel emotionally ‘tight’",
+        "You choose places for vibe and warmth, not prestige",
+      ],
+      doesntResonate: [
+        "You feel best in high-pressure, competitive environments",
+        "You prefer colder, emotionally distant cultures",
+      ],
     },
-    community: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    activities: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    learning: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    media: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    living: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    rituals: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    movement: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    wellness: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    products: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    travel: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
+    affiliates: [
+      { name: "Airbnb", type: "Stays", url: "https://airbnb.com" },
+      { name: "Workaway", type: "Slow travel", url: "https://workaway.info" },
+    ],
   },
-}
+
+  work: {
+    why: `**The Core Truth:**
+You do your best work when you feel **safe, connected, and un-rushed**. Your productivity comes from harmony, not force. When the environment is supportive, you become consistent and surprisingly effective.
+
+**What this means:**
+You need work that respects rhythm: flexible structure, humane leadership, and space to create. If the culture is harsh or constantly urgent, you’ll either burn out or emotionally detach.
+
+**When you honor this:**
+You create beauty, stability, and value that lasts—without sacrificing your spirit.`,
+    greenLight: [
+      {
+        title: "Rhythm-Friendly Roles",
+        items: [
+          "Design, brand, writing, content, community",
+          "Customer success / relationship-based roles",
+          "Wellness, hospitality, education, coaching",
+          "Product roles focused on human experience",
+          "Remote work with autonomy and trust",
+        ],
+        reasoning: "Your strength is **felt intelligence**: sensing people, pacing, and emotional reality.",
+      },
+      {
+        title: "Cultures That Feel Human",
+        items: [
+          "Leaders who communicate calmly",
+          "Teams that value relationships, not fear",
+          "Places where rest isn’t treated as weakness",
+        ],
+        reasoning: "Namsea thrives with **psychological safety** and steady tempo.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Fear-driven workplaces (pressure, blame, shaming)",
+        "Always-on urgency cultures",
+        "Cold KPI-only teams that treat humans like outputs",
+      ],
+      reasoning: "You’ll become anxious or numb, and your natural warmth will shut down.",
+    },
+    validation: {
+      resonates: [
+        "You work best when you feel emotionally settled",
+        "Harsh feedback affects you deeply (even if you don’t show it)",
+        "You’re loyal to teams that feel like family",
+      ],
+      doesntResonate: [
+        "You perform best under extreme pressure",
+        "You prefer high conflict and intensity",
+      ],
+    },
+    affiliates: [
+      { name: "Remote OK", type: "Remote jobs", url: "https://remoteok.com" },
+      { name: "Wellfound", type: "Startups", url: "https://wellfound.com" },
+    ],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You bond through **warmth, presence, and care**. Community is not optional for you—it’s part of regulation. You don’t want a crowd; you want a circle.
+
+**What this means:**
+Your people are those who feel emotionally safe, playful, and consistent. You want shared meals, shared space, and gentle loyalty.
+
+**When you honor this:**
+You become more confident, creative, and alive—because you’re held.`,
+    greenLight: [
+      {
+        title: "Care-Based Communities",
+        items: [
+          "Small recurring friend circles",
+          "Creative collectives (music, art, food)",
+          "Surf / yoga / wellness communities",
+          "Neighbourhood-style social life (familiar faces)",
+        ],
+        reasoning: "Namsea thrives in **soft belonging**, not performance networking.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Communities built on status games",
+        "Groups addicted to drama or chaos",
+        "Spaces that shame emotional sensitivity",
+      ],
+      reasoning: "You’ll either shrink or start people-pleasing until you disappear.",
+    },
+    validation: {
+      resonates: [
+        "You feel restored after shared meals and gentle conversation",
+        "You value kindness over dominance",
+      ],
+      doesntResonate: [
+        "You prefer solo life with minimal social contact",
+      ],
+    },
+    affiliates: [
+      { name: "Meetup", type: "Communities", url: "https://meetup.com" },
+    ],
+  },
+
+  activities: {
+    why: `You choose activities that feel like **flow, beauty, and presence**. You don’t want stimulation—you want harmony.`,
+    greenLight: [
+      {
+        title: "Flow Activities",
+        items: [
+          "Swimming / surfing / ocean time",
+          "Yoga, mobility, breath-led movement",
+          "Cooking, hosting, shared meals",
+          "Music, dance, slow creative practices",
+        ],
+        reasoning: "These keep your nervous system open and your spirit soft.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: [
+        "Hyper-competitive activities that harden you",
+        "Over-scheduled hobbies with no joy",
+      ],
+      reasoning: "If it removes softness, it isn’t aligned.",
+    },
+    validation: {
+      resonates: ["You feel your best when life feels ‘gentle’ but meaningful"],
+      doesntResonate: ["You prefer intensity and competition for fun"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **experience + embodiment**. You don’t just understand—you absorb.`,
+    greenLight: [
+      {
+        title: "Embodied Learning",
+        items: [
+          "Mentorship and apprenticeship",
+          "Learning by doing (hands-on, real environment)",
+          "Slow study with repetition and integration",
+        ],
+        reasoning: "Namsea learns when knowledge becomes lived.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: [
+        "Pure theory with no grounding",
+        "Fast, competitive learning cultures",
+      ],
+      reasoning: "Too much speed creates anxiety and shallow retention.",
+    },
+    validation: {
+      resonates: ["You remember what you’ve lived more than what you’ve read"],
+      doesntResonate: ["You love abstract theory more than experience"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to feel **beauty, tenderness, and aliveness**.`,
+    greenLight: [
+      {
+        title: "Soft-Signal Media",
+        items: [
+          "Films with atmosphere and heart",
+          "Music that regulates mood",
+          "Nature documentaries",
+          "Stories about healing, love, belonging",
+        ],
+        reasoning: "Namsea’s media is nourishment, not adrenaline.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: [
+        "Aggressive outrage cycles",
+        "Violent content that hardens your system",
+      ],
+      reasoning: "It contaminates your emotional baseline.",
+    },
+    validation: {
+      resonates: ["Your playlist can change your whole day"],
+      doesntResonate: ["Media doesn’t affect you emotionally"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home is a **sanctuary**. It should feel soft, warm, and restorative.`,
+    greenLight: [
+      {
+        title: "Soft Homes",
+        items: [
+          "Natural light, airy layouts, greenery",
+          "Textures: wood, linen, warm colors",
+          "A kitchen / dining space that invites people",
+        ],
+        reasoning: "Your space should help you exhale.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: [
+        "Cold minimalist spaces that feel sterile",
+        "Homes that prioritize image over comfort",
+      ],
+      reasoning: "You’ll feel emotionally ungrounded.",
+    },
+    validation: {
+      resonates: ["Your space strongly affects your mood"],
+      doesntResonate: ["You can live anywhere without it affecting you"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals keep your life **tender and consistent**.`,
+    greenLight: [
+      {
+        title: "Gentle Rituals",
+        items: [
+          "Morning light + tea/coffee",
+          "Sunset walks",
+          "Weekly shared meal",
+          "Small daily self-care routines",
+        ],
+        reasoning: "These rituals preserve softness in a hard world.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Routines that feel like punishment"],
+      reasoning: "If it’s harsh, it will not last for you.",
+    },
+    validation: {
+      resonates: ["Small rituals keep you stable"],
+      doesntResonate: ["You dislike routines entirely"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is regulation. You move to **stay open**.`,
+    greenLight: [
+      {
+        title: "Open-Body Movement",
+        items: [
+          "Yoga, swimming, dance, hikes",
+          "Mobility and breath-focused training",
+        ],
+        reasoning: "Your body needs softness + strength together.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Ego-based gym culture that creates anxiety"],
+      reasoning: "It hardens you instead of strengthening you.",
+    },
+    validation: {
+      resonates: ["You feel emotionally better after gentle movement"],
+      doesntResonate: ["You only enjoy extreme training"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **emotional truth + nervous system care**.`,
+    greenLight: [
+      {
+        title: "Regulation-Based Wellness",
+        items: [
+          "Sleep consistency",
+          "Somatic practices (breath, grounding)",
+          "Therapy/coaching that feels safe and human",
+        ],
+        reasoning: "When your system is regulated, everything improves.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: [
+        "Toxic productivity wellness (shame + discipline only)",
+      ],
+      reasoning: "Shame makes you collapse or people-please.",
+    },
+    validation: {
+      resonates: ["Your environment and relationships affect your health strongly"],
+      doesntResonate: ["You can push through anything without cost"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy things that increase comfort, beauty, and ease—because those are performance multipliers for you.`,
+    greenLight: [
+      {
+        title: "Comfort + Beauty Tools",
+        items: [
+          "Good bedding",
+          "Soft lighting",
+          "Skincare / body care that feels ritualistic",
+          "Kitchen tools that make cooking joyful",
+        ],
+        reasoning: "Your products are about *quality of daily life*.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Harsh, purely utilitarian choices that feel cold"],
+      reasoning: "If it makes life feel sterile, you’ll stop using it.",
+    },
+    validation: {
+      resonates: ["You’ll pay more for things that feel good daily"],
+      doesntResonate: ["You only care about function, never feel"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **soften and restore**. You want nature, warmth, and slow integration.`,
+    greenLight: [
+      {
+        title: "Restorative Travel",
+        items: [
+          "Island and coastal travel",
+          "Slow travel with one base",
+          "Trips built around nature + community",
+        ],
+        reasoning: "Namsea returns home with a softer nervous system.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fast, packed itineraries", "Party travel that feels hollow"],
+      reasoning: "Too much speed fractures your presence.",
+    },
+    validation: {
+      resonates: ["You prefer fewer places, deeper experience"],
+      doesntResonate: ["You want rapid travel and packed schedules"],
+    },
+    affiliates: [],
+  },
+},
+
