@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { CSSProperties } from 'react'
 import { CODE_PAGES } from '@/lib/codePages'
 import ProfileEditor from '@/app/components/ProfileEditor'
+import RecommendationsTabs from '@/app/components/RecommendationsTabs'
 
 const THEME = {
   bg: "linear-gradient(180deg, #0a0d12 0%, #111720 100%)",
@@ -91,6 +92,11 @@ export default async function DashboardPage() {
             {/* Profile Editor */}
             {latestResult && (
               <ProfileEditor result={latestResult} />
+            )}
+
+            {/* Recommendations Tabs - NEW! */}
+            {latestResult && (
+              <RecommendationsTabs primaryCode={latestResult.primary_code} />
             )}
 
             {/* Explore Your Lens */}
