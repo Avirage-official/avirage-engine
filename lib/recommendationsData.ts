@@ -1326,97 +1326,386 @@ You choose activities that **test endurance, discipline, and willpower**. Ease f
   },
 },
 
-  /* ==========================================
-     ALETHIR - ANCIENT GREEK INQUIRY
-  ========================================== */
-  Alethir: {
-    // Similar comprehensive structure for Alethir
-    // (I'll build this next - placeholder for now)
-    locations: {
-      why: "Alethir content coming next...",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
+/* ==========================================
+   ALETHIR – ANCIENT GREEK INQUIRY
+========================================== */
+Alethir: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is powered by **questions**, not comfort. You don’t just want a place to live—you want a place that *keeps your mind awake*. You thrive in environments where debate is normal, ideas are social currency, and curiosity is respected.
+
+**What this means:**
+Aletheir isn’t “bookish”—it’s **alive inquiry**. You need cities with institutions, thinkers, discourse, and cultural depth. If the environment can’t hold complexity, you start shrinking yourself.
+
+**When you honor this:**
+You feel mentally fed. You meet people who challenge you. Your mind stays sharp—without becoming cynical.`,
+    greenLight: [
+      {
+        title: "Idea-Dense Cities",
+        items: [
+          "Athens – philosophical lineage and public discourse",
+          "London – museums, institutions, debate culture",
+          "Berlin – intellectual counterculture and critique",
+          "Boston/Cambridge – universities and deep-specialist circles",
+          "Paris – salons, theory, arts + philosophy overlap",
+        ],
+        reasoning: "Alethir thrives where **ideas are ambient**—not a niche hobby.",
+      },
+      {
+        title: "Third Places for Thought",
+        items: [
+          "Libraries with long-stay energy",
+          "Museums you can return to repeatedly",
+          "Cafés built for conversation (not fast turnover)",
+          "Public lectures, talks, philosophy clubs",
+        ],
+        reasoning: "You need environments that invite **lingering attention**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Places where questions are treated as negativity",
+        "Social cultures where depth is seen as ‘trying too hard’",
+        "Pure party cities with little intellectual infrastructure",
+      ],
+      reasoning: "When inquiry is socially punished, you either go quiet—or become sharp and isolated.",
     },
-    work: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
+    validation: {
+      resonates: [
+        "You feel energized after a deep debate—even if you disagree",
+        "You choose cities for institutions and culture, not just lifestyle",
+        "You’ve felt ‘mentally hungry’ in places that are too shallow",
+      ],
+      doesntResonate: [
+        "You prefer a calm, non-discussive environment",
+        "You dislike theory or abstract thinking entirely",
+      ],
     },
-    community: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    activities: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    learning: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    media: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    living: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    rituals: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    movement: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    wellness: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    products: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
-    travel: {
-      why: "",
-      greenLight: [],
-      redLight: { title: "", items: [], reasoning: "" },
-      validation: { resonates: [], doesntResonate: [] },
-      affiliates: [],
-    },
+    affiliates: [
+      { name: "Meetup", type: "Communities", url: "https://meetup.com" },
+      { name: "Eventbrite", type: "Lectures", url: "https://eventbrite.com" },
+    ],
   },
+
+  work: {
+    why: `**The Core Truth:**
+You don’t work for tasks—you work for **truth, clarity, and coherence**. You’re built for roles where thinking is the product: analysis, reasoning, strategy, critique, synthesis.
+
+**What this means:**
+If your job doesn’t let you question assumptions, you’ll either disengage or slowly rot. You need work that respects the mind—and gives you room to go deeper than the obvious answer.
+
+**When you honor this:**
+You become a precision instrument: calm, sharp, and unusually difficult to manipulate.`,
+    greenLight: [
+      {
+        title: "Inquiry-Driven Roles",
+        items: [
+          "Strategy, research, policy, intelligence",
+          "Product thinking, analytics, experimentation",
+          "Law, philosophy, ethics, governance",
+          "AI/ML research, systems design, evaluation",
+          "Writing/editing where ideas matter",
+        ],
+        reasoning: "Your gift is **structured insight**—you reduce noise into principles.",
+      },
+      {
+        title: "High-Integrity Environments",
+        items: [
+          "Organizations that reward dissent (in good faith)",
+          "Cultures with rigorous review (peer critique, debate, QA)",
+          "Places where ‘why’ is welcomed, not feared",
+        ],
+        reasoning: "You need **truth-tolerance** in the culture, or you’ll become an outsider.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Vibes-only cultures (no reasoning, no standards)",
+        "Jobs where questioning is seen as disloyalty",
+        "Work that is purely execution without thinking space",
+      ],
+      reasoning: "You’ll feel like you’re betraying yourself if you’re forced to perform certainty without evidence.",
+    },
+    validation: {
+      resonates: [
+        "You can’t respect a plan you don’t understand",
+        "You spot contradictions fast—and can’t unsee them",
+        "You feel alive when you’re chasing a better explanation",
+      ],
+      doesntResonate: [
+        "You prefer clear instructions over ambiguity",
+        "You dislike debate and critique entirely",
+      ],
+    },
+    affiliates: [
+      { name: "LinkedIn Jobs", type: "Jobs", url: "https://linkedin.com/jobs" },
+      { name: "Wellfound", type: "Startups", url: "https://wellfound.com" },
+    ],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You bond through **ideas and honesty**, not constant presence. Your people are those who can disagree without disrespect, and who don’t collapse under complexity.
+
+**What this means:**
+You need a community where thought is safe. Not everyone has to be “intellectual”—but people must be **truthful, curious, and not fragile around nuance**.
+
+**When you honor this:**
+You feel seen for your mind—and your heart softens.`,
+    greenLight: [
+      {
+        title: "Dialogue-Based Circles",
+        items: [
+          "Philosophy / debate groups",
+          "Reading circles with real critique",
+          "Research or builder communities",
+          "Mentorship networks (teacher + student flows both ways)",
+        ],
+        reasoning: "Alethir needs **clean discourse**—not performance or tribal shouting.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Groups built on conformity",
+        "Spaces where disagreement becomes personal attack",
+        "Communities addicted to outrage or superiority",
+      ],
+      reasoning: "Your mind will either sharpen into arrogance—or withdraw into loneliness.",
+    },
+    validation: {
+      resonates: [
+        "You’ve had friendships built on conversation more than activity",
+        "You respect people who change their mind with evidence",
+      ],
+      doesntResonate: [
+        "You bond mostly through shared fun and lightness",
+      ],
+    },
+    affiliates: [
+      { name: "Discord", type: "Communities", url: "https://discord.com" },
+    ],
+  },
+
+  activities: {
+    why: `You choose activities that reward **depth, precision, and meaning**. You don’t want stimulation—you want insight.`,
+    greenLight: [
+      {
+        title: "Depth Activities",
+        items: [
+          "Debate, writing, long-form reading",
+          "Chess / strategy games",
+          "Museum study, philosophy walks",
+          "Building frameworks, research projects",
+        ],
+        reasoning: "These let you turn attention into understanding.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: [
+        "Constant entertainment loops",
+        "Activities with no room for thought",
+      ],
+      reasoning: "Too much stimulation blurs your signal; you start feeling empty.",
+    },
+    validation: { resonates: ["You prefer ‘slow depth’ over ‘fast fun’"], doesntResonate: ["You need constant novelty to enjoy life"] },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn by **interrogation**. You don’t memorize—you test. You need first principles, not slogans.`,
+    greenLight: [
+      {
+        title: "Socratic Learning",
+        items: [
+          "Courses with debate + critique",
+          "Books that build arguments (not just tips)",
+          "Research, peer review, note systems",
+        ],
+        reasoning: "You learn when the material can survive questioning.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: [
+        "Motivational content posing as education",
+        "Learning paths that punish asking ‘why’",
+      ],
+      reasoning: "If the system can’t explain itself, you can’t trust it.",
+    },
+    validation: { resonates: ["You chase clarity until it clicks"], doesntResonate: ["You prefer simple answers even when reality is complex"] },
+    affiliates: [
+      { name: "Coursera", type: "Courses", url: "https://coursera.org" },
+      { name: "edX", type: "Courses", url: "https://edx.org" },
+    ],
+  },
+
+  media: {
+    why: `You consume media to refine your mind. You want **arguments, craft, and insight**—not noise.`,
+    greenLight: [
+      {
+        title: "High-Signal Media",
+        items: [
+          "Long-form essays and lectures",
+          "Documentaries with substance",
+          "Podcasts with structured thinking",
+          "Books that challenge worldview",
+        ],
+        reasoning: "You respect media that thinks, not just reacts.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: [
+        "Outrage cycles",
+        "Low-context ‘hot take’ culture",
+      ],
+      reasoning: "It trains your mind to be reactive instead of clear.",
+    },
+    validation: { resonates: ["You can’t enjoy shallow content for long"], doesntResonate: ["You prefer light content always"] },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home must support **thinking**. You need space for calm attention: reading, writing, reflection.`,
+    greenLight: [
+      {
+        title: "Thinking-Friendly Homes",
+        items: [
+          "Quiet corners, warm light, fewer distractions",
+          "A desk that invites deep work",
+          "Books within reach (physical or digital library)",
+        ],
+        reasoning: "Your environment should reduce noise so your mind can go deeper.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: [
+        "Constant noise, chaotic shared spaces",
+        "Homes designed only for hosting/consumption",
+      ],
+      reasoning: "You’ll feel mentally scattered and subtly irritated every day.",
+    },
+    validation: { resonates: ["You need solitude to think clearly"], doesntResonate: ["You prefer constant social presence at home"] },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals keep you honest. They create **structure for inquiry**: returning, refining, clarifying.`,
+    greenLight: [
+      {
+        title: "Clarity Rituals",
+        items: [
+          "Daily writing / reflection",
+          "Weekly ‘truth audit’ (what do I actually believe?)",
+          "Long walks to think",
+        ],
+        reasoning: "Your mind needs regular space to re-align with reality.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Rituals that are performative, not reflective"],
+      reasoning: "If it’s for appearance, it pollutes your inner signal.",
+    },
+    validation: { resonates: ["You return to the same questions over years"], doesntResonate: ["You dislike reflection and prefer action only"] },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement for you is not hype—it’s **clarity through discipline**. You prefer practices that calm the mind and sharpen awareness.`,
+    greenLight: [
+      {
+        title: "Mind-Body Precision",
+        items: [
+          "Yoga, mobility, breathwork",
+          "Strength training with technique focus",
+          "Endurance walks/runs for thinking",
+        ],
+        reasoning: "You move best when movement supports cognition.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Chaotic workout cultures built on ego and noise"],
+      reasoning: "Too much external intensity reduces your internal clarity.",
+    },
+    validation: { resonates: ["You think better after controlled movement"], doesntResonate: ["You need adrenaline to enjoy movement"] },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness is about **mental integrity**: clear perception, emotional honesty, and stable attention.`,
+    greenLight: [
+      {
+        title: "Integrity-Based Wellness",
+        items: [
+          "Therapy/coaching that builds frameworks",
+          "Meditation that improves attention (not escapism)",
+          "Sleep discipline (clarity multiplier)",
+        ],
+        reasoning: "You feel well when your mind is coherent and truthful.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Spiritual bypassing (using ‘peace’ to avoid truth)"],
+      reasoning: "If it numbs inquiry, it eventually harms you.",
+    },
+    validation: { resonates: ["You can’t feel peace without honesty"], doesntResonate: ["You prefer comfort even when it’s untrue"] },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy tools that increase signal: better thinking, better work, better clarity.`,
+    greenLight: [
+      {
+        title: "Signal-Boosting Tools",
+        items: [
+          "Great notebooks / pens (thinking tools)",
+          "Note systems (Obsidian/Notion style)",
+          "Books and references you return to",
+        ],
+        reasoning: "Your ‘tools’ are mostly cognitive—anything that helps you refine truth.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Impulse buys optimized for novelty"],
+      reasoning: "Novelty without depth feels like noise to you.",
+    },
+    validation: { resonates: ["You prefer one great tool over ten trendy ones"], doesntResonate: ["You love constant new gadgets"] },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **understand**, not to escape. You want history, museums, conversations, and context.`,
+    greenLight: [
+      {
+        title: "Context-Rich Travel",
+        items: [
+          "Cities with deep history and institutions",
+          "Trips built around learning (lectures, tours with substance)",
+          "Slow travel that allows integration",
+        ],
+        reasoning: "You want to return home with a better model of reality—not just photos.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Party travel with no depth or context"],
+      reasoning: "You’ll feel like you spent time but gained nothing.",
+    },
+    validation: { resonates: ["You plan travel around meaning"], doesntResonate: ["You travel mainly for entertainment"] },
+    affiliates: [
+      { name: "Atlas Obscura", type: "Deep places", url: "https://atlasobscura.com" },
+    ],
+  },
+},
 
   /* ==========================================
      NAMSEA - SOUTHEAST ASIAN FLOW
