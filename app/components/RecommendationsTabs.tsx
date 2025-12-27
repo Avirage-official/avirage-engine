@@ -17,141 +17,192 @@ const THEME = {
 }
 
 const DISPLAY_FONT = "'Cinzel', serif"
+const BODY_FONT = "'Inter', system-ui, sans-serif"
 
 interface RecommendationsTabsProps {
   primaryCode: string
 }
 
-type CategoryKey =
-  | 'locations' | 'work' | 'community' | 'activities'
-  | 'learning' | 'media' | 'living' | 'rituals'
-  | 'movement' | 'wellness' | 'products' | 'travel'
+type CategoryKey = 'locations' | 'work' | 'community' | 'activities' | 'learning' | 'media' | 'living' | 'rituals' | 'movement' | 'wellness' | 'products' | 'travel'
 
 const CATEGORIES: { key: CategoryKey; label: string; emoji: string }[] = [
   { key: 'locations', label: 'Locations', emoji: '🌍' },
-  { key: 'work', label: 'Work', emoji: '💼' },
-  { key: 'community', label: 'Community', emoji: '👥' },
+  { key: 'work', label: 'Work Environments', emoji: '💼' },
+  { key: 'community', label: 'Community Types', emoji: '👥' },
   { key: 'activities', label: 'Activities', emoji: '🎨' },
-  { key: 'learning', label: 'Learning', emoji: '📚' },
-  { key: 'media', label: 'Media', emoji: '🎵' },
-  { key: 'living', label: 'Living', emoji: '🏠' },
-  { key: 'rituals', label: 'Rituals', emoji: '🍽️' },
-  { key: 'movement', label: 'Movement', emoji: '💪' },
-  { key: 'wellness', label: 'Wellness', emoji: '🧘' },
-  { key: 'products', label: 'Products', emoji: '🛍️' },
-  { key: 'travel', label: 'Travel', emoji: '✈️' },
+  { key: 'learning', label: 'Learning Styles', emoji: '📚' },
+  { key: 'media', label: 'Music/Media', emoji: '🎵' },
+  { key: 'living', label: 'Living Spaces', emoji: '🏠' },
+  { key: 'rituals', label: 'Social Rituals', emoji: '🍽️' },
+  { key: 'movement', label: 'Movement/Fitness', emoji: '💪' },
+  { key: 'wellness', label: 'Wellness Practices', emoji: '🧘' },
+  { key: 'products', label: 'Products/Tools', emoji: '🛍️' },
+  { key: 'travel', label: 'Travel Styles', emoji: '✈️' },
 ]
 
 export default function RecommendationsTabs({ primaryCode }: RecommendationsTabsProps) {
   const [activeTab, setActiveTab] = useState<CategoryKey>('locations')
+  
+  // Get recommendations for this code
   const codeRecs = RECOMMENDATIONS[primaryCode]
+  
+  if (!codeRecs) {
+    return (
+      <div style={emptyState}>
+        <p style={emptyText}>Recommendations coming soon for {primaryCode}!</p>
+      </div>
+    )
+  }
 
-  if (!codeRecs) return null
+  const currentCategory = codeRecs[activeTab]
 
   return (
-    <section style={{ marginBottom: 56 }}>
-      <header style={header}>
-        <h2 style={title}>Exploring your {primaryCode} alignment</h2>
-        <p style={subtitle}>
-          These aren’t rules. They’re patterns you may already recognize.
-        </p>
-      </header>
+    <section style={{ marginBottom: 48 }}>
+      <div style={sectionHeader}>
+        <div>
+          <h2 style={sectionTitle}>Your {primaryCode} Recommendations</h2>
+          <p style={sectionDesc}>
+            Deep guidance across 12 life categories—choose what feeds your soul, avoid what drains it
+          </p>
+        </div>
+      </div>
 
-      <div style={tabNav}>
-        {CATEGORIES.map(cat => (
+      {/* Tab Navigation */}
+      <div style={tabContainer}>
+        {CATEGORIES.map((cat) => (
           <button
             key={cat.key}
             onClick={() => setActiveTab(cat.key)}
             style={{
-              ...tabBtn,
-              ...(activeTab === cat.key ? tabBtnActive : {})
+              ...tabButton,
+              ...(activeTab === cat.key ? tabButtonActive : {}),
             }}
           >
-            <span>{cat.emoji}</span>
+            <span style={{ fontSize: 18 }}>{cat.emoji}</span>
             <span>{cat.label}</span>
           </button>
         ))}
       </div>
 
-      <div style={content}>
-        <CategoryContent category={codeRecs[activeTab]} />
+      {/* Tab Content */}
+      <div style={tabContent}>
+        <CategoryContent category={currentCategory} categoryKey={activeTab} />
       </div>
     </section>
   )
 }
 
-function CategoryContent({ category }: { category: CategoryRecommendation }) {
-  const [showRed, setShowRed] = useState(false)
-  const [expanded, setExpanded] = useState(false)
-
-  if (!category?.why) return null
+function CategoryContent({ category, categoryKey }: { category: CategoryRecommendation; categoryKey: string }) {
+  if (!category.why || category.why.includes('coming next')) {
+    return (
+      <div style={emptyState}>
+        <p style={emptyText}>Content for this category is being crafted with care. Check back soon!</p>
+      </div>
+    )
+  }
 
   return (
     <div>
-      {/* Soft primer */}
-      <p style={primer}>
-        Some parts of life quietly energize you. Others slowly drain you.
-        This section helps you notice the difference.
-      </p>
-
-      {/* Why */}
-      <div style={whyBox}>
-        {category.why.split('\n\n').map((p, i) => (
-          <p key={i} style={whyText}>{p}</p>
-        ))}
+      {/* Why This Matters */}
+      <div style={whySection}>
+        <h3 style={whyTitle}>Why This Matters</h3>
+        <div style={whyText}>
+          {category.why.split('\n\n').map((paragraph, idx) => (
+            <p key={idx} style={{ marginBottom: 16, lineHeight: 1.8 }}>
+              {paragraph.split('**').map((part, i) => 
+                i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+              )}
+            </p>
+          ))}
+        </div>
       </div>
 
-      {/* Green Light */}
-      {category.greenLight.map((g, i) => (
-        <div key={i} style={greenBox}>
-          <div style={greenTitle}>{g.title}</div>
-
-          <ul style={list}>
-            {(expanded ? g.items : g.items.slice(0, 3)).map((item, j) => (
-              <li key={j}>{item}</li>
+      {/* Green Light Sections */}
+      {category.greenLight.map((section, idx) => (
+        <div key={idx} style={greenLightSection}>
+          <div style={sectionBadge}>
+            <span style={badgeIcon}>✓</span>
+            <span style={badgeText}>{section.title}</span>
+          </div>
+          
+          <ul style={listStyle}>
+            {section.items.map((item, i) => (
+              <li key={i} style={listItem}>{item}</li>
             ))}
           </ul>
 
-          {g.items.length > 3 && (
-            <button onClick={() => setExpanded(!expanded)} style={revealBtn}>
-              {expanded ? 'Show less' : 'Show more'}
-            </button>
-          )}
-
-          {g.reasoning && (
-            <p style={reasoning}>{g.reasoning}</p>
+          {section.reasoning && (
+            <p style={reasoningText}>
+              <strong>Why it fits:</strong> {section.reasoning}
+            </p>
           )}
         </div>
       ))}
 
-      {/* Red Light (collapsed) */}
-      {category.redLight?.items?.length > 0 && (
-        <div style={redWrapper}>
-          <button onClick={() => setShowRed(!showRed)} style={softToggle}>
-            {showRed ? 'Hide friction signs' : 'When this might not fit'}
-          </button>
+      {/* Red Light Section */}
+      {category.redLight.items.length > 0 && (
+        <div style={redLightSection}>
+          <div style={sectionBadgeRed}>
+            <span style={badgeIconRed}>✕</span>
+            <span style={badgeTextRed}>{category.redLight.title}</span>
+          </div>
+          
+          <ul style={listStyle}>
+            {category.redLight.items.map((item, i) => (
+              <li key={i} style={listItemRed}>{item}</li>
+            ))}
+          </ul>
 
-          {showRed && (
-            <div style={redBox}>
-              <ul style={list}>
-                {category.redLight.items.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-              {category.redLight.reasoning && (
-                <p style={reasoning}>{category.redLight.reasoning}</p>
-              )}
-            </div>
+          {category.redLight.reasoning && (
+            <p style={reasoningTextRed}>
+              <strong>Why avoid:</strong> {category.redLight.reasoning}
+            </p>
           )}
         </div>
       )}
 
-      {/* Validation */}
-      {category.validation?.resonates?.length > 0 && (
-        <div style={validation}>
-          <p style={validationHint}>
-            If this felt familiar rather than impressive, you’re probably reading yourself.
-          </p>
+      {/* Validation Questions */}
+      {category.validation.resonates.length > 0 && (
+        <div style={validationSection}>
+          <h3 style={validationTitle}>How To Know If This Resonates</h3>
+          
+          <div style={validationGrid}>
+            <div style={validationCard}>
+              <div style={validationLabel}>✓ You resonate if:</div>
+              <ul style={validationList}>
+                {category.validation.resonates.map((item, i) => (
+                  <li key={i} style={validationItem}>{item}</li>
+                ))}
+              </ul>
+            </div>
+
+            {category.validation.doesntResonate.length > 0 && (
+              <div style={validationCard}>
+                <div style={validationLabelAlt}>⚠️ You might not if:</div>
+                <ul style={validationList}>
+                  {category.validation.doesntResonate.map((item, i) => (
+                    <li key={i} style={validationItem}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Affiliate Links */}
+      {category.affiliates.length > 0 && (
+        <div style={affiliateSection}>
+          <h3 style={affiliateTitle}>Recommended Resources</h3>
+          <div style={affiliateGrid}>
+            {category.affiliates.map((aff, i) => (
+              <a key={i} href={aff.url} target="_blank" rel="noopener noreferrer" style={affiliateLink}>
+                <div style={affiliateName}>{aff.name}</div>
+                <div style={affiliateType}>{aff.type}</div>
+                <span style={affiliateArrow}>→</span>
+              </a>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -162,121 +213,302 @@ function CategoryContent({ category }: { category: CategoryRecommendation }) {
    STYLES
 ============================ */
 
-const header: CSSProperties = { marginBottom: 24 }
-const title: CSSProperties = {
+const sectionHeader: CSSProperties = {
+  marginBottom: 32,
+}
+
+const sectionTitle: CSSProperties = {
   fontFamily: DISPLAY_FONT,
-  fontSize: 26,
+  fontSize: 28,
   fontWeight: 900,
-}
-const subtitle: CSSProperties = {
-  fontSize: 15,
-  color: THEME.textSecondary,
-}
-
-const tabNav: CSSProperties = {
-  display: 'flex',
-  gap: 8,
-  flexWrap: 'wrap',
-  marginBottom: 24,
-}
-
-const tabBtn: CSSProperties = {
-  padding: '10px 14px',
-  borderRadius: 10,
-  border: `1px solid ${THEME.softBorder}`,
-  background: THEME.panel,
-  color: THEME.textSecondary,
-  fontWeight: 600,
-  cursor: 'pointer',
-}
-
-const tabBtnActive: CSSProperties = {
-  borderColor: THEME.accent,
-  color: THEME.accent,
-}
-
-const content: CSSProperties = {
-  padding: 28,
-  borderRadius: 16,
-  background: THEME.panel,
-  border: `1px solid ${THEME.softBorder}`,
-}
-
-const primer: CSSProperties = {
-  fontSize: 13,
-  fontStyle: 'italic',
-  color: THEME.textMuted,
-  marginBottom: 20,
-  maxWidth: 520,
-}
-
-const whyBox: CSSProperties = {
-  marginBottom: 28,
-}
-
-const whyText: CSSProperties = {
-  fontSize: 14,
-  lineHeight: 1.8,
-  color: THEME.textSecondary,
-  marginBottom: 12,
-}
-
-const greenBox: CSSProperties = {
-  marginBottom: 24,
-}
-
-const greenTitle: CSSProperties = {
-  fontSize: 14,
-  fontWeight: 800,
   marginBottom: 8,
-  color: THEME.accent,
+  color: THEME.textPrimary,
 }
 
-const list: CSSProperties = {
-  paddingLeft: 18,
+const sectionDesc: CSSProperties = {
+  fontSize: 15,
   color: THEME.textSecondary,
   lineHeight: 1.7,
 }
 
-const revealBtn: CSSProperties = {
-  marginTop: 8,
-  background: 'none',
-  border: 'none',
+const tabContainer: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+  gap: 10,
+  marginBottom: 24,
+}
+
+const tabButton: CSSProperties = {
+  padding: '14px 16px',
+  borderRadius: 12,
+  border: `1px solid ${THEME.softBorder}`,
+  background: THEME.panel,
+  color: THEME.textSecondary,
+  fontSize: 13,
+  fontWeight: 700,
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 10,
+  transition: 'all 0.2s ease',
+}
+
+const tabButtonActive: CSSProperties = {
+  background: 'rgba(201,169,106,0.10)',
+  borderColor: THEME.accent,
   color: THEME.accent,
-  fontSize: 13,
-  cursor: 'pointer',
 }
 
-const reasoning: CSSProperties = {
+const tabContent: CSSProperties = {
+  padding: 32,
+  borderRadius: 16,
+  border: `1px solid ${THEME.softBorder}`,
+  background: THEME.panel,
+}
+
+const whySection: CSSProperties = {
+  marginBottom: 32,
+  padding: 24,
+  borderRadius: 12,
+  background: THEME.panelStrong,
+  border: `1px solid ${THEME.softBorder}`,
+}
+
+const whyTitle: CSSProperties = {
+  fontFamily: DISPLAY_FONT,
+  fontSize: 20,
+  fontWeight: 900,
+  marginBottom: 16,
+  color: THEME.accent,
+}
+
+const whyText: CSSProperties = {
+  fontSize: 14,
+  color: THEME.textSecondary,
+  lineHeight: 1.8,
+}
+
+const greenLightSection: CSSProperties = {
+  marginBottom: 24,
+  padding: 20,
+  borderRadius: 12,
+  border: `1px solid rgba(100, 200, 100, 0.2)`,
+  background: 'rgba(100, 200, 100, 0.03)',
+}
+
+const redLightSection: CSSProperties = {
+  marginBottom: 24,
+  padding: 20,
+  borderRadius: 12,
+  border: `1px solid rgba(255, 100, 100, 0.2)`,
+  background: 'rgba(255, 100, 100, 0.03)',
+}
+
+const sectionBadge: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 8,
+  padding: '8px 14px',
+  borderRadius: 8,
+  background: 'rgba(100, 200, 100, 0.15)',
+  marginBottom: 16,
+}
+
+const sectionBadgeRed: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 8,
+  padding: '8px 14px',
+  borderRadius: 8,
+  background: 'rgba(255, 100, 100, 0.15)',
+  marginBottom: 16,
+}
+
+const badgeIcon: CSSProperties = {
+  fontSize: 16,
+  fontWeight: 900,
+  color: 'rgb(100, 200, 100)',
+}
+
+const badgeIconRed: CSSProperties = {
+  fontSize: 16,
+  fontWeight: 900,
+  color: 'rgb(255, 100, 100)',
+}
+
+const badgeText: CSSProperties = {
+  fontSize: 14,
+  fontWeight: 900,
+  color: 'rgb(100, 200, 100)',
+  letterSpacing: '0.04em',
+  textTransform: 'uppercase',
+}
+
+const badgeTextRed: CSSProperties = {
+  fontSize: 14,
+  fontWeight: 900,
+  color: 'rgb(255, 100, 100)',
+  letterSpacing: '0.04em',
+  textTransform: 'uppercase',
+}
+
+const listStyle: CSSProperties = {
+  margin: 0,
+  paddingLeft: 20,
+  listStyle: 'disc',
+}
+
+const listItem: CSSProperties = {
+  fontSize: 14,
+  color: THEME.textSecondary,
+  marginBottom: 10,
+  lineHeight: 1.7,
+}
+
+const listItemRed: CSSProperties = {
+  fontSize: 14,
+  color: THEME.textSecondary,
+  marginBottom: 10,
+  lineHeight: 1.7,
+}
+
+const reasoningText: CSSProperties = {
   fontSize: 13,
-  fontStyle: 'italic',
   color: THEME.textMuted,
-  marginTop: 8,
-}
-
-const redWrapper: CSSProperties = {
-  marginTop: 16,
-}
-
-const softToggle: CSSProperties = {
-  background: 'none',
-  border: 'none',
-  color: THEME.textMuted,
-  fontSize: 13,
-  cursor: 'pointer',
-}
-
-const redBox: CSSProperties = {
   marginTop: 12,
-  paddingLeft: 12,
-}
-
-const validation: CSSProperties = {
-  marginTop: 32,
-}
-
-const validationHint: CSSProperties = {
-  fontSize: 13,
   fontStyle: 'italic',
+  lineHeight: 1.6,
+}
+
+const reasoningTextRed: CSSProperties = {
+  fontSize: 13,
   color: THEME.textMuted,
+  marginTop: 12,
+  fontStyle: 'italic',
+  lineHeight: 1.6,
+}
+
+const validationSection: CSSProperties = {
+  marginTop: 32,
+  padding: 24,
+  borderRadius: 12,
+  background: THEME.panelStrong,
+  border: `1px solid ${THEME.softBorder}`,
+}
+
+const validationTitle: CSSProperties = {
+  fontFamily: DISPLAY_FONT,
+  fontSize: 18,
+  fontWeight: 900,
+  marginBottom: 20,
+  color: THEME.textPrimary,
+}
+
+const validationGrid: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: 20,
+}
+
+const validationCard: CSSProperties = {
+  padding: 16,
+  borderRadius: 10,
+  background: 'rgba(255,255,255,0.02)',
+  border: `1px solid ${THEME.softBorder}`,
+}
+
+const validationLabel: CSSProperties = {
+  fontSize: 13,
+  fontWeight: 900,
+  color: 'rgb(100, 200, 100)',
+  marginBottom: 12,
+  letterSpacing: '0.04em',
+}
+
+const validationLabelAlt: CSSProperties = {
+  fontSize: 13,
+  fontWeight: 900,
+  color: 'rgb(255, 200, 100)',
+  marginBottom: 12,
+  letterSpacing: '0.04em',
+}
+
+const validationList: CSSProperties = {
+  margin: 0,
+  paddingLeft: 20,
+  listStyle: 'circle',
+}
+
+const validationItem: CSSProperties = {
+  fontSize: 13,
+  color: THEME.textSecondary,
+  marginBottom: 8,
+  lineHeight: 1.6,
+}
+
+const affiliateSection: CSSProperties = {
+  marginTop: 32,
+  padding: 20,
+  borderRadius: 12,
+  background: 'rgba(201,169,106,0.05)',
+  border: `1px solid ${THEME.accent}`,
+}
+
+const affiliateTitle: CSSProperties = {
+  fontSize: 16,
+  fontWeight: 900,
+  color: THEME.accent,
+  marginBottom: 16,
+  letterSpacing: '0.04em',
+  textTransform: 'uppercase',
+}
+
+const affiliateGrid: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+  gap: 12,
+}
+
+const affiliateLink: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: '12px 16px',
+  borderRadius: 10,
+  background: THEME.panel,
+  border: `1px solid ${THEME.softBorder}`,
+  textDecoration: 'none',
+  color: THEME.textPrimary,
+  transition: 'all 0.2s ease',
+  cursor: 'pointer',
+}
+
+const affiliateName: CSSProperties = {
+  fontSize: 14,
+  fontWeight: 700,
+  color: THEME.textPrimary,
+}
+
+const affiliateType: CSSProperties = {
+  fontSize: 12,
+  color: THEME.textMuted,
+}
+
+const affiliateArrow: CSSProperties = {
+  fontSize: 16,
+  color: THEME.accent,
+}
+
+const emptyState: CSSProperties = {
+  padding: 60,
+  textAlign: 'center',
+  borderRadius: 16,
+  border: `1px solid ${THEME.softBorder}`,
+  background: THEME.panel,
+}
+
+const emptyText: CSSProperties = {
+  fontSize: 15,
+  color: THEME.textSecondary,
+  margin: 0,
 }
