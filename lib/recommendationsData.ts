@@ -968,6 +968,363 @@ You plan trips around **learning**. You take workshops. You meet makers. You ret
       ],
     },
   },
+/* ==========================================
+   JAEJIN – KOREAN INTENSITY
+========================================== */
+Jaejin: {
+  locations: {
+    why: `**The Core Truth:**
+Your code thrives under **pressure, density, and expectation**. You don’t come alive in relaxed or meandering environments—you sharpen when standards are high and effort is visible. Calm feels like decay; intensity feels like purpose.
+
+**What this means:**
+You need places where ambition is normalized, where long hours aren’t questioned, and where excellence is socially reinforced. Environments that demand less will slowly erode your edge.
+
+**When you honor this:**
+You feel focused, respected, and alive. Your effort has context. Your discipline makes sense.`,
+    greenLight: [
+      {
+        title: "High-Performance Cities",
+        items: [
+          "Seoul – intensity, discipline, collective effort",
+          "Singapore – efficiency, merit, pressure-tested systems",
+          "Tokyo – seriousness of work, social standards",
+          "New York City – competitive energy, output culture",
+        ],
+        reasoning: "These cities normalize **strain + excellence**. Your drive isn’t pathologized here—it’s expected.",
+      },
+      {
+        title: "Dense, Goal-Oriented Districts",
+        items: [
+          "Business and financial hubs",
+          "University-centered neighborhoods",
+          "Areas with visible work ethic and late-night activity",
+        ],
+        reasoning: "You need to *feel* collective effort around you. Stillness drains you.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Slow-paced beach towns",
+        "Overly spiritual or leisure-focused cities",
+        "Places where ambition is mocked or softened",
+      ],
+      reasoning: "These environments frame your intensity as unhealthy. Over time, you’ll either dull yourself or burn out.",
+    },
+    validation: {
+      resonates: [
+        "You feel more focused when surrounded by driven people",
+        "You’ve felt restless or guilty in overly relaxed places",
+        "You associate effort with self-respect",
+      ],
+      doesntResonate: [
+        "You thrive in unstructured, slow environments",
+        "You dislike competition entirely",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+Your relationship with work is **existential**. Effort isn’t optional—it’s how you justify your place in the world. You respect results, discipline, and endurance more than comfort or balance.
+
+**What this means:**
+You do best where expectations are clear, output is measured, and contribution matters. Ambiguity and softness feel unsafe.
+
+**When you honor this:**
+You feel pride, momentum, and self-trust.`,
+    greenLight: [
+      {
+        title: "High-Output Roles",
+        items: [
+          "Operations, engineering, finance, strategy",
+          "Startups in execution-heavy phases",
+          "Organizations with clear KPIs and accountability",
+        ],
+        reasoning: "You need **pressure + responsibility** to stay engaged.",
+      },
+      {
+        title: "Hierarchical or Merit-Based Systems",
+        items: [
+          "Clear reporting lines",
+          "Promotion through effort and results",
+          "Respect for seniority or proven competence",
+        ],
+        reasoning: "Structure gives your effort meaning.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Unstructured creative roles with no standards",
+        "Teams allergic to hierarchy or feedback",
+        "Cultures that reward vibes over results",
+      ],
+      reasoning: "These make you feel unanchored and frustrated.",
+    },
+    validation: {
+      resonates: [
+        "You respect people who work harder than they talk",
+        "You feel guilty resting without earning it",
+        "You’re energized by responsibility",
+      ],
+      doesntResonate: [
+        "You work best without pressure",
+        "You dislike being evaluated",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You bond through **shared struggle**, not emotional disclosure. Loyalty is proven through consistency, not words.
+
+**What this means:**
+You prefer smaller, serious groups with mutual obligation. Casual or overly expressive communities feel shallow.
+
+**When you honor this:**
+You feel protected, respected, and grounded.`,
+    greenLight: [
+      {
+        title: "Duty-Based Bonds",
+        items: [
+          "Work teams with shared pressure",
+          "Training groups (martial arts, endurance sports)",
+          "Long-term professional cohorts",
+        ],
+        reasoning: "Commitment builds trust for you.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Styles",
+      items: [
+        "Emotion-first social groups",
+        "Constantly changing friend circles",
+        "Communities without shared responsibility",
+      ],
+      reasoning: "They lack weight and reliability.",
+    },
+    validation: {
+      resonates: [
+        "You trust people who show up consistently",
+        "You value loyalty over emotional openness",
+      ],
+      doesntResonate: [
+        "You bond primarily through emotional sharing",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `**The Core Truth:**
+You choose activities that **test endurance, discipline, and willpower**. Ease feels meaningless; effort gives shape to identity.`,
+    greenLight: [
+      {
+        title: "Discipline-Based Activities",
+        items: [
+          "Martial arts",
+          "Weight training with progression",
+          "Long-distance running",
+          "Skill mastery with strict standards",
+        ],
+        reasoning: "These externalize inner strength.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: [
+        "Purely recreational hobbies",
+        "Low-commitment activities",
+      ],
+      reasoning: "They don’t satisfy your need for effort.",
+    },
+    validation: {
+      resonates: [
+        "You enjoy activities that demand sacrifice",
+      ],
+      doesntResonate: [
+        "You prefer playful, low-effort hobbies",
+      ],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn best through **rigor and repetition**. Knowledge is earned, not sampled.`,
+    greenLight: [
+      {
+        title: "Structured Learning",
+        items: [
+          "Formal education",
+          "Certification paths",
+          "Skill ladders with clear levels",
+        ],
+        reasoning: "Clear progression sustains motivation.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Unstructured self-learning"],
+      reasoning: "Lack of standards drains momentum.",
+    },
+    validation: { resonates: [], doesntResonate: [] },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You respect media that shows **effort, sacrifice, and seriousness**.`,
+    greenLight: [
+      {
+        title: "Intensity-Focused Media",
+        items: [
+          "War, training, or survival films",
+          "Biographies of disciplined figures",
+        ],
+        reasoning: "You’re drawn to earned strength.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Light, unserious content"],
+      reasoning: "It feels empty.",
+    },
+    validation: { resonates: [], doesntResonate: [] },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should support **focus and recovery**, not indulgence.`,
+    greenLight: [
+      {
+        title: "Minimal, Functional Spaces",
+        items: [
+          "Clean layouts",
+          "Low distraction",
+          "Proximity to work or training",
+        ],
+        reasoning: "Your environment should reduce friction.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Chaotic or overly decorative spaces"],
+      reasoning: "They diffuse your focus.",
+    },
+    validation: { resonates: [], doesntResonate: [] },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals help you **contain pressure** and maintain discipline.`,
+    greenLight: [
+      {
+        title: "Consistency Rituals",
+        items: [
+          "Morning training",
+          "Fixed routines",
+          "Weekly self-evaluation",
+        ],
+        reasoning: "Structure stabilizes intensity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Unpredictable schedules"],
+      reasoning: "They increase stress.",
+    },
+    validation: { resonates: [], doesntResonate: [] },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is about **strength and control**, not expression.`,
+    greenLight: [
+      {
+        title: "Strength & Endurance",
+        items: [
+          "Powerlifting",
+          "Combat sports",
+          "Military-style training",
+        ],
+        reasoning: "They align with your internal drive.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Dance or flow-based movement"],
+      reasoning: "They lack containment.",
+    },
+    validation: { resonates: [], doesntResonate: [] },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Wellness for you is **maintenance**, not indulgence.`,
+    greenLight: [
+      {
+        title: "Discipline-Based Wellness",
+        items: [
+          "Sleep discipline",
+          "Cold exposure",
+          "Mental toughness practices",
+        ],
+        reasoning: "You respect practices that require effort.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Unstructured self-care trends"],
+      reasoning: "They feel unserious.",
+    },
+    validation: { resonates: [], doesntResonate: [] },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You value tools that **perform under stress**.`,
+    greenLight: [
+      {
+        title: "Reliable, Serious Tools",
+        items: [
+          "Durable gear",
+          "Professional equipment",
+        ],
+        reasoning: "Failure is unacceptable.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Trendy, fragile products"],
+      reasoning: "They don’t last.",
+    },
+    validation: { resonates: [], doesntResonate: [] },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `Travel is useful when it **tests or sharpens you**.`,
+    greenLight: [
+      {
+        title: "Purpose-Driven Travel",
+        items: [
+          "Training camps",
+          "Work-focused relocation",
+        ],
+        reasoning: "You travel to improve, not escape.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Pure leisure travel"],
+      reasoning: "It feels empty.",
+    },
+    validation: { resonates: [], doesntResonate: [] },
+    affiliates: [],
+  },
+},
 
   /* ==========================================
      ALETHIR - ANCIENT GREEK INQUIRY
