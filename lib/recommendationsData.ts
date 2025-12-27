@@ -968,7 +968,42 @@ You plan trips around **learning**. You take workshops. You meet makers. You ret
       ],
     },
   },
-
+/* ==========================================
+     JAEJIN - KOREAN INTENSITY
+  ========================================== */
+  Jaejin: {
+    locations: {
+      why: `Your code thrives in high-performance environments where intensity is normal.`,
+      greenLight: [
+        {
+          title: "High-Performance Cities",
+          items: ["Seoul", "Singapore", "Tokyo", "NYC"],
+          reasoning: "These cities reward intensity.",
+        },
+      ],
+      redLight: {
+        title: "Avoid",
+        items: ["Beach towns", "Slow-paced cities"],
+        reasoning: "These pathologize your drive.",
+      },
+      validation: {
+        resonates: ["You thrive under pressure"],
+        doesntResonate: ["You prefer calm"],
+      },
+      affiliates: [],
+    },
+    work: { why: "", greenLight: [], redLight: { title: "", items: [], reasoning: "" }, validation: { resonates: [], doesntResonate: [] }, affiliates: [] },
+    community: { why: "", greenLight: [], redLight: { title: "", items: [], reasoning: "" }, validation: { resonates: [], doesntResonate: [] }, affiliates: [] },
+    activities: { why: "", greenLight: [], redLight: { title: "", items: [], reasoning: "" }, validation: { resonates: [], doesntResonate: [] }, affiliates: [] },
+    learning: { why: "", greenLight: [], redLight: { title: "", items: [], reasoning: "" }, validation: { resonates: [], doesntResonate: [] }, affiliates: [] },
+    media: { why: "", greenLight: [], redLight: { title: "", items: [], reasoning: "" }, validation: { resonates: [], doesntResonate: [] }, affiliates: [] },
+    living: { why: "", greenLight: [], redLight: { title: "", items: [], reasoning: "" }, validation: { resonates: [], doesntResonate: [] }, affiliates: [] },
+    rituals: { why: "", greenLight: [], redLight: { title: "", items: [], reasoning: "" }, validation: { resonates: [], doesntResonate: [] }, affiliates: [] },
+    movement: { why: "", greenLight: [], redLight: { title: "", items: [], reasoning: "" }, validation: { resonates: [], doesntResonate: [] }, affiliates: [] },
+    wellness: { why: "", greenLight: [], redLight: { title: "", items: [], reasoning: "" }, validation: { resonates: [], doesntResonate: [] }, affiliates: [] },
+    products: { why: "", greenLight: [], redLight: { title: "", items: [], reasoning: "" }, validation: { resonates: [], doesntResonate: [] }, affiliates: [] },
+    travel: { why: "", greenLight: [], redLight: { title: "", items: [], reasoning: "" }, validation: { resonates: [], doesntResonate: [] }, affiliates: [] },
+  },
   /* ==========================================
      ALETHIR - ANCIENT GREEK INQUIRY
   ========================================== */
