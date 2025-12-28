@@ -2110,5 +2110,4 @@ You become more confident, creative, and alive—because you’re held.`,
     },
     affiliates: [],
   },
-},
-
+}
