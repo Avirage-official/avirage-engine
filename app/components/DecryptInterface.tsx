@@ -456,7 +456,7 @@ function DecryptedPanel({ nodeKey, userCode, birthDate, userName, onClose }: Dec
 }
 
 function PanelContent({ nodeKey, userCode, birthDate, userName }: Omit<DecryptedPanelProps, 'onClose'>) {
-  const content: Record<NodeKey, JSX.Element> = {
+  const content: Record<NodeKey, ReactElement> = {
     numerology: <NumerologyContent birthDate={birthDate} userName={userName} />,
     inverse: <InverseContent userCode={userCode} />,
     correlation: <CorrelationContent userCode={userCode} />,
