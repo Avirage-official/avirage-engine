@@ -101,7 +101,7 @@ export default function RecommendationsTabs({ primaryCode }: RecommendationsTabs
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: idx * 0.05 }}
-              style={{ gridColumn: isOpen ? 'span 2' : 'span 1' }}
+              style={{ gridColumn: isOpen ? '1 / -1' : 'span 1' }}
             >
               {!isOpen && (
                 <SealedCard
@@ -766,7 +766,12 @@ const mainTitle: CSSProperties = {
   WebkitTextFillColor: 'transparent',
 }
 const mainSubtitle: CSSProperties = { fontSize: 16, color: THEME.textSecondary, marginBottom: 20, lineHeight: 1.6 }
-const gridStyle: CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, alignItems: 'start' }
+const gridStyle: CSSProperties = { 
+  display: 'grid', 
+  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+  gap: 20, 
+  alignItems: 'start' 
+}
 const sealedCard: CSSProperties = {
   position: 'relative',
   padding: 20,
