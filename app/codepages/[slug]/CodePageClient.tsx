@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import type { CodePage } from "@/lib/codePages";
-import { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 
 export default function CodePageClient({
   slug,
@@ -11,14 +11,36 @@ export default function CodePageClient({
   slug: string;
   page: CodePage;
 }) {
-  // Cursor-reactive “holo” glow
+  // Cursor-reactive “holo” glow (smooth + lightweight)
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 180, damping: 25 });
-  const sy = useSpring(my, { stiffness: 180, damping: 25 });
+
+  // A bit softer than before to avoid “laggy chase”
+  const sx = useSpring(mx, { stiffness: 140, damping: 24, mass: 0.7 });
+  const sy = useSpring(my, { stiffness: 140, damping: 24, mass: 0.7 });
 
   const glowX = useTransform(sx, (v) => `${v}px`);
   const glowY = useTransform(sy, (v) => `${v}px`);
+
+  // rAF throttle (prevents updating on every pointer event)
+  const rafRef = useRef<number | null>(null);
+  const last = useRef({ x: 0, y: 0 });
+
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    // mouse only (touch/pen can be noisy + feels weird)
+    if (e.pointerType !== "mouse") return;
+
+    const r = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+    last.current.x = e.clientX - r.left;
+    last.current.y = e.clientY - r.top;
+
+    if (rafRef.current) return;
+    rafRef.current = requestAnimationFrame(() => {
+      mx.set(last.current.x);
+      my.set(last.current.y);
+      rafRef.current = null;
+    });
+  };
 
   const sections = useMemo(() => {
     return [
@@ -31,7 +53,10 @@ export default function CodePageClient({
       {
         kicker: "Traits",
         title: page.traits.headline,
-        cards: page.traits.highlights.map((t) => ({ title: t.label, body: t.meaning })),
+        cards: page.traits.highlights.map((t) => ({
+          title: t.label,
+          body: t.meaning,
+        })),
       },
       {
         kicker: "Recommendations",
@@ -57,20 +82,17 @@ export default function CodePageClient({
 
   return (
     <div
-      onPointerMove={(e) => {
-        const r = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
-        mx.set(e.clientX - r.left);
-        my.set(e.clientY - r.top);
-      }}
+      onPointerMove={onMove}
       className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] p-5 shadow-[0_30px_120px_rgba(0,0,0,0.65)] backdrop-blur-xl"
     >
       {/* Animated background layers */}
       <div className="pointer-events-none absolute inset-0">
         {/* soft grid */}
         <div className="absolute inset-0 opacity-[0.14] [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
-        {/* animated nebula */}
+
+        {/* animated nebula (slightly lighter than blur-3xl) */}
         <motion.div
-          className="absolute -inset-24 opacity-40 blur-3xl"
+          className="absolute -inset-24 opacity-40 blur-2xl"
           animate={{ rotate: 360, scale: [1, 1.06, 1] }}
           transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
           style={{
@@ -78,15 +100,18 @@ export default function CodePageClient({
               "radial-gradient(700px 400px at 20% 30%, rgba(99,102,241,0.22), transparent 60%), radial-gradient(700px 400px at 80% 70%, rgba(236,72,153,0.18), transparent 60%), radial-gradient(600px 360px at 55% 20%, rgba(34,211,238,0.16), transparent 60%)",
           }}
         />
-        {/* cursor glow */}
+
+        {/* cursor glow (smaller radius = less GPU work) */}
         <motion.div
           className="absolute inset-0"
           style={{
-            background: "radial-gradient(280px 280px at var(--gx) var(--gy), rgba(255,255,255,0.10), transparent 55%)",
+            background:
+              "radial-gradient(220px 220px at var(--gx) var(--gy), rgba(255,255,255,0.10), transparent 60%)",
             ["--gx" as any]: glowX,
             ["--gy" as any]: glowY,
           }}
         />
+
         {/* vignette */}
         <div className="absolute inset-0 bg-[radial-gradient(1200px_700px_at_50%_20%,transparent_40%,rgba(0,0,0,0.75)_100%)]" />
       </div>
@@ -252,7 +277,7 @@ export default function CodePageClient({
           ) : null}
         </div>
 
-        {/* Right: “translator” panel (turn content into a sleek “signal map”) */}
+        {/* Right: “translator” panel */}
         <motion.aside
           initial={{ opacity: 0, x: 14 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -273,11 +298,7 @@ export default function CodePageClient({
           </div>
 
           <div className="mt-4 space-y-3">
-            <Signal
-              label="Core lens"
-              value={page.lens.title}
-              hint="Your primary world-filter"
-            />
+            <Signal label="Core lens" value={page.lens.title} hint="Your primary world-filter" />
             <Signal
               label="Trait headline"
               value={page.traits.headline}
@@ -299,7 +320,6 @@ export default function CodePageClient({
             </div>
           </div>
 
-          {/* No images here on purpose */}
           <div className="mt-4 text-xs leading-6 text-white/55">
             Clean mode: images removed. Your content becomes the visual.
           </div>
