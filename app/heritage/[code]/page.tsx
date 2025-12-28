@@ -11,8 +11,8 @@ const THEME = {
 
 const DISPLAY_FONT = "'Cinzel', serif"
 
-export default function HeritagePage({ params }: { params: { code: string } }) {
-  const { code } = params
+export default async function HeritagePage({ params }: { params: Promise<{ code: string }> }) {
+  const { code } = await params
   const heritage = HERITAGE_DATA[code.toLowerCase()]
 
   if (!heritage) {
