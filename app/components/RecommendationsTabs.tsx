@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { CSSProperties } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { RECOMMENDATIONS, CategoryRecommendation } from '@/lib/recommendationsData'
@@ -14,9 +14,8 @@ const THEME = {
   textSecondary: "#9aa3ad",
   textMuted: "rgba(154,163,173,0.75)",
   accent: "#c9a96a",
-  accentSoft: "rgba(201,169,106,0.18)",
+  accentGlow: "rgba(201,169,106,0.35)",
   danger: "rgba(235,111,111,0.85)",
-  dangerSoft: "rgba(235,111,111,0.12)",
 }
 
 const DISPLAY_FONT = "'Cinzel', serif"
@@ -30,214 +29,346 @@ type CategoryKey =
   | 'learning' | 'media' | 'living' | 'rituals'
   | 'movement' | 'wellness' | 'products' | 'travel'
 
-const CATEGORIES: { key: CategoryKey; label: string; emoji: string }[] = [
-  { key: 'locations', label: 'Locations', emoji: '🌍' },
-  { key: 'work', label: 'Work', emoji: '💼' },
-  { key: 'community', label: 'Community', emoji: '👥' },
-  { key: 'activities', label: 'Activities', emoji: '🎨' },
-  { key: 'learning', label: 'Learning', emoji: '📚' },
-  { key: 'media', label: 'Media', emoji: '🎵' },
-  { key: 'living', label: 'Living', emoji: '🏠' },
-  { key: 'rituals', label: 'Rituals', emoji: '🍽️' },
-  { key: 'movement', label: 'Movement', emoji: '💪' },
-  { key: 'wellness', label: 'Wellness', emoji: '🧘' },
-  { key: 'products', label: 'Products', emoji: '🛍️' },
-  { key: 'travel', label: 'Travel', emoji: '✈️' },
+const CATEGORIES: { key: CategoryKey; label: string; emoji: string; tagline: string }[] = [
+  { key: 'locations', label: 'Locations', emoji: '🌍', tagline: 'Where you belong' },
+  { key: 'work', label: 'Work', emoji: '💼', tagline: 'How you operate' },
+  { key: 'community', label: 'Community', emoji: '👥', tagline: 'Who you need' },
+  { key: 'activities', label: 'Activities', emoji: '🎨', tagline: 'What feeds you' },
+  { key: 'learning', label: 'Learning', emoji: '📚', tagline: 'How you grow' },
+  { key: 'media', label: 'Media', emoji: '🎵', tagline: 'What resonates' },
+  { key: 'living', label: 'Living', emoji: '🏠', tagline: 'Your environment' },
+  { key: 'rituals', label: 'Rituals', emoji: '🍽️', tagline: 'How you connect' },
+  { key: 'movement', label: 'Movement', emoji: '💪', tagline: 'How you move' },
+  { key: 'wellness', label: 'Wellness', emoji: '🧘', tagline: 'How you sustain' },
+  { key: 'products', label: 'Products', emoji: '🛍️', tagline: 'What serves you' },
+  { key: 'travel', label: 'Travel', emoji: '✈️', tagline: 'How you explore' },
 ]
 
 export default function RecommendationsTabs({ primaryCode }: RecommendationsTabsProps) {
-  const [activeTab, setActiveTab] = useState<CategoryKey>('locations')
+  const [openCategory, setOpenCategory] = useState<CategoryKey | null>(null)
+  const [unsealing, setUnsealing] = useState<CategoryKey | null>(null)
 
-  // Safe lookup (prevents “tabs disappear on reload”)
-  const normalized = (primaryCode || '').trim()
-  const codeKey = useMemo(() => {
-    if (!normalized) return undefined
-    if (normalized in RECOMMENDATIONS) return normalized
-    return Object.keys(RECOMMENDATIONS).find(k => k.toLowerCase() === normalized.toLowerCase())
-  }, [normalized])
-
-  const codeRecs = codeKey ? RECOMMENDATIONS[codeKey] : undefined
-
-  if (!normalized) {
-    return (
-      <section style={{ marginBottom: 56 }}>
-        <p style={{ color: THEME.textSecondary }}>Loading your recommendations…</p>
-      </section>
-    )
-  }
+  const codeRecs = RECOMMENDATIONS[primaryCode]
 
   if (!codeRecs) {
     return (
-      <section style={{ marginBottom: 56 }}>
-        <p style={{ color: THEME.textSecondary }}>
-          No recommendations found for <strong style={{ color: THEME.textPrimary }}>{primaryCode}</strong>.
-        </p>
+      <section style={sectionStyle}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={emptyState}
+        >
+          <div style={emptyIcon}>🔒</div>
+          <p style={emptyText}>Recommendations coming soon for {primaryCode}</p>
+        </motion.div>
       </section>
     )
   }
 
-  return (
-    <section style={{ marginBottom: 56 }}>
-      <h2 style={title}>Exploring your {codeKey} alignment</h2>
-      <p style={subtitle}>Move through these slowly. Notice what reacts.</p>
-
-      <div style={tabNav}>
-        {CATEGORIES.map(cat => {
-          const active = activeTab === cat.key
-          return (
-            <button
-              key={cat.key}
-              onClick={() => setActiveTab(cat.key)}
-              style={{
-                ...tabBtn,
-                ...(active ? tabBtnActive : {}),
-              }}
-            >
-              <span style={{ opacity: active ? 1 : 0.9 }}>{cat.emoji}</span>
-              <span>{cat.label}</span>
-
-              {/* active glide indicator */}
-              {active && (
-                <motion.div
-                  layoutId="activeTabPill"
-                  style={activePill}
-                  transition={{ type: 'spring', stiffness: 520, damping: 36 }}
-                />
-              )}
-            </button>
-          )
-        })}
-      </div>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 14, filter: 'blur(2px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          exit={{ opacity: 0, y: -10, filter: 'blur(2px)' }}
-          transition={{ duration: 0.24, ease: 'easeOut' }}
-          style={content}
-        >
-          <CategoryContent category={codeRecs[activeTab]} />
-        </motion.div>
-      </AnimatePresence>
-    </section>
-  )
-}
-
-/* --------------------------------
-   CONTENT
---------------------------------- */
-
-function CategoryContent({ category }: { category: CategoryRecommendation }) {
-  const [showRed, setShowRed] = useState(false)
-  const [expandedMap, setExpandedMap] = useState<Record<number, boolean>>({})
-
-  if (!category?.why) return null
-
-  const toggleExpanded = (idx: number) =>
-    setExpandedMap(prev => ({ ...prev, [idx]: !prev[idx] }))
+  const handleSealClick = (key: CategoryKey) => {
+    if (openCategory === key) {
+      // Close it
+      setOpenCategory(null)
+    } else {
+      // Unseal animation
+      setUnsealing(key)
+      setTimeout(() => {
+        setOpenCategory(key)
+        setUnsealing(null)
+      }, 800) // Duration of unseal animation
+    }
+  }
 
   return (
-    <div>
-      {/* Primer */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.05 }}
-        style={primer}
-      >
-        Some things energize you quietly. Others drain you slowly.
-      </motion.p>
-
-      {/* WHY – presented as a “chapter” */}
+    <section style={sectionStyle}>
+      {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.10 }}
-        style={whyCard}
+        style={headerSection}
       >
-        <div style={whyHeader}>Why this matters</div>
-        {category.why.split('\n\n').map((p, i) => (
-          <p key={i} style={whyText}>
-            {renderInlineMarkdown(p)}
-          </p>
-        ))}
+        <h2 style={mainTitle}>Cultural Artifacts</h2>
+        <p style={mainSubtitle}>
+          These aren't recommendations. They're <strong style={{ color: THEME.accent }}>encoded knowledge</strong> from your {primaryCode} lineage.
+        </p>
+        <div style={instructionBox}>
+          <span style={instructionIcon}>⚡</span>
+          <span style={instructionText}>Break the seals. Absorb what resonates. Ignore the rest.</span>
+        </div>
       </motion.div>
 
-      {/* GREEN – each block as a card */}
-      <div style={{ display: 'grid', gap: 14 }}>
-        {category.greenLight.map((g, i) => {
-          const expanded = !!expandedMap[i]
-          const visibleItems = expanded ? g.items : g.items.slice(0, 3)
-          const hiddenCount = Math.max(0, g.items.length - 3)
+      {/* Sealed Categories Grid */}
+      <div style={gridStyle}>
+        {CATEGORIES.map((cat, idx) => {
+          const isOpen = openCategory === cat.key
+          const isUnsealing = unsealing === cat.key
+          const category = codeRecs[cat.key]
+          const hasContent = category?.why && !category.why.includes('coming next')
 
           return (
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 + i * 0.04 }}
-              style={greenCard}
+              key={cat.key}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: idx * 0.05 }}
+              style={{ gridColumn: isOpen ? 'span 2' : 'span 1' }}
             >
-              <div style={greenTop}>
-                <div style={greenAccent} />
-                <div>
-                  <div style={greenTitle}>{g.title}</div>
-                  {g.reasoning && <p style={reasoning}>{renderInlineMarkdown(g.reasoning)}</p>}
-                </div>
-              </div>
+              {/* Sealed Card */}
+              {!isOpen && (
+                <SealedCard
+                  category={cat}
+                  hasContent={hasContent}
+                  isUnsealing={isUnsealing}
+                  onClick={() => hasContent && handleSealClick(cat.key)}
+                />
+              )}
 
-              <ul style={list}>
-                {visibleItems.map((item, j) => (
-                  <motion.li
-                    key={j}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: j * 0.03 }}
-                  >
-                    {renderInlineMarkdown(item)}
-                  </motion.li>
-                ))}
-              </ul>
-
-              {g.items.length > 3 && (
-                <motion.button
-                  whileHover={{ y: -1 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => toggleExpanded(i)}
-                  style={revealBtn}
-                >
-                  {expanded ? 'Show less' : `Show ${hiddenCount} more`}
-                  <motion.span
-                    animate={{ rotate: expanded ? 180 : 0 }}
-                    transition={{ duration: 0.18 }}
-                    style={chev}
-                  >
-                    ▾
-                  </motion.span>
-                </motion.button>
+              {/* Opened Content */}
+              {isOpen && (
+                <OpenedArtifact
+                  category={cat}
+                  content={category!}
+                  onClose={() => setOpenCategory(null)}
+                />
               )}
             </motion.div>
           )
         })}
       </div>
+    </section>
+  )
+}
 
-      {/* RED – elegant friction card */}
-      {category.redLight?.items?.length > 0 && (
-        <div style={{ marginTop: 18 }}>
+/* ============================
+   SEALED CARD
+============================ */
+
+interface SealedCardProps {
+  category: typeof CATEGORIES[0]
+  hasContent: boolean
+  isUnsealing: boolean
+  onClick: () => void
+}
+
+function SealedCard({ category, hasContent, isUnsealing, onClick }: SealedCardProps) {
+  const [isHovered, setIsHovered] = useState(false)
+
+  return (
+    <motion.button
+      onHoverStart={() => hasContent && setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      whileHover={hasContent ? { scale: 1.02, y: -4 } : {}}
+      whileTap={hasContent ? { scale: 0.98 } : {}}
+      onClick={onClick}
+      disabled={!hasContent}
+      style={{
+        ...sealedCard,
+        cursor: hasContent ? 'pointer' : 'not-allowed',
+        opacity: hasContent ? 1 : 0.4,
+      }}
+    >
+      {/* Glow effect when hovering */}
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={glowLayer}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Seal icon with animation */}
+      <motion.div
+        animate={isUnsealing ? {
+          scale: [1, 1.2, 0.8, 1.5, 0],
+          rotate: [0, 10, -10, 360],
+          opacity: [1, 1, 1, 0.5, 0],
+        } : {}}
+        transition={{ duration: 0.8, ease: 'easeInOut' }}
+        style={sealIcon}
+      >
+        {hasContent ? (
+          <motion.div
+            animate={isHovered ? {
+              rotate: [0, -5, 5, -5, 0],
+              scale: [1, 1.1, 1],
+            } : {}}
+            transition={{ duration: 0.6, repeat: isHovered ? Infinity : 0 }}
+            style={sealEmoji}
+          >
+            🔒
+          </motion.div>
+        ) : (
+          <div style={{ ...sealEmoji, opacity: 0.3 }}>⏳</div>
+        )}
+      </motion.div>
+
+      {/* Category emoji */}
+      <div style={categoryEmoji}>{category.emoji}</div>
+
+      {/* Text */}
+      <div style={sealedText}>
+        <div style={sealedLabel}>{category.label}</div>
+        <div style={sealedTagline}>{category.tagline}</div>
+      </div>
+
+      {/* Status indicator */}
+      <div style={statusDot(hasContent)} />
+
+      {/* Unsealing effect */}
+      <AnimatePresence>
+        {isUnsealing && (
+          <>
+            <motion.div
+              initial={{ scale: 0, opacity: 1 }}
+              animate={{ scale: 3, opacity: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8 }}
+              style={unsealRipple}
+            />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0] }}
+              transition={{ duration: 0.8 }}
+              style={unsealFlash}
+            />
+          </>
+        )}
+      </AnimatePresence>
+    </motion.button>
+  )
+}
+
+/* ============================
+   OPENED ARTIFACT
+============================ */
+
+interface OpenedArtifactProps {
+  category: typeof CATEGORIES[0]
+  content: CategoryRecommendation
+  onClose: () => void
+}
+
+function OpenedArtifact({ category, content, onClose }: OpenedArtifactProps) {
+  const [showRed, setShowRed] = useState(false)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95, y: 10 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      style={artifactCard}
+    >
+      {/* Header with close */}
+      <div style={artifactHeader}>
+        <div style={artifactHeaderLeft}>
+          <div style={artifactEmoji}>{category.emoji}</div>
+          <div>
+            <div style={artifactTitle}>{category.label}</div>
+            <div style={artifactTagline}>{category.tagline}</div>
+          </div>
+        </div>
+        <motion.button
+          whileHover={{ scale: 1.1, rotate: 90 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={onClose}
+          style={closeBtn}
+        >
+          ✕
+        </motion.button>
+      </div>
+
+      {/* Divider */}
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+        style={divider}
+      />
+
+      {/* Primer */}
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        style={primer}
+      >
+        This knowledge was encoded for people like you. Not everyone will understand it.
+      </motion.p>
+
+      {/* WHY section */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        style={whySection}
+      >
+        <div style={sectionLabel}>THE TRUTH</div>
+        <div style={whyContent}>
+          {content.why.split('\n\n').map((p, i) => (
+            <p key={i} style={whyParagraph}>
+              {renderMarkdown(p)}
+            </p>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* GREEN LIGHT sections */}
+      <div style={{ display: 'grid', gap: 16 }}>
+        {content.greenLight.map((g, idx) => (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 + idx * 0.1 }}
+            style={greenBlock}
+          >
+            <div style={greenBlockHeader}>
+              <div style={greenAccent} />
+              <div style={greenTitle}>{g.title}</div>
+            </div>
+            <ul style={itemList}>
+              {g.items.map((item, i) => (
+                <motion.li
+                  key={i}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 + idx * 0.1 + i * 0.05 }}
+                  style={listItem}
+                >
+                  {renderMarkdown(item)}
+                </motion.li>
+              ))}
+            </ul>
+            {g.reasoning && (
+              <p style={reasoning}>{renderMarkdown(g.reasoning)}</p>
+            )}
+          </motion.div>
+        ))}
+      </div>
+
+      {/* RED LIGHT (collapsible) */}
+      {content.redLight?.items?.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          style={{ marginTop: 20 }}
+        >
           <motion.button
-            whileHover={{ y: -1 }}
-            whileTap={{ scale: 0.99 }}
+            whileHover={{ x: 4 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => setShowRed(!showRed)}
-            style={softToggle}
+            style={redToggle}
           >
             <span style={{ color: THEME.danger }}>⚠</span>
-            <span>{showRed ? 'Hide friction signs' : 'When this might not fit'}</span>
+            <span>{showRed ? 'Hide friction signals' : 'What drains this pattern'}</span>
             <motion.span
               animate={{ rotate: showRed ? 180 : 0 }}
-              transition={{ duration: 0.18 }}
-              style={chev}
+              style={{ display: 'inline-block', marginLeft: 8 }}
             >
               ▾
             </motion.span>
@@ -249,290 +380,409 @@ function CategoryContent({ category }: { category: CategoryRecommendation }) {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.26, ease: 'easeOut' }}
-                style={redCard}
+                transition={{ duration: 0.3 }}
+                style={redBlock}
               >
-                <div style={redTitle}>{category.redLight.title || 'Signs of friction'}</div>
-                <ul style={list}>
-                  {category.redLight.items.map((item, i) => (
-                    <li key={i}>{renderInlineMarkdown(item)}</li>
+                <div style={redTitle}>{content.redLight.title || 'Friction signals'}</div>
+                <ul style={itemList}>
+                  {content.redLight.items.map((item, i) => (
+                    <li key={i} style={listItem}>{renderMarkdown(item)}</li>
                   ))}
                 </ul>
-                {category.redLight.reasoning && (
-                  <p style={reasoning}>{renderInlineMarkdown(category.redLight.reasoning)}</p>
+                {content.redLight.reasoning && (
+                  <p style={reasoning}>{renderMarkdown(content.redLight.reasoning)}</p>
                 )}
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
       )}
 
-      {/* Closure footer */}
+      {/* Footer */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.18 }}
-        style={reflectionCard}
+        transition={{ delay: 1 }}
+        style={artifactFooter}
       >
-        <div style={reflectionTitle}>Reflection</div>
-        <p style={validationHint}>
-          If this felt familiar rather than impressive, you’re reading yourself.
-        </p>
+        <div style={footerText}>
+          If this felt obvious rather than impressive, you're reading yourself correctly.
+        </div>
       </motion.div>
-    </div>
+    </motion.div>
   )
 }
 
-/* --------------------------------
-   INLINE MARKDOWN (very small)
-   Supports **bold** and *italic*
---------------------------------- */
+/* ============================
+   MARKDOWN RENDERER
+============================ */
 
-function renderInlineMarkdown(text: string) {
-  // Split by **bold** first, then *italic*
-  const parts: Array<{ type: 'text' | 'bold' | 'italic'; value: string }> = []
-
-  // bold: **...**
+function renderMarkdown(text: string) {
+  const parts: React.ReactNode[] = []
   const boldRegex = /\*\*(.+?)\*\*/g
   let lastIndex = 0
   let match: RegExpExecArray | null
 
   while ((match = boldRegex.exec(text)) !== null) {
     if (match.index > lastIndex) {
-      parts.push({ type: 'text', value: text.slice(lastIndex, match.index) })
+      parts.push(text.slice(lastIndex, match.index))
     }
-    parts.push({ type: 'bold', value: match[1] })
+    parts.push(<strong key={match.index} style={{ color: THEME.textPrimary }}>{match[1]}</strong>)
     lastIndex = match.index + match[0].length
   }
-  if (lastIndex < text.length) parts.push({ type: 'text', value: text.slice(lastIndex) })
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex))
 
-  // Now process italics inside text parts only: *...*
-  const final: React.ReactNode[] = []
-  parts.forEach((p, idx) => {
-    if (p.type === 'bold') {
-      final.push(<strong key={`b-${idx}`} style={{ color: THEME.textPrimary }}>{p.value}</strong>)
-      return
-    }
-    if (p.type === 'text') {
-      const italicsRegex = /\*(.+?)\*/g
-      let li = 0
-      let m: RegExpExecArray | null
-      while ((m = italicsRegex.exec(p.value)) !== null) {
-        if (m.index > li) final.push(<span key={`t-${idx}-${li}`}>{p.value.slice(li, m.index)}</span>)
-        final.push(<em key={`i-${idx}-${m.index}`} style={{ color: THEME.textPrimary, opacity: 0.92 }}>{m[1]}</em>)
-        li = m.index + m[0].length
-      }
-      if (li < p.value.length) final.push(<span key={`t2-${idx}-${li}`}>{p.value.slice(li)}</span>)
-    }
-  })
-
-  return final
+  return parts
 }
 
 /* ============================
    STYLES
 ============================ */
 
-const title: CSSProperties = {
+const sectionStyle: CSSProperties = {
+  marginBottom: 64,
+}
+
+const headerSection: CSSProperties = {
+  marginBottom: 32,
+  textAlign: 'center',
+}
+
+const mainTitle: CSSProperties = {
   fontFamily: DISPLAY_FONT,
-  fontSize: 28,
+  fontSize: 36,
   fontWeight: 900,
-  letterSpacing: 0.6,
+  letterSpacing: 1.2,
+  marginBottom: 12,
+  background: `linear-gradient(135deg, ${THEME.textPrimary} 0%, ${THEME.accent} 100%)`,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
 }
 
-const subtitle: CSSProperties = {
-  fontSize: 15,
+const mainSubtitle: CSSProperties = {
+  fontSize: 16,
   color: THEME.textSecondary,
-  marginBottom: 18,
+  marginBottom: 20,
+  lineHeight: 1.6,
 }
 
-const tabNav: CSSProperties = {
-  display: 'flex',
+const instructionBox: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
   gap: 10,
-  flexWrap: 'wrap',
-  marginBottom: 18,
+  padding: '12px 20px',
+  borderRadius: 999,
+  background: THEME.panelStrong,
+  border: `1px solid ${THEME.accent}`,
 }
 
-const tabBtn: CSSProperties = {
+const instructionIcon: CSSProperties = {
+  fontSize: 18,
+}
+
+const instructionText: CSSProperties = {
+  fontSize: 13,
+  color: THEME.accent,
+  fontWeight: 700,
+  letterSpacing: 0.5,
+}
+
+const gridStyle: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(2, 1fr)',
+  gap: 16,
+}
+
+const sealedCard: CSSProperties = {
   position: 'relative',
-  padding: '10px 14px',
-  borderRadius: 12,
-  border: `1px solid ${THEME.softBorder}`,
+  padding: 24,
+  borderRadius: 20,
   background: THEME.panel,
-  color: THEME.textSecondary,
-  fontWeight: 650,
-  cursor: 'pointer',
+  border: `1px solid ${THEME.softBorder}`,
+  textAlign: 'center',
   overflow: 'hidden',
+  minHeight: 200,
   display: 'flex',
-  gap: 8,
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 12,
+}
+
+const glowLayer: CSSProperties = {
+  position: 'absolute',
+  inset: -2,
+  borderRadius: 20,
+  background: `radial-gradient(circle at 50% 50%, ${THEME.accentGlow}, transparent 70%)`,
+  opacity: 0.6,
+  pointerEvents: 'none',
+}
+
+const sealIcon: CSSProperties = {
+  fontSize: 48,
+  marginBottom: 8,
+}
+
+const sealEmoji: CSSProperties = {
+  fontSize: 48,
+  filter: `drop-shadow(0 0 20px ${THEME.accentGlow})`,
+}
+
+const categoryEmoji: CSSProperties = {
+  fontSize: 32,
+  marginBottom: 8,
+}
+
+const sealedText: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 4,
+}
+
+const sealedLabel: CSSProperties = {
+  fontSize: 18,
+  fontWeight: 900,
+  color: THEME.textPrimary,
+  fontFamily: DISPLAY_FONT,
+}
+
+const sealedTagline: CSSProperties = {
+  fontSize: 13,
+  color: THEME.textMuted,
+  fontStyle: 'italic',
+}
+
+const statusDot = (active: boolean): CSSProperties => ({
+  position: 'absolute',
+  top: 16,
+  right: 16,
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  background: active ? THEME.accent : THEME.textMuted,
+  boxShadow: active ? `0 0 12px ${THEME.accentGlow}` : 'none',
+})
+
+const unsealRipple: CSSProperties = {
+  position: 'absolute',
+  inset: 0,
+  borderRadius: 20,
+  border: `2px solid ${THEME.accent}`,
+  pointerEvents: 'none',
+}
+
+const unsealFlash: CSSProperties = {
+  position: 'absolute',
+  inset: 0,
+  borderRadius: 20,
+  background: THEME.accent,
+  pointerEvents: 'none',
+}
+
+const artifactCard: CSSProperties = {
+  padding: 28,
+  borderRadius: 24,
+  background: THEME.panelStrong,
+  border: `2px solid ${THEME.accent}`,
+  boxShadow: `0 0 40px ${THEME.accentGlow}`,
+}
+
+const artifactHeader: CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  marginBottom: 20,
+}
+
+const artifactHeaderLeft: CSSProperties = {
+  display: 'flex',
+  gap: 16,
   alignItems: 'center',
 }
 
-const tabBtnActive: CSSProperties = {
-  borderColor: THEME.accent,
+const artifactEmoji: CSSProperties = {
+  fontSize: 40,
+}
+
+const artifactTitle: CSSProperties = {
+  fontSize: 24,
+  fontWeight: 900,
+  fontFamily: DISPLAY_FONT,
   color: THEME.textPrimary,
 }
 
-const activePill: CSSProperties = {
-  position: 'absolute',
-  inset: 0,
-  borderRadius: 12,
-  background: THEME.accentSoft,
-  border: `1px solid rgba(201,169,106,0.35)`,
-  zIndex: 0,
+const artifactTagline: CSSProperties = {
+  fontSize: 14,
+  color: THEME.textMuted,
+  fontStyle: 'italic',
 }
 
-const content: CSSProperties = {
-  padding: 22,
-  borderRadius: 18,
-  background: THEME.panel,
-  border: `1px solid ${THEME.hairline}`,
+const closeBtn: CSSProperties = {
+  width: 32,
+  height: 32,
+  borderRadius: '50%',
+  background: 'transparent',
+  border: `1px solid ${THEME.softBorder}`,
+  color: THEME.textSecondary,
+  fontSize: 16,
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}
+
+const divider: CSSProperties = {
+  height: 1,
+  background: `linear-gradient(90deg, transparent, ${THEME.accent}, transparent)`,
+  marginBottom: 20,
+  transformOrigin: 'left',
 }
 
 const primer: CSSProperties = {
-  fontSize: 13,
+  fontSize: 14,
   fontStyle: 'italic',
   color: THEME.textMuted,
-  marginBottom: 14,
-  maxWidth: 520,
+  marginBottom: 20,
+  textAlign: 'center',
 }
 
-const whyCard: CSSProperties = {
+const whySection: CSSProperties = {
+  padding: 20,
   borderRadius: 16,
-  padding: 18,
+  background: 'rgba(0,0,0,0.3)',
   border: `1px solid ${THEME.hairline}`,
-  background: THEME.panelStrong,
-  marginBottom: 14,
+  marginBottom: 20,
 }
 
-const whyHeader: CSSProperties = {
-  fontSize: 13,
-  color: THEME.textMuted,
-  letterSpacing: 0.4,
-  textTransform: 'uppercase',
-  marginBottom: 10,
-}
-
-const whyText: CSSProperties = {
-  fontSize: 14,
-  lineHeight: 1.85,
-  color: THEME.textSecondary,
+const sectionLabel: CSSProperties = {
+  fontSize: 11,
+  fontWeight: 900,
+  letterSpacing: 1.5,
+  color: THEME.accent,
   marginBottom: 12,
 }
 
-const greenCard: CSSProperties = {
-  borderRadius: 16,
-  padding: 16,
-  border: `1px solid ${THEME.hairline}`,
-  background: "rgba(255,255,255,0.03)",
+const whyContent: CSSProperties = {
+  display: 'grid',
+  gap: 14,
 }
 
-const greenTop: CSSProperties = {
-  display: 'flex',
-  gap: 12,
-  alignItems: 'flex-start',
-  marginBottom: 10,
-}
-
-const greenAccent: CSSProperties = {
-  width: 4,
-  borderRadius: 12,
-  background: THEME.accent,
-  marginTop: 4,
-  flexShrink: 0,
-  height: 36,
-}
-
-const greenTitle: CSSProperties = {
+const whyParagraph: CSSProperties = {
   fontSize: 14,
-  fontWeight: 850,
-  color: THEME.textPrimary,
-  marginBottom: 2,
-}
-
-const list: CSSProperties = {
-  paddingLeft: 18,
-  lineHeight: 1.75,
+  lineHeight: 1.8,
   color: THEME.textSecondary,
   margin: 0,
 }
 
-const revealBtn: CSSProperties = {
-  marginTop: 10,
-  background: THEME.panelStrong,
-  border: `1px solid rgba(201,169,106,0.25)`,
-  color: THEME.accent,
-  borderRadius: 999,
-  padding: '8px 12px',
-  fontSize: 13,
-  cursor: 'pointer',
-  display: 'inline-flex',
-  gap: 8,
-  alignItems: 'center',
+const greenBlock: CSSProperties = {
+  padding: 18,
+  borderRadius: 14,
+  background: 'rgba(100, 200, 100, 0.05)',
+  border: '1px solid rgba(100, 200, 100, 0.2)',
 }
 
-const chev: CSSProperties = {
-  display: 'inline-block',
-  opacity: 0.9,
+const greenBlockHeader: CSSProperties = {
+  display: 'flex',
+  gap: 12,
+  alignItems: 'center',
+  marginBottom: 12,
+}
+
+const greenAccent: CSSProperties = {
+  width: 4,
+  height: 24,
+  borderRadius: 999,
+  background: 'rgb(100, 200, 100)',
+}
+
+const greenTitle: CSSProperties = {
+  fontSize: 15,
+  fontWeight: 900,
+  color: THEME.textPrimary,
+}
+
+const itemList: CSSProperties = {
+  margin: 0,
+  paddingLeft: 20,
+  lineHeight: 1.8,
+  color: THEME.textSecondary,
+}
+
+const listItem: CSSProperties = {
+  fontSize: 14,
+  marginBottom: 8,
 }
 
 const reasoning: CSSProperties = {
   fontSize: 13,
   fontStyle: 'italic',
   color: THEME.textMuted,
-  marginTop: 6,
+  marginTop: 12,
   marginBottom: 0,
 }
 
-const softToggle: CSSProperties = {
-  background: THEME.panelStrong,
-  border: `1px solid ${THEME.hairline}`,
-  color: THEME.textSecondary,
-  borderRadius: 14,
-  padding: '10px 12px',
-  cursor: 'pointer',
-  display: 'inline-flex',
-  gap: 10,
+const redToggle: CSSProperties = {
+  display: 'flex',
   alignItems: 'center',
+  gap: 10,
+  padding: '12px 16px',
+  borderRadius: 12,
+  background: THEME.panel,
+  border: `1px solid rgba(235,111,111,0.3)`,
+  color: THEME.textSecondary,
+  fontSize: 14,
+  cursor: 'pointer',
+  width: '100%',
 }
 
-const redCard: CSSProperties = {
+const redBlock: CSSProperties = {
   marginTop: 12,
-  borderRadius: 16,
-  padding: 16,
-  border: `1px solid rgba(235,111,111,0.22)`,
-  background: THEME.dangerSoft,
+  padding: 18,
+  borderRadius: 14,
+  background: 'rgba(235, 111, 111, 0.08)',
+  border: '1px solid rgba(235, 111, 111, 0.25)',
   overflow: 'hidden',
 }
 
 const redTitle: CSSProperties = {
   fontSize: 13,
-  fontWeight: 800,
+  fontWeight: 900,
   color: THEME.danger,
-  marginBottom: 8,
+  marginBottom: 12,
+  letterSpacing: 1,
   textTransform: 'uppercase',
-  letterSpacing: 0.5,
 }
 
-const reflectionCard: CSSProperties = {
-  marginTop: 16,
-  borderRadius: 16,
+const artifactFooter: CSSProperties = {
+  marginTop: 24,
   padding: 16,
+  borderRadius: 12,
+  background: 'rgba(0,0,0,0.2)',
   border: `1px solid ${THEME.hairline}`,
-  background: "rgba(255,255,255,0.03)",
+  textAlign: 'center',
 }
 
-const reflectionTitle: CSSProperties = {
-  fontSize: 13,
-  color: THEME.textMuted,
-  letterSpacing: 0.4,
-  textTransform: 'uppercase',
-  marginBottom: 8,
-}
-
-const validationHint: CSSProperties = {
-  margin: 0,
+const footerText: CSSProperties = {
   fontSize: 13,
   fontStyle: 'italic',
   color: THEME.textMuted,
+}
+
+const emptyState: CSSProperties = {
+  padding: 60,
+  textAlign: 'center',
+  borderRadius: 20,
+  background: THEME.panel,
+  border: `1px solid ${THEME.softBorder}`,
+}
+
+const emptyIcon: CSSProperties = {
+  fontSize: 48,
+  marginBottom: 16,
+  filter: `drop-shadow(0 0 20px ${THEME.accentGlow})`,
+}
+
+const emptyText: CSSProperties = {
+  fontSize: 15,
+  color: THEME.textSecondary,
 }
