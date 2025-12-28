@@ -3933,5 +3933,364 @@ You feel safe, respected, and aligned.`,
     affiliates: [],
   },
 },
+/* ==========================================
+   YATEVAR – COSMIC ORDER, DUTY & RITUAL TIME
+   (Vedic Indian + Nahua/Aztec)
+========================================== */
+Yatevar: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is oriented around **living in alignment with cosmic order**. Life is not random to you—it unfolds in cycles, duties, and moments that must be honored at the right time.
+
+**What this means:**
+You thrive in environments where rhythm, ritual, and structure guide daily life. Places that ignore time, season, or responsibility feel disorienting.
+
+**When you honor this:**
+You feel purposeful, steady, and protected—because you are moving with time, not against it.`,
+    greenLight: [
+      {
+        title: "Ritualized, Time-Aware Environments",
+        items: [
+          "Cultures with daily and seasonal rituals",
+          "Places where tradition shapes daily rhythm",
+          "Environments tied to land, calendar, and ceremony",
+        ],
+        reasoning: "Yatevar thrives where **time has meaning**.",
+      },
+      {
+        title: "Structured Sacred Spaces",
+        items: [
+          "Places with temples, plazas, or communal ritual sites",
+          "Homes aligned with routine and order",
+        ],
+        reasoning: "Sacred structure anchors your sense of duty.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Timeless, structureless lifestyles",
+        "Cultures that dismiss duty or responsibility",
+        "Places detached from land and season",
+      ],
+      reasoning: "You feel unmoored when nothing marks time.",
+    },
+    validation: {
+      resonates: [
+        "You feel grounded by routine and ritual",
+        "You sense when something is ‘out of time’",
+      ],
+      doesntResonate: [
+        "You prefer total spontaneity",
+        "You dislike obligation entirely",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when your role feels like **service within a larger order**. Meaning comes from fulfilling your part well—not from personal gain alone.
+
+**What this means:**
+You excel in roles with clear responsibility, lineage, or social function. Aimless work drains you.
+
+**When you honor this:**
+You feel dignified, steady, and inwardly aligned.`,
+    greenLight: [
+      {
+        title: "Duty-Oriented Roles",
+        items: [
+          "Education, teaching, mentorship",
+          "Governance, civil service",
+          "Ritual, spiritual, or cultural stewardship",
+          "Roles with clear generational impact",
+        ],
+        reasoning: "Your motivation comes from **right action**.",
+      },
+      {
+        title: "Order-Driven Work Cultures",
+        items: [
+          "Clear hierarchies of responsibility",
+          "Respect for process and timing",
+        ],
+        reasoning: "You work best when structure reflects meaning.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Directionless or purely profit-driven roles",
+        "Cultures that dismiss responsibility",
+      ],
+      reasoning: "They feel hollow and destabilizing.",
+    },
+    validation: {
+      resonates: [
+        "You like knowing your role and duty",
+        "You take responsibility seriously",
+      ],
+      doesntResonate: [
+        "You prefer work with no expectations",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You belong through **shared ritual and mutual obligation**. Community is sustained by showing up consistently.
+
+**What this means:**
+You value groups that honor roles, elders, and continuity. Communities without structure feel fragile.
+
+**When you honor this:**
+You feel protected and socially anchored.`,
+    greenLight: [
+      {
+        title: "Ritual-Bound Communities",
+        items: [
+          "Family-centered or lineage-based groups",
+          "Communities with ceremonies and shared calendars",
+        ],
+        reasoning: "Yatevar bonds through **duty and repetition**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Highly fluid groups with no continuity",
+        "Communities that reject obligation",
+      ],
+      reasoning: "They feel unstable to you.",
+    },
+    validation: {
+      resonates: [
+        "You value commitment",
+        "You respect elders and tradition",
+      ],
+      doesntResonate: [
+        "You dislike structured community",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that reinforce **discipline and ritual timing**.`,
+    greenLight: [
+      {
+        title: "Ritual Activities",
+        items: [
+          "Daily spiritual or grounding practices",
+          "Ceremony-based movement or art",
+        ],
+        reasoning: "Repetition gives meaning.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Random activities with no continuity"],
+      reasoning: "They feel empty.",
+    },
+    validation: {
+      resonates: ["You enjoy doing things at set times"],
+      doesntResonate: ["You avoid routine"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **lineage, repetition, and sacred texts**.`,
+    greenLight: [
+      {
+        title: "Traditional Learning",
+        items: [
+          "Study of foundational texts",
+          "Teacher–student transmission",
+        ],
+        reasoning: "Knowledge gains power through continuity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Contextless or purely trendy learning"],
+      reasoning: "It lacks grounding.",
+    },
+    validation: {
+      resonates: ["You respect ancient knowledge"],
+      doesntResonate: ["You prefer novelty only"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to **understand order, myth, and time**.`,
+    greenLight: [
+      {
+        title: "Mythic & Historical Media",
+        items: [
+          "Epics, mythology, sacred history",
+          "Civilizational documentaries",
+        ],
+        reasoning: "Stories teach duty and consequence.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disposable or nihilistic content"],
+      reasoning: "It erodes meaning.",
+    },
+    validation: {
+      resonates: ["You enjoy mythic narratives"],
+      doesntResonate: ["You prefer purely casual content"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **ordered and ritually grounded**.`,
+    greenLight: [
+      {
+        title: "Ritual Living",
+        items: [
+          "Defined spaces for rest, work, and reflection",
+          "Objects with symbolic meaning",
+        ],
+        reasoning: "Structure reinforces alignment.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disordered or purposeless spaces"],
+      reasoning: "They confuse your rhythm.",
+    },
+    validation: {
+      resonates: ["Your space reflects your values"],
+      doesntResonate: ["You don’t care about spatial order"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals keep you **aligned with time and duty**.`,
+    greenLight: [
+      {
+        title: "Time-Based Rituals",
+        items: [
+          "Daily, weekly, and seasonal practices",
+          "Ritual review of actions and duties",
+        ],
+        reasoning: "Time gives structure to meaning.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Ritual-free living"],
+      reasoning: "You feel unanchored.",
+    },
+    validation: {
+      resonates: ["Ritual gives you stability"],
+      doesntResonate: ["You dislike ceremony"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **devotion and discipline**.`,
+    greenLight: [
+      {
+        title: "Disciplined Movement",
+        items: [
+          "Yoga-like or form-based practices",
+          "Movement tied to breath and rhythm",
+        ],
+        reasoning: "Movement becomes offering.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Chaotic training"],
+      reasoning: "It lacks intention.",
+    },
+    validation: {
+      resonates: ["You move with intention"],
+      doesntResonate: ["You move randomly"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **balance and duty to the body**.`,
+    greenLight: [
+      {
+        title: "Balanced Wellness",
+        items: [
+          "Routine sleep and nourishment",
+          "Preventive, cyclical care",
+        ],
+        reasoning: "Balance sustains life.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disregarding bodily rhythm"],
+      reasoning: "It breaks alignment.",
+    },
+    validation: {
+      resonates: ["You respect bodily cycles"],
+      doesntResonate: ["You ignore your body"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy items with **symbolic and functional value**.`,
+    greenLight: [
+      {
+        title: "Meaningful Products",
+        items: [
+          "Tools used daily with intention",
+          "Objects tied to ritual or routine",
+        ],
+        reasoning: "Use gives meaning.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disposable, meaningless items"],
+      reasoning: "They feel empty.",
+    },
+    validation: {
+      resonates: ["You value purposeful possessions"],
+      doesntResonate: ["You buy impulsively"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **encounter sacred time and place**.`,
+    greenLight: [
+      {
+        title: "Sacred Travel",
+        items: [
+          "Pilgrimage-style journeys",
+          "Cultural or ceremonial destinations",
+        ],
+        reasoning: "Travel should mark transformation.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Aimless tourism"],
+      reasoning: "It lacks meaning.",
+    },
+    validation: {
+      resonates: ["Travel feels meaningful when purposeful"],
+      doesntResonate: ["You travel just to escape"],
+    },
+    affiliates: [],
+  },
+},
 
 }                 // closes RECOMMENDATIONS
