@@ -2847,5 +2847,371 @@ You feel connected without feeling owned.`,
     affiliates: [],
   },
 },
+/* ==========================================
+   LHUMIR – STILLNESS, CLARITY & INNER DISCIPLINE
+   (Tibetan)
+========================================== */
+Lhumir: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is oriented around **clarity through stillness**. You don’t seek stimulation or expression—you seek *altitude*. When the noise drops, your perception sharpens.
 
+**What this means:**
+You thrive in environments that are quiet, spacious, and restrained. Excessive stimulation, emotional noise, or materialism clouds your inner clarity.
+
+**When you honor this:**
+You feel centered, perceptive, and quietly powerful—because nothing is pulling you away from yourself.`,
+    greenLight: [
+      {
+        title: "High-Clarity Environments",
+        items: [
+          "Mountain or elevated regions",
+          "Quiet towns with minimal sensory overload",
+          "Places with strong contemplative culture",
+          "Environments that respect silence",
+        ],
+        reasoning: "Lhumir thrives where **clarity is protected**.",
+      },
+      {
+        title: "Low-Stimulation Living",
+        items: [
+          "Minimal advertising and noise",
+          "Simple daily rhythms",
+          "Natural light and open air",
+        ],
+        reasoning: "Your nervous system resets in calm, sparse settings.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Loud, overstimulating cities",
+        "Places obsessed with consumption or display",
+        "Emotionally chaotic cultures",
+      ],
+      reasoning: "Your perception dulls when there’s too much input.",
+    },
+    validation: {
+      resonates: [
+        "Silence feels nourishing to you",
+        "You see more when things slow down",
+        "You feel drained by constant stimulation",
+      ],
+      doesntResonate: [
+        "You thrive in loud, busy environments",
+        "You dislike quiet or solitude",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when your mind is **clear and undisturbed**. Your contribution comes from insight, discernment, and long attention—not speed.
+
+**What this means:**
+You thrive in roles that allow deep focus, ethical alignment, and minimal interruption. Chaotic workplaces scatter your attention and erode quality.
+
+**When you honor this:**
+You produce work that is precise, thoughtful, and unusually grounded.`,
+    greenLight: [
+      {
+        title: "Clarity-Based Roles",
+        items: [
+          "Research, analysis, strategy",
+          "Teaching, mentoring, guidance roles",
+          "Design or writing requiring deep focus",
+          "Wellness, contemplative, or ethical fields",
+        ],
+        reasoning: "Your value comes from **seeing clearly**, not reacting quickly.",
+      },
+      {
+        title: "Calm Work Cultures",
+        items: [
+          "Few meetings, high trust",
+          "Respect for deep work",
+          "Leaders who value composure",
+        ],
+        reasoning: "Stillness allows your intelligence to surface.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Always-on urgency cultures",
+        "Emotionally reactive teams",
+        "Workplaces with constant interruptions",
+      ],
+      reasoning: "They fragment your attention and reduce your effectiveness.",
+    },
+    validation: {
+      resonates: [
+        "You do your best thinking alone or in quiet",
+        "You value composure under pressure",
+      ],
+      doesntResonate: [
+        "You enjoy constant collaboration and buzz",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You connect through **shared depth and mutual restraint**. You don’t need many people—you need sincerity.
+
+**What this means:**
+You prefer communities that value humility, calm presence, and ethical conduct. Excessive emotional display or social drama feels destabilizing.
+
+**When you honor this:**
+You feel supported without being pulled out of yourself.`,
+    greenLight: [
+      {
+        title: "Depth-Oriented Communities",
+        items: [
+          "Small contemplative or spiritual circles",
+          "Mentor–student style relationships",
+          "Communities built on shared values, not noise",
+        ],
+        reasoning: "Lhumir bonds through **presence, not performance**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Drama-driven groups",
+        "Communities addicted to stimulation or status",
+      ],
+      reasoning: "They disturb your inner equilibrium.",
+    },
+    validation: {
+      resonates: [
+        "You prefer few but meaningful relationships",
+        "You value humility in others",
+      ],
+      doesntResonate: [
+        "You want large, highly social communities",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that cultivate **stillness, awareness, and discipline**.`,
+    greenLight: [
+      {
+        title: "Contemplative Activities",
+        items: [
+          "Meditation and breath practices",
+          "Solitary walks in nature",
+          "Journaling or reflective study",
+        ],
+        reasoning: "These activities sharpen perception.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["High-noise, high-stimulation activities"],
+      reasoning: "They scatter your attention.",
+    },
+    validation: {
+      resonates: ["You enjoy quiet practices"],
+      doesntResonate: ["You need excitement to feel alive"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **contemplation and integration**.`,
+    greenLight: [
+      {
+        title: "Deep Learning",
+        items: [
+          "Slow study of foundational texts",
+          "Learning that integrates ethics and insight",
+        ],
+        reasoning: "You value understanding over accumulation.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fast, shallow learning systems"],
+      reasoning: "They don’t leave lasting insight.",
+    },
+    validation: {
+      resonates: ["You revisit the same ideas over time"],
+      doesntResonate: ["You prefer fast-paced learning"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to **clarify, not stimulate**.`,
+    greenLight: [
+      {
+        title: "Clarity Media",
+        items: [
+          "Documentaries with depth",
+          "Talks or writings on wisdom and ethics",
+          "Minimalist or nature-based content",
+        ],
+        reasoning: "Media should quiet the mind, not agitate it.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Loud, reactive, outrage-driven content"],
+      reasoning: "It clouds perception.",
+    },
+    validation: {
+      resonates: ["You feel calmer after good media"],
+      doesntResonate: ["You enjoy chaotic content"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **simple, quiet, and intentional**.`,
+    greenLight: [
+      {
+        title: "Minimal Living",
+        items: [
+          "Sparse but warm interiors",
+          "Spaces designed for calm and reflection",
+        ],
+        reasoning: "Your environment supports inner clarity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Cluttered, noisy homes"],
+      reasoning: "They disturb your focus.",
+    },
+    validation: {
+      resonates: ["You feel better in uncluttered spaces"],
+      doesntResonate: ["You like busy, decorative homes"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals maintain your **inner alignment and discipline**.`,
+    greenLight: [
+      {
+        title: "Alignment Rituals",
+        items: [
+          "Morning stillness practice",
+          "Daily reflection or intention-setting",
+        ],
+        reasoning: "Consistency keeps you centered.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Chaotic or excessive routines"],
+      reasoning: "They dilute focus.",
+    },
+    validation: {
+      resonates: ["You value quiet daily rituals"],
+      doesntResonate: ["You dislike routine"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is about **balance and awareness**.`,
+    greenLight: [
+      {
+        title: "Mindful Movement",
+        items: [
+          "Yoga, tai chi–like practices",
+          "Slow, intentional strength or walking",
+        ],
+        reasoning: "Movement supports clarity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Aggressive, chaotic training"],
+      reasoning: "It disrupts awareness.",
+    },
+    validation: {
+      resonates: ["You move to stay centered"],
+      doesntResonate: ["You move for adrenaline"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **mental clarity and ethical alignment**.`,
+    greenLight: [
+      {
+        title: "Clarity-Based Wellness",
+        items: [
+          "Regular rest",
+          "Practices that calm the nervous system",
+        ],
+        reasoning: "Calm supports health.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Overstimulation and excess"],
+      reasoning: "They erode balance.",
+    },
+    validation: {
+      resonates: ["Calm improves your health"],
+      doesntResonate: ["You thrive on stimulation"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy for **simplicity and purpose**.`,
+    greenLight: [
+      {
+        title: "Essential Products",
+        items: [
+          "Minimal, high-quality items",
+          "Tools that reduce complexity",
+        ],
+        reasoning: "Less distraction = more clarity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Excessive or flashy possessions"],
+      reasoning: "They clutter attention.",
+    },
+    validation: {
+      resonates: ["You prefer fewer possessions"],
+      doesntResonate: ["You like collecting many things"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **reset perspective and deepen awareness**.`,
+    greenLight: [
+      {
+        title: "Contemplative Travel",
+        items: [
+          "Retreats or quiet regions",
+          "Nature-focused, slow journeys",
+        ],
+        reasoning: "Travel should clarify, not overwhelm.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fast, noisy travel"],
+      reasoning: "It fragments attention.",
+    },
+    validation: {
+      resonates: ["You travel to reflect"],
+      doesntResonate: ["You travel for excitement"],
+    },
+    affiliates: [],
+  },
+},
 }                 // closes RECOMMENDATIONS
