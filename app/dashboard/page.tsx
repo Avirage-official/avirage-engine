@@ -49,11 +49,15 @@ export default async function DashboardPage() {
           </Link>
           <div style={navLinks}>
             <Link href="/dashboard" style={{ ...navLink, color: THEME.accent }}>
-              Dashboard
+    Dashboard 
+            </Link>
+            <Link href="/insights" style={navLink}>
+              Insights
             </Link>
             <Link href="/quiz" style={navLink}>
               Take Quiz Again
             </Link>
+          </div>
           </div>
         </div>
       </nav>
