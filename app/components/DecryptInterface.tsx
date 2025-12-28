@@ -457,7 +457,7 @@ function DecryptedPanel({ nodeKey, userCode, birthDate, userName, onClose }: Dec
 
 function PanelContent({ nodeKey, userCode, birthDate, userName }: Omit<DecryptedPanelProps, 'onClose'>) {
   const content: Record<NodeKey, ReactElement> = {
-    numerology: <NumerologyContent birthDate={birthDate} userName={userName} />,
+    numerology: <NumerologyContent birthDate={birthDate} userName={userName} userCode={userCode} />,
     inverse: <InverseContent userCode={userCode} />,
     correlation: <CorrelationContent userCode={userCode} />,
     rarity: <RarityContent userCode={userCode} />,
@@ -468,7 +468,7 @@ function PanelContent({ nodeKey, userCode, birthDate, userName }: Omit<Decrypted
 }
 
 // Placeholder content components
-function NumerologyContent({ birthDate, userName }: { birthDate: Date; userName?: string }) {
+function NumerologyContent({ birthDate, userName, userCode }: { birthDate: Date; userName?: string; userCode: string }) {
   // Calculate Life Path Number
   const calculateLifePath = (date: Date) => {
     const dateStr = date.getFullYear().toString() + 
