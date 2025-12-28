@@ -7166,5 +7166,360 @@ You feel held by continuity—without needing intensity.`,
     affiliates: [],
   },
 },
+/* ==========================================
+   RENARA – QUIET POWER, HARMONY & INNER STILLNESS
+   (Javanese)
+========================================== */
+Renara: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is built on **inner composure and subtle influence**. Power is not loud—it is calm, contained, and felt without being announced.
+
+**What this means:**
+You thrive in environments that value harmony, politeness, and emotional regulation. Chaotic, aggressive, or overly expressive places exhaust you.
+
+**When you honor this:**
+You feel centered, dignified, and quietly authoritative—because nothing pulls you off balance.`,
+    greenLight: [
+      {
+        title: "Harmonious, Low-Noise Environments",
+        items: [
+          "Cultures that value politeness and restraint",
+          "Places with aesthetic order and calm pacing",
+          "Environments where conflict is handled subtly",
+        ],
+        reasoning: "Renara thrives where **calm equals strength**.",
+      },
+      {
+        title: "Elegant Living Contexts",
+        items: [
+          "Homes designed for tranquility",
+          "Spaces that feel intentional and uncluttered",
+        ],
+        reasoning: "Outer calm supports inner composure.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "High-conflict or confrontational cultures",
+        "Noisy, chaotic, emotionally volatile spaces",
+      ],
+      reasoning: "They destabilize your inner balance.",
+    },
+    validation: {
+      resonates: [
+        "You dislike unnecessary confrontation",
+        "You value calm and grace",
+      ],
+      doesntResonate: [
+        "You enjoy loud or aggressive environments",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when influence is exercised **indirectly and skillfully**. You don’t dominate—you guide.
+
+**What this means:**
+You excel in roles requiring diplomacy, coordination, and emotional intelligence. Environments that reward force over finesse frustrate you.
+
+**When you honor this:**
+You become quietly indispensable—respected for steadiness and wisdom.`,
+    greenLight: [
+      {
+        title: "Diplomatic & Harmonizing Roles",
+        items: [
+          "Coordination, operations, or facilitation",
+          "Advisory or behind-the-scenes leadership",
+          "Cultural, HR, or people-centered roles",
+        ],
+        reasoning: "Your strength is **soft power**.",
+      },
+      {
+        title: "Respectful Work Cultures",
+        items: [
+          "Low-ego environments",
+          "Clear roles with mutual respect",
+        ],
+        reasoning: "Harmony allows you to lead subtly.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Aggressive, confrontational workplaces",
+        "Cultures that reward dominance and noise",
+      ],
+      reasoning: "You’ll withdraw or disengage.",
+    },
+    validation: {
+      resonates: [
+        "You influence without forcing",
+        "You prefer calm leadership",
+      ],
+      doesntResonate: [
+        "You like aggressive competition",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You belong through **mutual respect and emotional containment**. Harmony matters more than self-expression.
+
+**What this means:**
+You prefer communities that maintain social grace and avoid public conflict. Emotional excess feels destabilizing.
+
+**When you honor this:**
+You feel safe, respected, and socially fluent.`,
+    greenLight: [
+      {
+        title: "Grace-Based Communities",
+        items: [
+          "Polite, emotionally regulated groups",
+          "Communities with unspoken but respected norms",
+        ],
+        reasoning: "Renara bonds through **mutual restraint**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Drama-driven or emotionally explosive groups",
+      ],
+      reasoning: "They disrupt harmony.",
+    },
+    validation: {
+      resonates: [
+        "You value emotional self-control",
+      ],
+      doesntResonate: [
+        "You enjoy public emotional expression",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that cultivate **stillness, grace, and refinement**.`,
+    greenLight: [
+      {
+        title: "Refining Activities",
+        items: [
+          "Meditation or contemplative practices",
+          "Art, music, or craft with precision",
+          "Slow, intentional routines",
+        ],
+        reasoning: "Refinement strengthens inner calm.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["High-adrenaline, chaotic activities"],
+      reasoning: "They disturb balance.",
+    },
+    validation: {
+      resonates: ["You like calm, focused activities"],
+      doesntResonate: ["You seek constant stimulation"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **absorption, observation, and patience**.`,
+    greenLight: [
+      {
+        title: "Quiet Learning",
+        items: [
+          "Learning by observing masters",
+          "Slow, layered understanding",
+        ],
+        reasoning: "Depth comes from patience.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fast, loud, surface-level learning"],
+      reasoning: "It lacks depth.",
+    },
+    validation: {
+      resonates: ["You learn best slowly"],
+      doesntResonate: ["You want instant mastery"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to **restore calm and perspective**.`,
+    greenLight: [
+      {
+        title: "Quiet Media",
+        items: [
+          "Subtle, atmospheric films or music",
+          "Content focused on nuance and mood",
+        ],
+        reasoning: "Subtlety feeds you.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Sensational or confrontational media"],
+      reasoning: "It agitates you.",
+    },
+    validation: {
+      resonates: ["You like subtle storytelling"],
+      doesntResonate: ["You enjoy shock value"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **serene, ordered, and refined**.`,
+    greenLight: [
+      {
+        title: "Serene Living",
+        items: [
+          "Minimal but warm design",
+          "Intentional placement of objects",
+        ],
+        reasoning: "Order reinforces composure.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Cluttered or noisy spaces"],
+      reasoning: "They disturb inner stillness.",
+    },
+    validation: {
+      resonates: ["Your space affects your mood strongly"],
+      doesntResonate: ["You don’t care about atmosphere"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals help you **maintain inner equilibrium**.`,
+    greenLight: [
+      {
+        title: "Stillness Rituals",
+        items: [
+          "Daily quiet reflection",
+          "Slow, intentional morning routines",
+        ],
+        reasoning: "Stillness preserves power.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Rushed, chaotic routines"],
+      reasoning: "They erode composure.",
+    },
+    validation: {
+      resonates: ["You like quiet rituals"],
+      doesntResonate: ["You rush through your day"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **grace and control**.`,
+    greenLight: [
+      {
+        title: "Graceful Movement",
+        items: [
+          "Slow, controlled practices",
+          "Movement emphasizing balance and posture",
+        ],
+        reasoning: "Grace reflects inner order.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Explosive or chaotic training"],
+      reasoning: "It breaks flow.",
+    },
+    validation: {
+      resonates: ["You like controlled movement"],
+      doesntResonate: ["You prefer explosive intensity"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **calm regulation and balance**.`,
+    greenLight: [
+      {
+        title: "Calm Wellness",
+        items: [
+          "Regular sleep and gentle routines",
+          "Practices that soothe the nervous system",
+        ],
+        reasoning: "Calm sustains health.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Overstimulation and stress cycles"],
+      reasoning: "They erode wellbeing.",
+    },
+    validation: {
+      resonates: ["Calm improves your health"],
+      doesntResonate: ["You thrive under constant stress"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy products that reflect **elegance, subtlety, and quality**.`,
+    greenLight: [
+      {
+        title: "Refined Products",
+        items: [
+          "Well-crafted, understated items",
+          "Products that age gracefully",
+        ],
+        reasoning: "Quality speaks quietly.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Flashy, loud, low-quality products"],
+      reasoning: "They feel vulgar.",
+    },
+    validation: {
+      resonates: ["You prefer understated quality"],
+      doesntResonate: ["You like flashy products"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **restore inner balance and observe harmony**.`,
+    greenLight: [
+      {
+        title: "Serene Travel",
+        items: [
+          "Slow, culturally respectful travel",
+          "Destinations known for calm and beauty",
+        ],
+        reasoning: "Travel should soften you, not overstimulate you.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Chaotic, party-driven travel"],
+      reasoning: "It disrupts equilibrium.",
+    },
+    validation: {
+      resonates: ["You travel to find calm"],
+      doesntResonate: ["You travel for chaos"],
+    },
+    affiliates: [],
+  },
+},
 
 }                 // closes RECOMMENDATIONS
