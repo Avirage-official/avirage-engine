@@ -103,7 +103,7 @@ export default function RecommendationsTabs({ primaryCode }: RecommendationsTabs
           const isOpen = openCategory === cat.key
           const isUnsealing = unsealing === cat.key
           const category = codeRecs[cat.key]
-          const hasContent = category?.why && !category.why.includes('coming next')
+          const hasContent = !!(category?.why && typeof category.why === 'string' && !category.why.includes('coming next'))
 
           return (
             <motion.div
