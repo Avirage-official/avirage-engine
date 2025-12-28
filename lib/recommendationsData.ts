@@ -2483,4 +2483,369 @@ You feel quietly supported—without needing constant reassurance.`,
         affiliates: [],
   },              // closes travel
 },                // closes Kayori (or Shokunin / last code)
+/* ==========================================
+   SAHEN – HORIZON FREEDOM & MEASURED RESTRAINT
+   (Tuareg)
+========================================== */
+Sahen: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is built around **freedom through restraint**. You don’t want excess—you want *space*. Space to move, to think, to breathe. You thrive when nothing is cluttering your horizon.
+
+**What this means:**
+You need environments that feel open, uncluttered, and honest. Over-engineered cities, crowded schedules, and constant stimulation suffocate you.
+
+**When you honor this:**
+You feel sovereign, calm, and internally vast—because your life has room to move.`,
+    greenLight: [
+      {
+        title: "Open-Horizon Environments",
+        items: [
+          "Desert, steppe, or wide-sky regions",
+          "Places with minimal visual and social clutter",
+          "Regions where silence is respected",
+          "Cultures that value autonomy over control",
+        ],
+        reasoning: "Sahen thrives where **space itself is a resource**.",
+      },
+      {
+        title: "Low-Density Living",
+        items: [
+          "Homes with open sightlines",
+          "Neighborhoods without constant intrusion",
+          "Life arrangements with buffer time",
+        ],
+        reasoning: "Your nervous system relaxes when nothing presses in.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Crowded, noisy cities with no escape",
+        "Over-scheduled cultures with no downtime",
+        "Places that monitor or control movement",
+      ],
+      reasoning: "You’ll feel trapped, irritable, or quietly rebellious.",
+    },
+    validation: {
+      resonates: [
+        "You feel better when you can see far and move freely",
+        "Crowds and noise exhaust you",
+        "You need unstructured time to feel like yourself",
+      ],
+      doesntResonate: [
+        "You love dense, highly social environments",
+        "You prefer tightly packed schedules",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when given **autonomy and trust**. Micromanagement drains you. You want responsibility without surveillance.
+
+**What this means:**
+You thrive in roles where outcomes matter more than constant presence. Systems that obsess over monitoring make you disengage.
+
+**When you honor this:**
+You become efficient, self-directed, and deeply reliable.`,
+    greenLight: [
+      {
+        title: "Autonomy-Driven Roles",
+        items: [
+          "Independent or remote work",
+          "Field work or roles with movement",
+          "Project-based responsibilities",
+          "Roles with minimal bureaucracy",
+        ],
+        reasoning: "Your productivity comes from **freedom, not pressure**.",
+      },
+      {
+        title: "Trust-Based Cultures",
+        items: [
+          "Leaders who set direction, then step back",
+          "Clear goals with minimal oversight",
+        ],
+        reasoning: "You work best when you’re not constantly watched.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Micromanaged teams",
+        "Constant check-ins and surveillance",
+        "Roles that restrict movement or flexibility",
+      ],
+      reasoning: "You’ll quietly withdraw or disengage.",
+    },
+    validation: {
+      resonates: [
+        "You do better when trusted",
+        "You dislike unnecessary meetings",
+      ],
+      doesntResonate: [
+        "You enjoy constant collaboration and oversight",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You value **loose-bond loyalty**. You don’t need constant contact—but when it matters, you show up.
+
+**What this means:**
+Your ideal community respects independence and doesn’t demand constant availability. You prefer fewer, deeper bonds.
+
+**When you honor this:**
+You feel connected without feeling owned.`,
+    greenLight: [
+      {
+        title: "Low-Demand Communities",
+        items: [
+          "Small circles with mutual respect",
+          "Communities that allow distance without guilt",
+        ],
+        reasoning: "Sahen bonds through **choice, not obligation**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "High-demand social groups",
+        "Communities that equate closeness with control",
+      ],
+      reasoning: "You’ll feel pressured or suffocated.",
+    },
+    validation: {
+      resonates: [
+        "You value independence in relationships",
+        "You dislike being constantly expected",
+      ],
+      doesntResonate: [
+        "You want constant social interaction",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that give you **space and self-direction**.`,
+    greenLight: [
+      {
+        title: "Open-Ended Activities",
+        items: [
+          "Solo travel or long walks",
+          "Navigation, exploration, mapping",
+          "Activities without strict schedules",
+        ],
+        reasoning: "You feel alive when you can roam.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Tightly choreographed group activities"],
+      reasoning: "They feel restrictive.",
+    },
+    validation: {
+      resonates: ["You enjoy wandering without a plan"],
+      doesntResonate: ["You prefer structured activities"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **self-directed exploration**.`,
+    greenLight: [
+      {
+        title: "Independent Learning",
+        items: [
+          "Self-paced study",
+          "Learning through travel or lived experience",
+        ],
+        reasoning: "You trust your own path.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Rigid curricula with no flexibility"],
+      reasoning: "They feel confining.",
+    },
+    validation: {
+      resonates: ["You learn best alone"],
+      doesntResonate: ["You like classroom structure"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to **expand your sense of space and perspective**.`,
+    greenLight: [
+      {
+        title: "Wide-Horizon Media",
+        items: [
+          "Travel writing",
+          "Stories of exploration and endurance",
+        ],
+        reasoning: "You’re drawn to vastness.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fast, noisy content"],
+      reasoning: "It crowds your inner space.",
+    },
+    validation: {
+      resonates: ["You like media that slows you down"],
+      doesntResonate: ["You enjoy constant stimulation"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **open, simple, and unencumbered**.`,
+    greenLight: [
+      {
+        title: "Minimal Living",
+        items: [
+          "Few but meaningful possessions",
+          "Open layouts, uncluttered space",
+        ],
+        reasoning: "Less weight = more freedom.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Cluttered or crowded homes"],
+      reasoning: "They feel heavy.",
+    },
+    validation: {
+      resonates: ["You feel lighter with fewer things"],
+      doesntResonate: ["You like collecting many items"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals give you **orientation, not obligation**.`,
+    greenLight: [
+      {
+        title: "Orientation Rituals",
+        items: [
+          "Daily check-in with direction and intention",
+          "Rituals that ground without fixing you in place",
+        ],
+        reasoning: "You need alignment, not rigidity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Heavy, binding routines"],
+      reasoning: "They restrict your movement.",
+    },
+    validation: {
+      resonates: ["You like light structure"],
+      doesntResonate: ["You like strict routines"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **navigation and endurance**.`,
+    greenLight: [
+      {
+        title: "Navigational Movement",
+        items: [
+          "Long walks, hiking, trekking",
+          "Endurance movement at your own pace",
+        ],
+        reasoning: "Movement clears your horizon.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Crowded gyms and rigid classes"],
+      reasoning: "They feel confining.",
+    },
+    validation: {
+      resonates: ["You move to think"],
+      doesntResonate: ["You move to socialize"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness depends on **space, autonomy, and recovery**.`,
+    greenLight: [
+      {
+        title: "Space-Based Wellness",
+        items: [
+          "Adequate rest and alone time",
+          "Nature exposure",
+        ],
+        reasoning: "Space heals you.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Constant stimulation and obligation"],
+      reasoning: "It exhausts you.",
+    },
+    validation: {
+      resonates: ["You need solitude to reset"],
+      doesntResonate: ["You reset through social energy"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy for **portability and usefulness**.`,
+    greenLight: [
+      {
+        title: "Lightweight Tools",
+        items: [
+          "Durable, portable gear",
+          "Multipurpose items",
+        ],
+        reasoning: "Freedom means carrying less.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Heavy, single-use possessions"],
+      reasoning: "They feel like anchors.",
+    },
+    validation: {
+      resonates: ["You like traveling light"],
+      doesntResonate: ["You enjoy heavy setups"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **move and recalibrate your horizon**.`,
+    greenLight: [
+      {
+        title: "Horizon Travel",
+        items: [
+          "Long routes rather than packed itineraries",
+          "Travel that allows wandering",
+        ],
+        reasoning: "Movement restores you.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Crowded tourist circuits"],
+      reasoning: "They feel claustrophobic.",
+    },
+    validation: {
+      resonates: ["You like open-ended journeys"],
+      doesntResonate: ["You prefer guided tours"],
+    },
+    affiliates: [],
+  },
+},
+
 }                 // closes RECOMMENDATIONS
