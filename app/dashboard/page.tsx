@@ -57,6 +57,9 @@ export default async function DashboardPage() {
       <Link href="/quiz" style={navLink}>
         Take Quiz Again
       </Link>
+      <Link href="/heritage/jaejin" style={navLink}>
+        Heritage
+      </Link>
     </div>
   </div>
 </nav>
