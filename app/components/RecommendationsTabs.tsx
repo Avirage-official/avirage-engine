@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { CSSProperties } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import type { ReactElement } from 'react'
 import { RECOMMENDATIONS, CategoryRecommendation } from '@/lib/recommendationsData'
+import type { ReactElement } from 'react'
 
 const THEME = {
   panel: "rgba(255,255,255,0.04)",
@@ -222,7 +222,7 @@ interface GeometricSymbolProps {
 }
 
 function GeometricSymbol({ categoryKey, isActive, isHovered, isUnsealing }: GeometricSymbolProps) {
- const symbols: Record<CategoryKey, ReactElement> = { 
+  const symbols: Record<CategoryKey, ReactElement> = {
     locations: <RotatingHexagon isActive={isActive} isHovered={isHovered} isUnsealing={isUnsealing} />,
     work: <PulsingGrid isActive={isActive} isHovered={isHovered} isUnsealing={isUnsealing} />,
     community: <InterlockingCircles isActive={isActive} isHovered={isHovered} isUnsealing={isUnsealing} />,
@@ -766,21 +766,22 @@ const mainTitle: CSSProperties = {
   WebkitTextFillColor: 'transparent',
 }
 const mainSubtitle: CSSProperties = { fontSize: 16, color: THEME.textSecondary, marginBottom: 20, lineHeight: 1.6 }
-const gridStyle: CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }
+const gridStyle: CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, alignItems: 'start' }
 const sealedCard: CSSProperties = {
   position: 'relative',
-  padding: 24,
+  padding: 20,
   borderRadius: 20,
   background: THEME.panel,
   border: `1px solid ${THEME.softBorder}`,
   textAlign: 'center',
   overflow: 'hidden',
-  minHeight: 200,
+  minHeight: 180,
+  aspectRatio: '1 / 1',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  gap: 12,
+  gap: 8,
 }
 const glowLayer: CSSProperties = {
   position: 'absolute',
@@ -790,10 +791,10 @@ const glowLayer: CSSProperties = {
   opacity: 0.6,
   pointerEvents: 'none',
 }
-const symbolContainer: CSSProperties = { marginBottom: 8 }
+const symbolContainer: CSSProperties = { marginBottom: 4, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }
 const sealedText: CSSProperties = { display: 'flex', flexDirection: 'column', gap: 4 }
-const sealedLabel: CSSProperties = { fontSize: 18, fontWeight: 900, color: THEME.textPrimary, fontFamily: DISPLAY_FONT }
-const sealedTagline: CSSProperties = { fontSize: 13, color: THEME.textMuted, fontStyle: 'italic' }
+const sealedLabel: CSSProperties = { fontSize: 16, fontWeight: 900, color: THEME.textPrimary, fontFamily: DISPLAY_FONT, letterSpacing: 0.5 }
+const sealedTagline: CSSProperties = { fontSize: 12, color: THEME.textMuted, fontStyle: 'italic' }
 const statusDot = (active: boolean): CSSProperties => ({
   position: 'absolute',
   top: 16,
