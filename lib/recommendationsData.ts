@@ -3578,4 +3578,360 @@ You feel connected without needing explanation.`,
     affiliates: [],
   },
 },
+/* ==========================================
+   ASHKARA – ETHICAL FIRE & PRINCIPLED ORDER
+   (Persian / Zoroastrian)
+========================================== */
+Ashkara: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is governed by **truth, order, and moral clarity**. You thrive where values are explicit and actions align with principles. Ambiguity corrodes your energy.
+
+**What this means:**
+You need environments that reward integrity, fairness, and responsibility. Places that normalize corruption, double standards, or moral fog exhaust you.
+
+**When you honor this:**
+You feel steady, purposeful, and internally lit—because your life aligns with what you believe.`,
+    greenLight: [
+      {
+        title: "Principle-Driven Environments",
+        items: [
+          "Cultures with strong civic ethics",
+          "Places that value justice and accountability",
+          "Institutions with clear rules applied fairly",
+        ],
+        reasoning: "Ashkara thrives where **order is moral**, not arbitrary.",
+      },
+      {
+        title: "Structured, Respectful Living",
+        items: [
+          "Clean, well-maintained public spaces",
+          "Predictable systems that work",
+        ],
+        reasoning: "Order supports ethical action.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Corrupt or rule-bending cultures",
+        "Places where power overrides principle",
+      ],
+      reasoning: "Moral inconsistency drains you.",
+    },
+    validation: {
+      resonates: [
+        "You care deeply about fairness",
+        "Hypocrisy angers you more than failure",
+      ],
+      doesntResonate: [
+        "You’re comfortable with moral ambiguity",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when there is **ethical alignment**. Your motivation comes from doing the *right* thing well—not from shortcuts or optics.
+
+**What this means:**
+You excel in roles with clear standards, accountability, and meaningful responsibility. Shady incentives or unclear ethics disengage you.
+
+**When you honor this:**
+You become a pillar—trusted, decisive, and respected.`,
+    greenLight: [
+      {
+        title: "Integrity-Centered Roles",
+        items: [
+          "Governance, policy, compliance",
+          "Law, ethics, risk, quality assurance",
+          "Leadership with accountability",
+          "Engineering or systems with safety focus",
+        ],
+        reasoning: "Your strength is **moral reliability**.",
+      },
+      {
+        title: "Transparent Cultures",
+        items: [
+          "Clear decision-making processes",
+          "Open accountability and consequences",
+        ],
+        reasoning: "Transparency fuels your commitment.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Incentives that reward cutting corners",
+        "Cultures that blur responsibility",
+      ],
+      reasoning: "You’ll disengage or burn out.",
+    },
+    validation: {
+      resonates: [
+        "You want to be proud of your work",
+        "You prefer clear rules over favors",
+      ],
+      doesntResonate: [
+        "You’re fine bending rules to win",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You bond through **shared values and mutual responsibility**. Trust is built on consistency and ethical behavior.
+
+**What this means:**
+You prefer communities with standards and purpose. Gossip, manipulation, or moral laxity erodes trust.
+
+**When you honor this:**
+You feel safe, respected, and aligned.`,
+    greenLight: [
+      {
+        title: "Values-Based Communities",
+        items: [
+          "Civic or service-oriented groups",
+          "Communities with codes of conduct",
+        ],
+        reasoning: "Ashkara bonds through **principle, not proximity**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Groups that excuse unethical behavior",
+        "Status games without accountability",
+      ],
+      reasoning: "They feel unsafe to you.",
+    },
+    validation: {
+      resonates: [
+        "You respect people who stand by their word",
+      ],
+      doesntResonate: [
+        "You enjoy morally loose social scenes",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that reinforce **discipline and integrity**.`,
+    greenLight: [
+      {
+        title: "Principled Activities",
+        items: [
+          "Structured training with rules",
+          "Service or duty-based practices",
+        ],
+        reasoning: "Order strengthens your inner fire.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Chaotic activities with no standards"],
+      reasoning: "They feel empty.",
+    },
+    validation: {
+      resonates: ["You enjoy structure with purpose"],
+      doesntResonate: ["You prefer rule-free play"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **clear frameworks and ethical grounding**.`,
+    greenLight: [
+      {
+        title: "Foundational Learning",
+        items: [
+          "Systems thinking",
+          "Ethics, philosophy, governance",
+        ],
+        reasoning: "You value truth over novelty.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Relativistic or purely opinion-based learning"],
+      reasoning: "It feels unanchored.",
+    },
+    validation: {
+      resonates: ["You seek first principles"],
+      doesntResonate: ["You enjoy ambiguity for its own sake"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to **clarify right action**.`,
+    greenLight: [
+      {
+        title: "Principled Media",
+        items: [
+          "Investigative journalism",
+          "Ethics and history",
+        ],
+        reasoning: "You want truth with responsibility.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Sensational or manipulative content"],
+      reasoning: "It pollutes judgment.",
+    },
+    validation: {
+      resonates: ["You care about accuracy"],
+      doesntResonate: ["You enjoy sensationalism"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **orderly and intentional**.`,
+    greenLight: [
+      {
+        title: "Orderly Living",
+        items: [
+          "Clean lines, functional layouts",
+          "Spaces that support routine",
+        ],
+        reasoning: "Order reinforces clarity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disorganized, neglected spaces"],
+      reasoning: "They feel disrespectful to you.",
+    },
+    validation: {
+      resonates: ["You feel calmer when things are in order"],
+      doesntResonate: ["You’re fine with disorder"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals keep your **ethical compass lit**.`,
+    greenLight: [
+      {
+        title: "Integrity Rituals",
+        items: [
+          "Daily intention-setting",
+          "Weekly review of actions vs values",
+        ],
+        reasoning: "Fire is sustained through attention.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Rituals without meaning"],
+      reasoning: "They feel hollow.",
+    },
+    validation: {
+      resonates: ["You like reflecting on alignment"],
+      doesntResonate: ["You avoid self-review"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **discipline in action**.`,
+    greenLight: [
+      {
+        title: "Disciplined Training",
+        items: [
+          "Martial arts with codes",
+          "Strength training with form and safety",
+        ],
+        reasoning: "Structure builds confidence.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Reckless or ruleless training"],
+      reasoning: "It violates your sense of order.",
+    },
+    validation: {
+      resonates: ["You value safe, principled training"],
+      doesntResonate: ["You chase risk for thrill"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **alignment and responsibility**.`,
+    greenLight: [
+      {
+        title: "Aligned Wellness",
+        items: [
+          "Consistent routines",
+          "Preventive care",
+        ],
+        reasoning: "Integrity supports health.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Neglect or extremes"],
+      reasoning: "They break trust with yourself.",
+    },
+    validation: {
+      resonates: ["You like steady habits"],
+      doesntResonate: ["You swing between extremes"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy for **quality and responsibility**.`,
+    greenLight: [
+      {
+        title: "Responsible Products",
+        items: [
+          "Durable, ethically made goods",
+        ],
+        reasoning: "Your purchases reflect your values.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disposable or unethical products"],
+      reasoning: "They feel wrong to you.",
+    },
+    validation: {
+      resonates: ["You care where things come from"],
+      doesntResonate: ["You only care about price"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **understand civilization and values**.`,
+    greenLight: [
+      {
+        title: "Civilizational Travel",
+        items: [
+          "Historic cities and cultural heritage",
+          "Journeys with meaning and learning",
+        ],
+        reasoning: "Travel should deepen understanding.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Aimless or indulgent travel"],
+      reasoning: "It feels empty.",
+    },
+    validation: {
+      resonates: ["You travel to learn values"],
+      doesntResonate: ["You travel just to escape"],
+    },
+    affiliates: [],
+  },
+},
+
 }                 // closes RECOMMENDATIONS
