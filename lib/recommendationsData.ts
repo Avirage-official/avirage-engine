@@ -3214,4 +3214,368 @@ You feel supported without being pulled out of yourself.`,
     affiliates: [],
   },
 },
+/* ==========================================
+   KHOISAN – ATTUNEMENT, PRESENCE & TRACKING INTELLIGENCE
+   (San / Khoisan)
+========================================== */
+Khoisan: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is built around **deep attunement to the present moment**. You don’t live abstractly—you read reality as it unfolds. Subtle changes in environment, people, and mood register instantly for you.
+
+**What this means:**
+You thrive in places that are natural, relational, and responsive. Overly artificial, rigid, or disconnected environments dull your perception.
+
+**When you honor this:**
+You feel alert, alive, and quietly wise—because you’re fully in contact with what’s real.`,
+    greenLight: [
+      {
+        title: "Sensory-Natural Environments",
+        items: [
+          "Nature-rich regions with open land",
+          "Places where daily life happens outdoors",
+          "Low-noise, low-artifice environments",
+          "Communities close to land and weather",
+        ],
+        reasoning: "Khoisan thrives where **the senses stay awake**.",
+      },
+      {
+        title: "Responsive Living Spaces",
+        items: [
+          "Homes with natural light and airflow",
+          "Spaces that allow movement and awareness",
+        ],
+        reasoning: "Your nervous system stays regulated through sensory feedback.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Highly artificial or sealed-off spaces",
+        "Overly bureaucratic or rule-heavy cultures",
+        "Places that suppress instinct or intuition",
+      ],
+      reasoning: "You’ll feel numb, anxious, or disconnected from yourself.",
+    },
+    validation: {
+      resonates: [
+        "You notice small changes others miss",
+        "You feel best when outdoors or moving",
+        "Artificial environments drain you",
+      ],
+      doesntResonate: [
+        "You prefer fully controlled, artificial spaces",
+        "You ignore sensory input easily",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when you can **read situations in real time**. Your intelligence is adaptive, intuitive, and situational—not rigidly procedural.
+
+**What this means:**
+You thrive in roles that reward observation, responsiveness, and on-the-ground awareness. Static desk roles or heavy abstraction disconnect you.
+
+**When you honor this:**
+You become highly effective—anticipating issues before they surface.`,
+    greenLight: [
+      {
+        title: "Situational Intelligence Roles",
+        items: [
+          "Field work, research, or observation-based roles",
+          "User research, ethnography, UX research",
+          "Coaching, facilitation, mediation",
+          "Crisis response or adaptive operations",
+        ],
+        reasoning: "Your strength is **reading the moment accurately**.",
+      },
+      {
+        title: "Flexible Work Structures",
+        items: [
+          "Environments that allow movement",
+          "Workflows that adapt in real time",
+        ],
+        reasoning: "Rigid systems blunt your intelligence.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Highly scripted or inflexible roles",
+        "Workplaces that dismiss intuition",
+        "Purely abstract or theoretical work",
+      ],
+      reasoning: "You’ll feel underused and mentally disconnected.",
+    },
+    validation: {
+      resonates: [
+        "You can sense problems early",
+        "You adjust naturally to changing conditions",
+      ],
+      doesntResonate: [
+        "You prefer fixed procedures",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You bond through **shared awareness and mutual responsiveness**. You read people quickly and value honesty in presence more than words.
+
+**What this means:**
+You prefer communities that are emotionally transparent and grounded. Pretence, hierarchy, or excessive formality feels unsafe.
+
+**When you honor this:**
+You feel connected without needing explanation.`,
+    greenLight: [
+      {
+        title: "Attuned Communities",
+        items: [
+          "Small groups with high trust",
+          "Communities comfortable with silence",
+          "Groups that respond to real needs, not roles",
+        ],
+        reasoning: "Khoisan bonds through **shared sensing**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Highly performative social groups",
+        "Rigid hierarchies that suppress instinct",
+      ],
+      reasoning: "They feel false or threatening.",
+    },
+    validation: {
+      resonates: [
+        "You sense honesty quickly",
+        "You dislike social masks",
+      ],
+      doesntResonate: [
+        "You enjoy formal or performative social scenes",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that sharpen **awareness and responsiveness**.`,
+    greenLight: [
+      {
+        title: "Awareness Activities",
+        items: [
+          "Tracking, navigation, exploration",
+          "Martial arts or movement requiring awareness",
+          "Nature-based skill practices",
+        ],
+        reasoning: "These keep your senses tuned.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Repetitive activities with no awareness demand"],
+      reasoning: "They dull perception.",
+    },
+    validation: {
+      resonates: ["You enjoy activities that require attention"],
+      doesntResonate: ["You prefer autopilot routines"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **direct experience and observation**.`,
+    greenLight: [
+      {
+        title: "Experiential Learning",
+        items: [
+          "Learning by watching and doing",
+          "Real-world experimentation",
+        ],
+        reasoning: "Khoisan learns by *being present*.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Purely theoretical instruction"],
+      reasoning: "Without context, learning feels hollow.",
+    },
+    validation: {
+      resonates: ["You learn fastest by doing"],
+      doesntResonate: ["You prefer abstract study"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to **observe reality more clearly**.`,
+    greenLight: [
+      {
+        title: "Reality-Based Media",
+        items: [
+          "Nature documentaries",
+          "Human behavior and observational content",
+        ],
+        reasoning: "You’re drawn to what reveals truth.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Overly edited, artificial content"],
+      reasoning: "It feels misleading.",
+    },
+    validation: {
+      resonates: ["You like raw, real media"],
+      doesntResonate: ["You enjoy heavy spectacle"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **open, sensory, and alive**.`,
+    greenLight: [
+      {
+        title: "Sensory Living",
+        items: [
+          "Natural materials",
+          "Indoor–outdoor flow",
+        ],
+        reasoning: "Your awareness depends on sensory richness.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Sealed, artificial interiors"],
+      reasoning: "They numb perception.",
+    },
+    validation: {
+      resonates: ["You feel better in natural spaces"],
+      doesntResonate: ["You prefer sealed environments"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals help you **stay oriented to reality**.`,
+    greenLight: [
+      {
+        title: "Presence Rituals",
+        items: [
+          "Daily sensory check-ins",
+          "Quiet observation practices",
+        ],
+        reasoning: "Presence is your anchor.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Rigid rituals disconnected from reality"],
+      reasoning: "They feel empty.",
+    },
+    validation: {
+      resonates: ["You like rituals that keep you aware"],
+      doesntResonate: ["You prefer symbolic ritual only"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **awareness-in-motion**.`,
+    greenLight: [
+      {
+        title: "Responsive Movement",
+        items: [
+          "Martial arts, agility training",
+          "Trail walking, natural movement",
+        ],
+        reasoning: "Movement sharpens perception.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Mindless, repetitive training"],
+      reasoning: "It disconnects you.",
+    },
+    validation: {
+      resonates: ["You move to stay alert"],
+      doesntResonate: ["You move to zone out"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **being in tune with your body and environment**.`,
+    greenLight: [
+      {
+        title: "Attunement Wellness",
+        items: [
+          "Listening to bodily signals",
+          "Nature-based regulation",
+        ],
+        reasoning: "Your body tells you what you need.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Ignoring bodily feedback"],
+      reasoning: "Disconnection creates imbalance.",
+    },
+    validation: {
+      resonates: ["You notice health signals early"],
+      doesntResonate: ["You ignore physical cues"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy tools that support **adaptability and awareness**.`,
+    greenLight: [
+      {
+        title: "Adaptive Tools",
+        items: [
+          "Lightweight, responsive gear",
+          "Tools that enhance perception",
+        ],
+        reasoning: "Your tools should extend your senses.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Overly complex or heavy products"],
+      reasoning: "They reduce responsiveness.",
+    },
+    validation: {
+      resonates: ["You like simple, effective tools"],
+      doesntResonate: ["You like complex systems"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **reawaken perception**.`,
+    greenLight: [
+      {
+        title: "Awareness Travel",
+        items: [
+          "Nature immersion travel",
+          "Journeys focused on observation, not consumption",
+        ],
+        reasoning: "Travel sharpens your senses.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Overplanned tourist travel"],
+      reasoning: "It dulls awareness.",
+    },
+    validation: {
+      resonates: ["You travel to feel more present"],
+      doesntResonate: ["You travel mainly for luxury"],
+    },
+    affiliates: [],
+  },
+},
 }                 // closes RECOMMENDATIONS
