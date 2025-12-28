@@ -2481,4 +2481,4 @@ You feel quietly supported—without needing constant reassurance.`,
       doesntResonate: ["You like constant movement"],
     },
     affiliates: [],
-  },
+  }
