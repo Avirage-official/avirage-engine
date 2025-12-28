@@ -4651,4 +4651,2520 @@ You feel proud of who you stand with.`,
     affiliates: [],
   },
 },
+  /* ==========================================
+   KHORUUN – VASTNESS, STOIC ENDURANCE & SOVEREIGN WILL
+   (Mongolian)
+========================================== */
+Khoruun: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is built around **sovereignty and wide horizons**. You are strongest when you feel uncontained—free to move, decide, and endure on your own terms.
+
+**What this means:**
+You thrive in environments that feel spacious, honest, and uncompressed. Over-regulated, crowded, or emotionally intrusive places drain your resolve.
+
+**When you honor this:**
+You feel calm, formidable, and internally unshakeable—because nothing is pressing in on you.`,
+    greenLight: [
+      {
+        title: "Wide, Uncompressed Environments",
+        items: [
+          "Open plains, steppes, or big-sky regions",
+          "Low-density cities or frontier-like towns",
+          "Places that value independence and toughness",
+        ],
+        reasoning: "Khoruun thrives where **space equals freedom**.",
+      },
+      {
+        title: "Self-Sufficient Living Contexts",
+        items: [
+          "Places where people rely on themselves",
+          "Cultures that respect resilience and grit",
+        ],
+        reasoning: "Your nervous system stabilizes when autonomy is normal.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Crowded, over-policed cities",
+        "Cultures that demand emotional conformity",
+        "Places that micromanage daily life",
+      ],
+      reasoning: "You’ll feel constrained and quietly resistant.",
+    },
+    validation: {
+      resonates: [
+        "You need space to think and move",
+        "You dislike being monitored or controlled",
+      ],
+      doesntResonate: [
+        "You enjoy dense, highly regulated environments",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when you are given **authority over your own execution**. You don’t need hand-holding—you need trust.
+
+**What this means:**
+You excel in roles that reward toughness, long endurance, and independent judgment. Excessive supervision kills motivation.
+
+**When you honor this:**
+You become relentless—quietly outlasting others.`,
+    greenLight: [
+      {
+        title: "Autonomous, Endurance Roles",
+        items: [
+          "Independent operations or field work",
+          "Logistics, infrastructure, or resilience-focused roles",
+          "Leadership where decisions stick",
+          "Entrepreneurial or frontier-style work",
+        ],
+        reasoning: "Your strength is **self-directed endurance**.",
+      },
+      {
+        title: "Low-Interference Cultures",
+        items: [
+          "Clear goals, minimal oversight",
+          "Respect for decisiveness",
+        ],
+        reasoning: "Trust unlocks your best work.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Micromanagement-heavy teams",
+        "Emotionally performative workplaces",
+      ],
+      reasoning: "You disengage when autonomy is removed.",
+    },
+    validation: {
+      resonates: [
+        "You prefer being trusted to figure things out",
+        "You handle long, difficult efforts well",
+      ],
+      doesntResonate: [
+        "You like constant feedback and collaboration",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You value **loyalty without intrusion**. You don’t need constant closeness—just reliability when it matters.
+
+**What this means:**
+You prefer small, tough, dependable circles. Emotional dependency or social pressure feels burdensome.
+
+**When you honor this:**
+You feel bonded without losing independence.`,
+    greenLight: [
+      {
+        title: "Low-Drama, Loyal Communities",
+        items: [
+          "Small groups built on shared hardship",
+          "Communities that respect personal distance",
+        ],
+        reasoning: "Khoruun bonds through **shared endurance**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "High-emotion, high-demand social groups",
+        "Communities that equate closeness with control",
+      ],
+      reasoning: "They feel suffocating.",
+    },
+    validation: {
+      resonates: [
+        "You value loyalty over intimacy",
+        "You show up when it counts",
+      ],
+      doesntResonate: [
+        "You want constant emotional connection",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that test **endurance, will, and self-reliance**.`,
+    greenLight: [
+      {
+        title: "Endurance Activities",
+        items: [
+          "Long-distance movement",
+          "Cold exposure or resilience training",
+          "Solo challenges",
+        ],
+        reasoning: "Challenge strengthens your core.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Soft, convenience-driven hobbies"],
+      reasoning: "They feel weakening.",
+    },
+    validation: {
+      resonates: ["You enjoy pushing limits quietly"],
+      doesntResonate: ["You avoid discomfort"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **testing, hardship, and real conditions**.`,
+    greenLight: [
+      {
+        title: "Trial-Based Learning",
+        items: [
+          "Learning through responsibility",
+          "Skills tested under pressure",
+        ],
+        reasoning: "Khoruun learns by enduring reality.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Overly theoretical learning"],
+      reasoning: "If it’s not tested, it’s not real.",
+    },
+    validation: {
+      resonates: ["You trust experience over theory"],
+      doesntResonate: ["You prefer abstract study"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media that reflects **strength, resilience, and vastness**.`,
+    greenLight: [
+      {
+        title: "Endurance Media",
+        items: [
+          "Stories of survival and conquest",
+          "Narratives about solitude and willpower",
+        ],
+        reasoning: "You resonate with toughness done quietly.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Overly sentimental or noisy content"],
+      reasoning: "It feels weak or distracting.",
+    },
+    validation: {
+      resonates: ["You like stoic characters"],
+      doesntResonate: ["You prefer emotional drama"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **simple, strong, and unrestrictive**.`,
+    greenLight: [
+      {
+        title: "Sovereign Living",
+        items: [
+          "Minimal but durable setup",
+          "Space to move and think",
+        ],
+        reasoning: "Your home should never feel confining.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Cramped or fragile living spaces"],
+      reasoning: "They feel limiting.",
+    },
+    validation: {
+      resonates: ["You like simple, tough environments"],
+      doesntResonate: ["You enjoy delicate or ornate spaces"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals reinforce **self-discipline and readiness**.`,
+    greenLight: [
+      {
+        title: "Endurance Rituals",
+        items: [
+          "Daily physical readiness check",
+          "Personal codes of conduct",
+        ],
+        reasoning: "Discipline preserves sovereignty.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Comfort-only routines"],
+      reasoning: "They weaken resolve.",
+    },
+    validation: {
+      resonates: ["You like holding yourself to standards"],
+      doesntResonate: ["You dislike self-discipline"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **endurance and control**.`,
+    greenLight: [
+      {
+        title: "Enduring Movement",
+        items: [
+          "Strength and stamina training",
+          "Movement that builds toughness",
+        ],
+        reasoning: "Your body mirrors your will.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Soft, convenience-focused training"],
+      reasoning: "It feels weakening.",
+    },
+    validation: {
+      resonates: ["You like feeling physically tough"],
+      doesntResonate: ["You prefer gentle-only movement"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **strength, recovery, and restraint**.`,
+    greenLight: [
+      {
+        title: "Resilience Wellness",
+        items: [
+          "Adequate recovery after exertion",
+          "Simple, sustaining nutrition",
+        ],
+        reasoning: "Strength must be maintained.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Excessive indulgence"],
+      reasoning: "It erodes resilience.",
+    },
+    validation: {
+      resonates: ["You feel best when strong and rested"],
+      doesntResonate: ["You ignore recovery"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy products for **durability and autonomy**.`,
+    greenLight: [
+      {
+        title: "Hard-Wearing Tools",
+        items: [
+          "Rugged gear",
+          "Tools that work anywhere",
+        ],
+        reasoning: "Your tools should survive hardship.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fragile, high-maintenance products"],
+      reasoning: "They feel unreliable.",
+    },
+    validation: {
+      resonates: ["You like gear that lasts"],
+      doesntResonate: ["You enjoy delicate products"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **experience scale, distance, and self-reliance**.`,
+    greenLight: [
+      {
+        title: "Vast Travel",
+        items: [
+          "Remote regions",
+          "Journeys requiring endurance and planning",
+        ],
+        reasoning: "Distance restores your sense of self.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Over-managed, luxury-only travel"],
+      reasoning: "It feels artificial.",
+    },
+    validation: {
+      resonates: ["You like remote travel"],
+      doesntResonate: ["You want everything handled for you"],
+    },
+    affiliates: [],
+  },
+},
+/* ==========================================
+   SILJOA – COLD RESILIENCE, FORESIGHT & QUIET COMPETENCE
+   (Inuit + Sámi)
+========================================== */
+Siljoa: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is built for **survival through foresight**. You don’t trust comfort that isn’t earned. You feel safest when you’re prepared, steady, and living inside a system that can handle winter—literal or metaphorical.
+
+**What this means:**
+You thrive in environments that respect nature, limit waste, and prioritize practicality. Places that reward excess, impulsivity, or fragile systems make you anxious.
+
+**When you honor this:**
+You feel calm and capable—because you know you can handle what’s coming.`,
+    greenLight: [
+      {
+        title: "Preparedness-Friendly Environments",
+        items: [
+          "Cold or seasonal climates with real winter logistics",
+          "Communities where people plan ahead (food, heat, transport)",
+          "Places that value practicality and repair culture",
+        ],
+        reasoning: "Siljoa thrives where **preparedness is normal**.",
+      },
+      {
+        title: "Nature-Respecting Living",
+        items: [
+          "Access to water, forest, sky, or open land",
+          "Places where people understand weather and limits",
+        ],
+        reasoning: "Your nervous system settles when reality is acknowledged—not denied.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Fragile, over-consumptive cities that ignore limits",
+        "Places where systems break often (power, safety, logistics)",
+        "Cultures that mock planning as paranoia",
+      ],
+      reasoning: "When nobody prepares, you carry the burden alone.",
+    },
+    validation: {
+      resonates: [
+        "You feel safer when you’re prepared",
+        "You notice resource waste quickly",
+        "You prefer reliable systems over luxury",
+      ],
+      doesntResonate: [
+        "You love spontaneity and hate planning",
+        "You dislike dealing with practicalities",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when reliability matters. You are a **stability builder**—someone who anticipates failure, reduces risk, and keeps things working when conditions are harsh.
+
+**What this means:**
+You thrive in roles that reward planning, resilience, and long attention. Chaotic, improvisational workplaces exhaust you.
+
+**When you honor this:**
+You become the person everyone relies on—quietly essential.`,
+    greenLight: [
+      {
+        title: "Resilience & Systems Roles",
+        items: [
+          "Reliability engineering, infrastructure, security",
+          "Operations, logistics, contingency planning",
+          "Risk, safety, QA, compliance",
+          "Anything that requires planning for worst-case",
+        ],
+        reasoning: "Your strength is **anticipation + stability**.",
+      },
+      {
+        title: "Low-Drama Work Cultures",
+        items: [
+          "Clear responsibility and protocols",
+          "Teams that respect calm competence",
+        ],
+        reasoning: "Siljoa works best in environments that value steadiness.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Always-on chaos cultures",
+        "Places that refuse contingency planning",
+        "Work that rewards risk-taking without responsibility",
+      ],
+      reasoning: "You’ll burn out protecting the system from itself.",
+    },
+    validation: {
+      resonates: [
+        "You think in contingencies automatically",
+        "You prefer stable, well-designed systems",
+      ],
+      doesntResonate: [
+        "You like high-risk work with no structure",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You bond through **dependability and shared survival intelligence**. You don’t need many people—you need people who show up when it matters.
+
+**What this means:**
+You value small circles with trust, competence, and emotional steadiness. Loud social scenes feel unsafe or tiring.
+
+**When you honor this:**
+You feel protected without needing constant interaction.`,
+    greenLight: [
+      {
+        title: "Reliability-Based Communities",
+        items: [
+          "Small circles with mutual aid",
+          "Communities that share resources and responsibility",
+          "Groups where calm is respected",
+        ],
+        reasoning: "Siljoa bonds through **mutual preparedness**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Drama-driven social groups",
+        "People who create crises repeatedly",
+      ],
+      reasoning: "Unnecessary chaos feels dangerous to you.",
+    },
+    validation: {
+      resonates: [
+        "You trust actions more than words",
+        "You prefer steady people",
+      ],
+      doesntResonate: [
+        "You love highly social, chaotic communities",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that build **competence, resilience, and calm focus**.`,
+    greenLight: [
+      {
+        title: "Competence Activities",
+        items: [
+          "Outdoor skills, hiking, navigation",
+          "Skill practice with real-world utility",
+          "Long quiet craft or building projects",
+        ],
+        reasoning: "You enjoy capability that lasts.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Shallow activities optimized only for stimulation"],
+      reasoning: "They feel pointless.",
+    },
+    validation: {
+      resonates: ["You like useful skills"],
+      doesntResonate: ["You prefer pure entertainment"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **practical understanding and systems thinking**.`,
+    greenLight: [
+      {
+        title: "Practical Learning",
+        items: [
+          "Hands-on training",
+          "Learning that improves reliability and preparedness",
+        ],
+        reasoning: "You trust knowledge you can apply under pressure.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Hype learning without real-world grounding"],
+      reasoning: "If it fails under stress, it isn’t knowledge.",
+    },
+    validation: {
+      resonates: ["You learn for survival value"],
+      doesntResonate: ["You learn mainly for novelty"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media that strengthens **perspective and preparedness**.`,
+    greenLight: [
+      {
+        title: "High-Utility Media",
+        items: [
+          "Survival, nature, and systems documentaries",
+          "Calm long-form content with real insight",
+        ],
+        reasoning: "You want signal, not noise.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Outrage cycles and chaotic stimulation"],
+      reasoning: "It destabilizes your baseline.",
+    },
+    validation: {
+      resonates: ["You prefer calm, practical media"],
+      doesntResonate: ["You love loud, chaotic content"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **safe, warm, and prepared**.`,
+    greenLight: [
+      {
+        title: "Prepared Home",
+        items: [
+          "Warm, insulated, cozy setup",
+          "Emergency basics handled quietly",
+          "Simple organization that reduces stress",
+        ],
+        reasoning: "Preparedness is emotional safety for you.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fragile, chaotic homes with constant problems"],
+      reasoning: "Unreliability keeps you tense.",
+    },
+    validation: {
+      resonates: ["You like things working reliably"],
+      doesntResonate: ["You don’t care if things break"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals keep you **ready and steady**.`,
+    greenLight: [
+      {
+        title: "Preparedness Rituals",
+        items: [
+          "Weekly reset: food, tasks, systems check",
+          "Seasonal planning and decluttering",
+        ],
+        reasoning: "Small routines prevent big problems.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Routines that create chaos or ignore reality"],
+      reasoning: "They break trust with yourself.",
+    },
+    validation: {
+      resonates: ["You feel calmer when prepared"],
+      doesntResonate: ["Routines feel suffocating to you"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **conditioning for resilience**.`,
+    greenLight: [
+      {
+        title: "Resilience Movement",
+        items: [
+          "Strength + endurance balance",
+          "Outdoor walking, hiking, carrying capacity",
+        ],
+        reasoning: "You train for durability, not aesthetics.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Risky, injury-prone intensity with no purpose"],
+      reasoning: "Longevity matters to you.",
+    },
+    validation: {
+      resonates: ["You like training that makes you capable"],
+      doesntResonate: ["You train only for appearance"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness is **stability, warmth, and nervous-system calm**.`,
+    greenLight: [
+      {
+        title: "Stability Wellness",
+        items: [
+          "Good sleep and recovery",
+          "Warmth, routine, and steady nutrition",
+        ],
+        reasoning: "Your system thrives when stable.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Extreme swings and neglect"],
+      reasoning: "Instability feels unsafe.",
+    },
+    validation: {
+      resonates: ["You need stability to feel well"],
+      doesntResonate: ["You like constant change"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy for **utility, durability, and preparedness**.`,
+    greenLight: [
+      {
+        title: "Reliability Products",
+        items: [
+          "Warm layers, durable gear",
+          "Tools that reduce risk and increase readiness",
+        ],
+        reasoning: "Your purchases are contingency planning.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Trendy disposable goods"],
+      reasoning: "They fail when you need them.",
+    },
+    validation: {
+      resonates: ["You choose durable things"],
+      doesntResonate: ["You buy for trends"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **reset perspective and test capability**.`,
+    greenLight: [
+      {
+        title: "Resilience Travel",
+        items: [
+          "Cold or nature-based travel",
+          "Trips with practical planning and calm pace",
+        ],
+        reasoning: "You like travel that feels real and grounding.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Chaotic, unplanned travel with constant surprises"],
+      reasoning: "Unnecessary risk isn’t fun to you.",
+    },
+    validation: {
+      resonates: ["You like travel with preparation"],
+      doesntResonate: ["You like unpredictable travel"],
+    },
+    affiliates: [],
+  },
+},
+/* ==========================================
+   WOHAKA – LINEAGE, LAND & WARRIOR STEWARDSHIP
+   (Māori + Lakota)
+========================================== */
+Wohaka: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is rooted in **belonging to land and lineage**. You don’t see yourself as separate from place or people—you are part of a living continuity that must be protected.
+
+**What this means:**
+You thrive where land is respected, ancestry is acknowledged, and people act as guardians rather than consumers. Places that treat land as disposable feel deeply wrong to you.
+
+**When you honor this:**
+You feel grounded, purposeful, and internally strong—because you know what you stand for.`,
+    greenLight: [
+      {
+        title: "Land-Rooted Environments",
+        items: [
+          "Regions with strong indigenous or ancestral presence",
+          "Places where land is cared for, not exploited",
+          "Communities tied to water, mountains, or plains",
+        ],
+        reasoning: "Wohaka thrives where **land is kin**, not resource.",
+      },
+      {
+        title: "Ancestral Living Contexts",
+        items: [
+          "Homes connected to family history",
+          "Places where elders and ancestry are respected",
+        ],
+        reasoning: "Lineage stabilizes your identity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Extractive, rootless cities",
+        "Cultures that dismiss ancestry or land care",
+        "Places that prioritize profit over stewardship",
+      ],
+      reasoning: "You feel spiritually displaced and frustrated.",
+    },
+    validation: {
+      resonates: [
+        "You feel protective toward land or community",
+        "Ancestry and roots matter to you",
+      ],
+      doesntResonate: [
+        "You feel no attachment to place",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when your role feels like **service and protection**. Your effort is strongest when it safeguards people, land, or future generations.
+
+**What this means:**
+You thrive in work that carries responsibility beyond yourself. Purely self-serving or extractive work feels hollow.
+
+**When you honor this:**
+You become a guardian—respected for strength, loyalty, and integrity.`,
+    greenLight: [
+      {
+        title: "Stewardship & Protection Roles",
+        items: [
+          "Community leadership",
+          "Environmental or land management",
+          "Security, protection, or advocacy roles",
+          "Education tied to heritage or values",
+        ],
+        reasoning: "Your motivation is **guardianship**.",
+      },
+      {
+        title: "Honor-Based Work Cultures",
+        items: [
+          "Clear responsibility and accountability",
+          "Respect for elders and experience",
+        ],
+        reasoning: "Honor fuels your commitment.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Exploitative or purely profit-driven work",
+        "Roles disconnected from real-world impact",
+      ],
+      reasoning: "They feel meaningless or corrupt.",
+    },
+    validation: {
+      resonates: [
+        "You want your work to protect something real",
+        "Responsibility motivates you",
+      ],
+      doesntResonate: [
+        "You only want personal gain",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You bond through **shared identity and mutual protection**. Community is a circle you defend, not a network you use.
+
+**What this means:**
+You value loyalty, accountability, and shared history. Weak boundaries or disloyalty feel like betrayal.
+
+**When you honor this:**
+You feel proud of who you belong to.`,
+    greenLight: [
+      {
+        title: "Kinship-Based Communities",
+        items: [
+          "Family-centered groups",
+          "Tribal or values-based communities",
+          "Circles with shared responsibility",
+        ],
+        reasoning: "Wohaka bonds through **kinship and duty**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Rootless, transactional social scenes",
+        "Groups that avoid accountability",
+      ],
+      reasoning: "They feel unsafe or shallow.",
+    },
+    validation: {
+      resonates: [
+        "You value loyalty above popularity",
+        "You dislike people who abandon responsibility",
+      ],
+      doesntResonate: [
+        "You prefer casual, low-commitment relationships",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that express **strength, honor, and connection to land**.`,
+    greenLight: [
+      {
+        title: "Warrior–Steward Activities",
+        items: [
+          "Strength and endurance training",
+          "Outdoor skills and land-based practices",
+          "Activities that build protective capability",
+        ],
+        reasoning: "Strength exists to serve and protect.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Purely indulgent or detached activities"],
+      reasoning: "They feel empty.",
+    },
+    validation: {
+      resonates: ["You like strength with purpose"],
+      doesntResonate: ["You prefer entertainment-only activities"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **lineage, story, and responsibility**.`,
+    greenLight: [
+      {
+        title: "Lineage Learning",
+        items: [
+          "Learning from elders or mentors",
+          "Oral history and lived wisdom",
+        ],
+        reasoning: "Knowledge is carried through people.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Contextless or purely abstract learning"],
+      reasoning: "It lacks grounding.",
+    },
+    validation: {
+      resonates: ["You respect elders as teachers"],
+      doesntResonate: ["You reject tradition entirely"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media that honors **identity, struggle, and responsibility**.`,
+    greenLight: [
+      {
+        title: "Lineage & Honor Media",
+        items: [
+          "Stories of ancestral struggle",
+          "Narratives about land, identity, and protection",
+        ],
+        reasoning: "Stories teach responsibility.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Cynical or rootless content"],
+      reasoning: "It erodes meaning.",
+    },
+    validation: {
+      resonates: ["You like stories about belonging"],
+      doesntResonate: ["You prefer ironic detachment"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **anchored and protective**.`,
+    greenLight: [
+      {
+        title: "Anchored Living",
+        items: [
+          "Homes tied to land or family",
+          "Spaces that feel safe and solid",
+        ],
+        reasoning: "Home is territory and refuge.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Temporary, rootless living setups"],
+      reasoning: "They feel unstable.",
+    },
+    validation: {
+      resonates: ["You want a place to defend and care for"],
+      doesntResonate: ["You like never settling anywhere"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals maintain **honor, memory, and responsibility**.`,
+    greenLight: [
+      {
+        title: "Lineage Rituals",
+        items: [
+          "Honoring ancestors",
+          "Rituals tied to land or seasons",
+        ],
+        reasoning: "Memory strengthens identity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Ritual-free, amnesiac living"],
+      reasoning: "You feel unanchored.",
+    },
+    validation: {
+      resonates: ["You value remembrance"],
+      doesntResonate: ["You ignore history"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **warrior readiness**.`,
+    greenLight: [
+      {
+        title: "Protective Movement",
+        items: [
+          "Strength, balance, and endurance",
+          "Movement that builds confidence and stability",
+        ],
+        reasoning: "Your body is a guardian.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fragile or passive movement"],
+      reasoning: "It feels unsafe.",
+    },
+    validation: {
+      resonates: ["You like feeling capable"],
+      doesntResonate: ["You avoid physical challenge"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **alignment with land, body, and duty**.`,
+    greenLight: [
+      {
+        title: "Grounded Wellness",
+        items: [
+          "Nature exposure",
+          "Physical strength and routine",
+        ],
+        reasoning: "Grounding sustains you.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disconnection from body or land"],
+      reasoning: "It weakens you.",
+    },
+    validation: {
+      resonates: ["Nature restores you"],
+      doesntResonate: ["You feel fine disconnected from land"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy products that support **durability and protection**.`,
+    greenLight: [
+      {
+        title: "Protective Tools",
+        items: [
+          "Durable gear",
+          "Tools tied to land or work",
+        ],
+        reasoning: "Your tools serve responsibility.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disposable, meaningless products"],
+      reasoning: "They feel wasteful.",
+    },
+    validation: {
+      resonates: ["You value durable things"],
+      doesntResonate: ["You buy purely for novelty"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **reconnect with land, ancestry, and responsibility**.`,
+    greenLight: [
+      {
+        title: "Rooted Travel",
+        items: [
+          "Ancestral or culturally meaningful travel",
+          "Journeys tied to land and learning",
+        ],
+        reasoning: "Travel should deepen belonging.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Rootless, party-driven travel"],
+      reasoning: "It feels empty.",
+    },
+    validation: {
+      resonates: ["You travel for meaning"],
+      doesntResonate: ["You travel just for escape"],
+    },
+    affiliates: [],
+  },
+},
+/* ==========================================
+   KARAYNI – HARMONY, OFFERING & LIVED BALANCE
+   (Balinese + Quechua)
+========================================== */
+Karayni: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is oriented around **balance between worlds**—self and community, work and ritual, earth and spirit. Life feels right when everything is in proportion.
+
+**What this means:**
+You thrive in environments where daily life includes beauty, ritual, and care for both people and land. Places that are purely transactional or aggressively individualistic feel spiritually dry.
+
+**When you honor this:**
+You feel calm, generous, and quietly joyful—because your life flows in balance.`,
+    greenLight: [
+      {
+        title: "Harmony-Centered Environments",
+        items: [
+          "Cultures with daily rituals and offerings",
+          "Places where community life is visible",
+          "Regions that integrate nature into daily living",
+        ],
+        reasoning: "Karayni thrives where **life is continuously rebalanced**.",
+      },
+      {
+        title: "Communal, Beautiful Living",
+        items: [
+          "Villages or neighborhoods with shared spaces",
+          "Environments that value aesthetics and care",
+        ],
+        reasoning: "Beauty and harmony regulate your nervous system.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Purely profit-driven cities",
+        "Places that dismiss ritual or care",
+        "Cultures that glorify imbalance and burnout",
+      ],
+      reasoning: "You feel drained when harmony is ignored.",
+    },
+    validation: {
+      resonates: [
+        "You feel better when life feels balanced",
+        "Beauty and care matter to you",
+      ],
+      doesntResonate: [
+        "You thrive in hyper-competitive environments",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when your labor feels like **contribution, not extraction**. Work is an offering to community and continuity.
+
+**What this means:**
+You thrive in roles where value is shared and effort is acknowledged. Work that exploits people or land feels deeply wrong.
+
+**When you honor this:**
+You become steady, generous, and trusted.`,
+    greenLight: [
+      {
+        title: "Contribution-Oriented Roles",
+        items: [
+          "Community-based enterprises",
+          "Education, healing, or cultural work",
+          "Sustainable agriculture or design",
+          "Roles that integrate care and productivity",
+        ],
+        reasoning: "Your motivation comes from **shared benefit**.",
+      },
+      {
+        title: "Balanced Work Cultures",
+        items: [
+          "Respect for rest and ceremony",
+          "Integration of human rhythm into schedules",
+        ],
+        reasoning: "Balance sustains your energy.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Exploitative or burnout-driven cultures",
+        "Work disconnected from real human impact",
+      ],
+      reasoning: "They feel spiritually misaligned.",
+    },
+    validation: {
+      resonates: [
+        "You care about how work affects people",
+        "You dislike purely extractive systems",
+      ],
+      doesntResonate: [
+        "You only care about efficiency",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You belong through **mutual care and shared rhythm**. Community is sustained by contribution, not dominance.
+
+**What this means:**
+You value groups that look after one another and maintain harmony. Excessive conflict or ego disrupts belonging.
+
+**When you honor this:**
+You feel held and purposeful.`,
+    greenLight: [
+      {
+        title: "Care-Based Communities",
+        items: [
+          "Villages or tight-knit neighborhoods",
+          "Groups with shared rituals or service",
+        ],
+        reasoning: "Karayni bonds through **reciprocity**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Competitive or status-driven groups",
+        "Communities that ignore collective wellbeing",
+      ],
+      reasoning: "They fracture harmony.",
+    },
+    validation: {
+      resonates: [
+        "You enjoy contributing to group wellbeing",
+        "Harmony matters more than winning",
+      ],
+      doesntResonate: [
+        "You thrive on competition",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that cultivate **balance, beauty, and presence**.`,
+    greenLight: [
+      {
+        title: "Harmonizing Activities",
+        items: [
+          "Gardening, farming, or land care",
+          "Art, craft, and ceremonial creation",
+          "Shared cooking or preparation",
+        ],
+        reasoning: "Creation restores balance.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Aggressive or purely competitive activities"],
+      reasoning: "They disrupt harmony.",
+    },
+    validation: {
+      resonates: ["You like creating beauty"],
+      doesntResonate: ["You enjoy constant competition"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **practice, ritual, and community transmission**.`,
+    greenLight: [
+      {
+        title: "Embodied & Communal Learning",
+        items: [
+          "Learning through doing with others",
+          "Skill passed through participation",
+        ],
+        reasoning: "Knowledge lives in practice.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Abstract learning with no application"],
+      reasoning: "It feels disconnected.",
+    },
+    validation: {
+      resonates: ["You learn best through practice"],
+      doesntResonate: ["You prefer theory only"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to **feel connection and continuity**.`,
+    greenLight: [
+      {
+        title: "Connection Media",
+        items: [
+          "Stories of community and land",
+          "Narratives about balance and care",
+        ],
+        reasoning: "Media should nourish harmony.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Cynical or divisive content"],
+      reasoning: "It disrupts balance.",
+    },
+    validation: {
+      resonates: ["You enjoy gentle, meaningful stories"],
+      doesntResonate: ["You like harsh or cynical content"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **alive, cared for, and balanced**.`,
+    greenLight: [
+      {
+        title: "Living Harmony",
+        items: [
+          "Natural materials and greenery",
+          "Spaces designed for gathering and ritual",
+        ],
+        reasoning: "Your space mirrors balance.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Sterile or neglectful homes"],
+      reasoning: "They feel dead.",
+    },
+    validation: {
+      resonates: ["You feel better in warm, lived-in spaces"],
+      doesntResonate: ["You prefer sterile minimalism"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals maintain **balance and gratitude**.`,
+    greenLight: [
+      {
+        title: "Balance Rituals",
+        items: [
+          "Daily gratitude or offering practices",
+          "Seasonal rituals tied to land",
+        ],
+        reasoning: "Gratitude restores harmony.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Ritual-free, rushed living"],
+      reasoning: "You feel unbalanced.",
+    },
+    validation: {
+      resonates: ["Ritual keeps you grounded"],
+      doesntResonate: ["You dislike ceremony"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **flow and integration**.`,
+    greenLight: [
+      {
+        title: "Flow Movement",
+        items: [
+          "Yoga, dance, tai chi–like practices",
+          "Movement that feels rhythmic and gentle",
+        ],
+        reasoning: "Flow maintains balance.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Harsh, force-based training"],
+      reasoning: "It disrupts equilibrium.",
+    },
+    validation: {
+      resonates: ["You like flowing movement"],
+      doesntResonate: ["You enjoy aggressive training"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **balance, care, and rhythm**.`,
+    greenLight: [
+      {
+        title: "Harmonious Wellness",
+        items: [
+          "Balanced nutrition and rest",
+          "Practices that integrate body and emotion",
+        ],
+        reasoning: "Balance sustains health.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Burnout cycles"],
+      reasoning: "They break harmony.",
+    },
+    validation: {
+      resonates: ["You feel best when life is balanced"],
+      doesntResonate: ["You like pushing extremes"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy products that support **daily harmony and care**.`,
+    greenLight: [
+      {
+        title: "Care-Based Products",
+        items: [
+          "Handmade or locally made goods",
+          "Items that support ritual or daily care",
+        ],
+        reasoning: "Your purchases support balance.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disposable, careless products"],
+      reasoning: "They feel disrespectful.",
+    },
+    validation: {
+      resonates: ["You value craftsmanship"],
+      doesntResonate: ["You buy without care"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **restore balance and connection**.`,
+    greenLight: [
+      {
+        title: "Harmonizing Travel",
+        items: [
+          "Cultural immersion travel",
+          "Slow travel with community contact",
+        ],
+        reasoning: "Travel should rebalance you.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fast, extractive tourism"],
+      reasoning: "It feels draining.",
+    },
+    validation: {
+      resonates: ["You travel to connect"],
+      doesntResonate: ["You travel to consume"],
+    },
+    affiliates: [],
+  },
+},
+/* ==========================================
+   SKENARI – CONSENSUS, FORESIGHT & SEVEN-GENERATION DUTY
+   (Haudenosaunee)
+========================================== */
+Skenari: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is oriented around **long-term consequence**. You naturally think beyond yourself—asking how actions ripple forward through time.
+
+**What this means:**
+You thrive in environments that value patience, dialogue, and stewardship. Short-term, extractive cultures feel reckless to you.
+
+**When you honor this:**
+You feel calm and morally clear—because your life aligns with continuity.`,
+    greenLight: [
+      {
+        title: "Long-Term-Oriented Environments",
+        items: [
+          "Cultures that value sustainability",
+          "Places with strong civic processes",
+          "Communities that plan beyond immediate gain",
+        ],
+        reasoning: "Skenari thrives where **future impact matters**.",
+      },
+      {
+        title: "Deliberate Living Contexts",
+        items: [
+          "Quiet, thoughtful towns",
+          "Places that support discussion and reflection",
+        ],
+        reasoning: "Slowness supports wise decisions.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Short-term profit-driven cities",
+        "Cultures that reward impulsive decisions",
+      ],
+      reasoning: "They feel dangerous to the future.",
+    },
+    validation: {
+      resonates: [
+        "You think about long-term consequences",
+        "You feel uneasy about short-sighted choices",
+      ],
+      doesntResonate: [
+        "You only care about immediate results",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when decisions are made **collectively and responsibly**. Power should be accountable and informed by many perspectives.
+
+**What this means:**
+You excel in governance, planning, mediation, and stewardship roles. Top-down, unilateral decision-making frustrates you.
+
+**When you honor this:**
+You become a stabilizing voice—trusted for wisdom and fairness.`,
+    greenLight: [
+      {
+        title: "Consensus & Stewardship Roles",
+        items: [
+          "Governance and policy",
+          "Urban or environmental planning",
+          "Mediation, facilitation, diplomacy",
+          "Community leadership",
+        ],
+        reasoning: "Your strength is **collective wisdom**.",
+      },
+      {
+        title: "Deliberative Work Cultures",
+        items: [
+          "Shared decision-making",
+          "Time given for reflection",
+        ],
+        reasoning: "Good decisions take time.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Authoritarian leadership",
+        "Cultures that dismiss discussion as weakness",
+      ],
+      reasoning: "You’ll feel ethically compromised.",
+    },
+    validation: {
+      resonates: [
+        "You value listening before deciding",
+        "You dislike rushed decisions",
+      ],
+      doesntResonate: [
+        "You prefer unilateral control",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You belong through **shared responsibility and voice**. Everyone matters, and decisions should reflect that.
+
+**What this means:**
+You value inclusive communities with clear processes for dialogue. Exclusion or dominance erodes trust.
+
+**When you honor this:**
+You feel respected and grounded.`,
+    greenLight: [
+      {
+        title: "Consensus-Based Communities",
+        items: [
+          "Groups that seek agreement, not dominance",
+          "Communities with clear dialogue processes",
+        ],
+        reasoning: "Skenari bonds through **shared voice**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Hierarchical groups that silence voices",
+      ],
+      reasoning: "They feel unjust.",
+    },
+    validation: {
+      resonates: [
+        "You want everyone heard",
+      ],
+      doesntResonate: [
+        "You’re comfortable silencing others",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that encourage **reflection and collective thinking**.`,
+    greenLight: [
+      {
+        title: "Deliberative Activities",
+        items: [
+          "Group discussions or councils",
+          "Community service or volunteering",
+        ],
+        reasoning: "Action follows thought.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Purely impulsive activities"],
+      reasoning: "They ignore consequence.",
+    },
+    validation: {
+      resonates: ["You enjoy thoughtful discussion"],
+      doesntResonate: ["You act without reflection"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **story, dialogue, and generational wisdom**.`,
+    greenLight: [
+      {
+        title: "Generational Learning",
+        items: [
+          "History and civic studies",
+          "Learning through storytelling",
+        ],
+        reasoning: "Wisdom accumulates over time.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Learning detached from consequence"],
+      reasoning: "Knowledge must serve continuity.",
+    },
+    validation: {
+      resonates: ["You respect elders’ wisdom"],
+      doesntResonate: ["You dismiss history"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to **understand consequence and responsibility**.`,
+    greenLight: [
+      {
+        title: "Responsibility Media",
+        items: [
+          "Long-form journalism",
+          "Historical and civic documentaries",
+        ],
+        reasoning: "Context matters.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Clickbait or outrage media"],
+      reasoning: "It distorts judgment.",
+    },
+    validation: {
+      resonates: ["You like deep analysis"],
+      doesntResonate: ["You prefer hot takes"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **stable, thoughtful, and intentional**.`,
+    greenLight: [
+      {
+        title: "Intentional Living",
+        items: [
+          "Spaces designed for gathering and discussion",
+          "Homes that feel durable and calm",
+        ],
+        reasoning: "Stability supports foresight.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Chaotic or disposable living setups"],
+      reasoning: "They feel short-sighted.",
+    },
+    validation: {
+      resonates: ["You like durable, intentional spaces"],
+      doesntResonate: ["You live only for convenience"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals maintain **memory and accountability**.`,
+    greenLight: [
+      {
+        title: "Continuity Rituals",
+        items: [
+          "Seasonal reflection",
+          "Ritual review of decisions and impact",
+        ],
+        reasoning: "Reflection preserves wisdom.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Living without reflection"],
+      reasoning: "You feel unmoored.",
+    },
+    validation: {
+      resonates: ["Reflection matters to you"],
+      doesntResonate: ["You avoid looking back"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **grounding and steady**.`,
+    greenLight: [
+      {
+        title: "Grounded Movement",
+        items: [
+          "Walking, steady strength work",
+          "Movement that supports longevity",
+        ],
+        reasoning: "Consistency matters more than intensity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Reckless, injury-prone training"],
+      reasoning: "Longevity matters.",
+    },
+    validation: {
+      resonates: ["You train for long life"],
+      doesntResonate: ["You chase extremes"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **balance and long-term care**.`,
+    greenLight: [
+      {
+        title: "Sustainable Wellness",
+        items: [
+          "Preventive care",
+          "Moderation and consistency",
+        ],
+        reasoning: "Health is cumulative.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Short-term fixes"],
+      reasoning: "They ignore future cost.",
+    },
+    validation: {
+      resonates: ["You think long-term about health"],
+      doesntResonate: ["You rely on quick fixes"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy with **future impact in mind**.`,
+    greenLight: [
+      {
+        title: "Responsible Products",
+        items: [
+          "Durable, repairable goods",
+          "Ethically sourced items",
+        ],
+        reasoning: "Purchases are votes for the future.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disposable, harmful products"],
+      reasoning: "They burden future generations.",
+    },
+    validation: {
+      resonates: ["You care about product impact"],
+      doesntResonate: ["You buy without considering consequences"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **learn from history and governance**.`,
+    greenLight: [
+      {
+        title: "Learning Travel",
+        items: [
+          "Cultural, historical destinations",
+          "Travel that deepens civic understanding",
+        ],
+        reasoning: "Travel should inform responsibility.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Pure entertainment travel"],
+      reasoning: "It feels shallow.",
+    },
+    validation: {
+      resonates: ["You travel to learn"],
+      doesntResonate: ["You travel just for fun"],
+    },
+    affiliates: [],
+  },
+},
+/* ==========================================
+   KINMORA – TIME, PATTERN & CYCLICAL MASTERY
+   (Maya)
+========================================== */
+Kinmora: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is attuned to **patterns across time**. You instinctively sense cycles, timing, and cause–effect relationships. Life feels right when actions align with the right moment.
+
+**What this means:**
+You thrive in environments that respect rhythm, seasonality, and long arcs of change. Chaotic, short-term-focused places feel disorienting.
+
+**When you honor this:**
+You feel precise, calm, and insightful—because you’re moving with time, not fighting it.`,
+    greenLight: [
+      {
+        title: "Time-Aware Environments",
+        items: [
+          "Cultures with calendars, rituals, or seasonal structure",
+          "Places connected to astronomy, land cycles, or agriculture",
+          "Environments that reward patience and foresight",
+        ],
+        reasoning: "Kinmora thrives where **timing matters**.",
+      },
+      {
+        title: "Patterned Living Spaces",
+        items: [
+          "Homes with routine and rhythm",
+          "Spaces aligned with natural light and cycles",
+        ],
+        reasoning: "Rhythm stabilizes your perception.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Always-on, time-blind cultures",
+        "Places obsessed with immediacy and speed",
+      ],
+      reasoning: "They disrupt your sense of timing.",
+    },
+    validation: {
+      resonates: [
+        "You’re sensitive to timing",
+        "You notice repeating patterns in life",
+      ],
+      doesntResonate: [
+        "You act without regard for timing",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when you can **plan, anticipate, and align actions with cycles**. Your intelligence shines when you’re allowed to think ahead.
+
+**What this means:**
+You excel in strategy, analysis, forecasting, and systems design. Reactive or purely short-term work drains you.
+
+**When you honor this:**
+You become a quiet strategist—often seeing outcomes before others do.`,
+    greenLight: [
+      {
+        title: "Pattern & Strategy Roles",
+        items: [
+          "Strategy, planning, forecasting",
+          "Data analysis and systems design",
+          "Research, architecture, or long-range planning",
+        ],
+        reasoning: "Your strength is **seeing cycles before they peak**.",
+      },
+      {
+        title: "Long-Horizon Work Cultures",
+        items: [
+          "Respect for planning time",
+          "Tolerance for delayed results",
+        ],
+        reasoning: "Good timing beats fast action.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Firefighting-only cultures",
+        "Work that ignores long-term consequences",
+      ],
+      reasoning: "You feel underused and rushed.",
+    },
+    validation: {
+      resonates: [
+        "You like planning ahead",
+        "You think in systems and cycles",
+      ],
+      doesntResonate: [
+        "You prefer pure improvisation",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You bond through **shared rhythm and continuity**. You value groups that endure over time.
+
+**What this means:**
+You prefer communities with traditions, calendars, and shared milestones. Highly fluid groups feel unstable.
+
+**When you honor this:**
+You feel anchored and socially coherent.`,
+    greenLight: [
+      {
+        title: "Continuity-Based Communities",
+        items: [
+          "Groups with long-standing traditions",
+          "Communities that celebrate cycles and anniversaries",
+        ],
+        reasoning: "Kinmora bonds through **shared time**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Ephemeral or constantly shifting groups",
+      ],
+      reasoning: "They lack continuity.",
+    },
+    validation: {
+      resonates: [
+        "You value tradition and rhythm",
+      ],
+      doesntResonate: [
+        "You prefer constant social novelty",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that reinforce **timing, patience, and pattern awareness**.`,
+    greenLight: [
+      {
+        title: "Cyclical Activities",
+        items: [
+          "Gardening or seasonal projects",
+          "Skill-building over long periods",
+        ],
+        reasoning: "Mastery unfolds over time.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Instant-gratification activities"],
+      reasoning: "They feel shallow.",
+    },
+    validation: {
+      resonates: ["You enjoy long-term projects"],
+      doesntResonate: ["You prefer quick wins"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **patterns, repetition, and historical context**.`,
+    greenLight: [
+      {
+        title: "Pattern Learning",
+        items: [
+          "History, astronomy, systems thinking",
+          "Learning that reveals cycles and structures",
+        ],
+        reasoning: "Understanding patterns creates foresight.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fragmented learning without context"],
+      reasoning: "It obscures the bigger picture.",
+    },
+    validation: {
+      resonates: ["You learn by seeing connections"],
+      doesntResonate: ["You prefer isolated facts"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to **understand long arcs and hidden order**.`,
+    greenLight: [
+      {
+        title: "Pattern Media",
+        items: [
+          "Historical documentaries",
+          "Content on cycles, systems, or time",
+        ],
+        reasoning: "You want depth over immediacy.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fast, reactive news cycles"],
+      reasoning: "They distort perspective.",
+    },
+    validation: {
+      resonates: ["You prefer long-form media"],
+      doesntResonate: ["You like rapid-fire updates"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **rhythmic and intentional**.`,
+    greenLight: [
+      {
+        title: "Cyclical Living",
+        items: [
+          "Consistent routines",
+          "Spaces aligned with light and season",
+        ],
+        reasoning: "Environment reinforces timing.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Chaotic, time-blind living"],
+      reasoning: "It disrupts rhythm.",
+    },
+    validation: {
+      resonates: ["Routine grounds you"],
+      doesntResonate: ["You dislike any routine"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals keep you **aligned with cycles and intention**.`,
+    greenLight: [
+      {
+        title: "Time Rituals",
+        items: [
+          "Daily and seasonal check-ins",
+          "Ritual reflection on timing and progress",
+        ],
+        reasoning: "Ritual tracks movement through time.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Living without markers of time"],
+      reasoning: "You lose orientation.",
+    },
+    validation: {
+      resonates: ["You like marking time"],
+      doesntResonate: ["You ignore cycles"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **measured and sustainable**.`,
+    greenLight: [
+      {
+        title: "Rhythmic Movement",
+        items: [
+          "Endurance-based training",
+          "Movement tied to breath and pacing",
+        ],
+        reasoning: "Consistency beats intensity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Erratic or extreme training"],
+      reasoning: "It breaks rhythm.",
+    },
+    validation: {
+      resonates: ["You train steadily"],
+      doesntResonate: ["You train impulsively"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **alignment with bodily cycles**.`,
+    greenLight: [
+      {
+        title: "Cyclical Wellness",
+        items: [
+          "Regular sleep and eating rhythms",
+          "Respect for recovery phases",
+        ],
+        reasoning: "Health is cyclical.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Ignoring bodily rhythms"],
+      reasoning: "It creates imbalance.",
+    },
+    validation: {
+      resonates: ["You feel best with regular rhythms"],
+      doesntResonate: ["You ignore your body clock"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy products that support **longevity and timing**.`,
+    greenLight: [
+      {
+        title: "Long-Life Products",
+        items: [
+          "Durable, timeless tools",
+          "Items that improve with use",
+        ],
+        reasoning: "Value accumulates over time.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disposable or trend-driven products"],
+      reasoning: "They lack continuity.",
+    },
+    validation: {
+      resonates: ["You value longevity"],
+      doesntResonate: ["You chase trends"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **observe cycles and ancient intelligence**.`,
+    greenLight: [
+      {
+        title: "Temporal Travel",
+        items: [
+          "Ancient sites and ruins",
+          "Journeys aligned with seasons or celestial events",
+        ],
+        reasoning: "Travel should deepen temporal awareness.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Random, rushed travel"],
+      reasoning: "It lacks timing.",
+    },
+    validation: {
+      resonates: ["You like meaningful timing in travel"],
+      doesntResonate: ["You travel impulsively"],
+    },
+    affiliates: [],
+  },
+},
+/* ==========================================
+   TJUKARI – SONGLINES, LAND MEMORY & STORY-NAVIGATION
+   (Aboriginal Australian)
+========================================== */
+Tjukari: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is built on **place-memory**. You don’t relate to land as scenery—you relate to it as *story*, law, and living map. You orient through patterns, subtle cues, and meaning carried in place.
+
+**What this means:**
+You thrive in environments where nature is close and respected, and where life isn’t severed from land. Purely artificial, rootless places can make you feel dislocated.
+
+**When you honor this:**
+You feel grounded, intuitive, and quietly guided—because the world starts speaking again.`,
+    greenLight: [
+      {
+        title: "Land-Speaking Environments",
+        items: [
+          "Nature-rich regions with minimal visual noise",
+          "Places where people know the land’s rhythms",
+          "Environments with strong local identity and story",
+        ],
+        reasoning: "Tjukari thrives where **place still has voice**.",
+      },
+      {
+        title: "Low-Artifice Living",
+        items: [
+          "Homes with natural materials and airflow",
+          "Daily life that includes outside time",
+        ],
+        reasoning: "Your nervous system regulates through land contact.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Rootless cities with no relationship to place",
+        "Highly artificial indoor-only lifestyles",
+        "Cultures that treat land as disposable",
+      ],
+      reasoning: "Disconnection from place becomes disconnection from self.",
+    },
+    validation: {
+      resonates: [
+        "Place affects your mood strongly",
+        "You feel better when you spend time on land",
+        "You notice subtle environmental cues",
+      ],
+      doesntResonate: [
+        "Place doesn’t matter to you",
+        "You feel fine living fully indoors",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when you can **read context and patterns**—and when your work respects human and ecological reality.
+
+**What this means:**
+You excel in roles involving observation, mapping, cultural insight, ecology, user understanding, and systems that depend on context. Work that ignores context feels reckless.
+
+**When you honor this:**
+You become an exceptional guide—seeing what others miss.`,
+    greenLight: [
+      {
+        title: "Context & Mapping Roles",
+        items: [
+          "User research, ethnography, field research",
+          "Ecology, sustainability, land-related work",
+          "Strategy roles that require contextual intelligence",
+          "Design that reflects real human behavior",
+        ],
+        reasoning: "Your strength is **situational wisdom**.",
+      },
+      {
+        title: "Reality-Respecting Work Cultures",
+        items: [
+          "Teams that observe before deciding",
+          "Work that values listening and iteration",
+        ],
+        reasoning: "Listening prevents harm and improves outcomes.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Abstract work detached from real conditions",
+        "Cultures that ‘decide first’ then ignore evidence",
+      ],
+      reasoning: "You’ll feel ethically and cognitively misaligned.",
+    },
+    validation: {
+      resonates: [
+        "You need to understand context before acting",
+        "You see patterns others overlook",
+      ],
+      doesntResonate: [
+        "You prefer acting fast without context",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You bond through **shared place, shared story, and shared care**. Belonging comes from continuity, not constant contact.
+
+**What this means:**
+You prefer communities with rooted identity, respect for elders, and real presence. Performative social scenes feel empty.
+
+**When you honor this:**
+You feel held by continuity—without needing intensity.`,
+    greenLight: [
+      {
+        title: "Rooted Communities",
+        items: [
+          "Small circles with shared history or values",
+          "Communities that honor elders and memory",
+          "Groups tied to place through care and presence",
+        ],
+        reasoning: "Tjukari bonds through **continuity and place**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Rootless, transactional social networks",
+        "Communities that dismiss history and elders",
+      ],
+      reasoning: "They feel ungrounded and unreliable.",
+    },
+    validation: {
+      resonates: [
+        "You value elders and lived wisdom",
+        "You prefer depth over constant social activity",
+      ],
+      doesntResonate: [
+        "You enjoy highly performative social scenes",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that cultivate **listening, land contact, and story-awareness**.`,
+    greenLight: [
+      {
+        title: "Land-Based Activities",
+        items: [
+          "Walking, hiking, exploring quietly",
+          "Nature observation and tracking",
+          "Photography or journaling as witnessing",
+        ],
+        reasoning: "You recharge through contact with land and attention.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["High-noise, high-stimulation activities"],
+      reasoning: "They drown out your signal.",
+    },
+    validation: {
+      resonates: ["Quiet nature time restores you"],
+      doesntResonate: ["You prefer constant stimulation"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **story, place, and repetition**.`,
+    greenLight: [
+      {
+        title: "Place-Based Learning",
+        items: [
+          "Learning through lived experience",
+          "Mentorship and narrative learning",
+        ],
+        reasoning: "Knowledge sticks when it’s carried in story.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fragmented learning with no context"],
+      reasoning: "It doesn’t integrate.",
+    },
+    validation: {
+      resonates: ["You remember stories better than facts"],
+      doesntResonate: ["You prefer purely technical learning"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to **connect with meaning and place**.`,
+    greenLight: [
+      {
+        title: "Meaningful Media",
+        items: [
+          "Nature and culture documentaries",
+          "Long-form storytelling",
+        ],
+        reasoning: "You prefer media that deepens perception.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Outrage loops and noise-heavy content"],
+      reasoning: "It overwhelms your inner listening.",
+    },
+    validation: {
+      resonates: ["You prefer slow, meaningful content"],
+      doesntResonate: ["You like fast, noisy content"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **breathable, grounded, and connected to outside**.`,
+    greenLight: [
+      {
+        title: "Breathable Living",
+        items: [
+          "Natural light, airflow, plants",
+          "Spaces that allow quiet and reflection",
+        ],
+        reasoning: "Your home should keep your senses open.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Sealed, artificial interiors with constant noise"],
+      reasoning: "They numb perception.",
+    },
+    validation: {
+      resonates: ["You feel better when your home breathes"],
+      doesntResonate: ["You prefer sealed environments"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals keep you **in relationship with land and memory**.`,
+    greenLight: [
+      {
+        title: "Memory Rituals",
+        items: [
+          "Regular walks in the same places",
+          "Quiet gratitude for land and life",
+          "Seasonal check-ins with nature",
+        ],
+        reasoning: "Repetition deepens relationship.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Ritual-free living"],
+      reasoning: "You lose orientation.",
+    },
+    validation: {
+      resonates: ["You like returning to the same places"],
+      doesntResonate: ["You dislike repetition"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **navigation and listening**.`,
+    greenLight: [
+      {
+        title: "Listening Movement",
+        items: [
+          "Walking, hiking, natural movement",
+          "Movement that keeps awareness open",
+        ],
+        reasoning: "Movement helps you listen to the world.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Chaotic, overstimulating training"],
+      reasoning: "It disrupts your awareness.",
+    },
+    validation: {
+      resonates: ["You move to clear your mind"],
+      doesntResonate: ["You move for adrenaline"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **grounding, sleep, and nervous-system regulation through nature**.`,
+    greenLight: [
+      {
+        title: "Grounded Wellness",
+        items: [
+          "Consistent sleep",
+          "Nature exposure as regulation",
+          "Simple routines that reduce noise",
+        ],
+        reasoning: "Nature stabilizes your system.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Overstimulation and irregular rhythms"],
+      reasoning: "They disconnect you from your baseline.",
+    },
+    validation: {
+      resonates: ["Nature improves your wellbeing"],
+      doesntResonate: ["Nature doesn’t affect you"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy products that support **simplicity, durability, and land-connection**.`,
+    greenLight: [
+      {
+        title: "Grounding Products",
+        items: [
+          "Simple, durable items",
+          "Tools for outdoor time and observation",
+        ],
+        reasoning: "Your tools should support presence.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Disposable, noisy, overly complex products"],
+      reasoning: "They add clutter to attention.",
+    },
+    validation: {
+      resonates: ["You value simple, durable tools"],
+      doesntResonate: ["You like complex gadgets"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **learn landscapes and deepen relationship with place**.`,
+    greenLight: [
+      {
+        title: "Landscape Travel",
+        items: [
+          "Slow travel in nature-rich regions",
+          "Journeys that prioritize observation over consumption",
+        ],
+        reasoning: "Travel should deepen your map of the world.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Checklist tourism"],
+      reasoning: "It feels disconnected.",
+    },
+    validation: {
+      resonates: ["You prefer slow, place-based travel"],
+      doesntResonate: ["You like rushing through many places"],
+    },
+    affiliates: [],
+  },
+},
+
 }                 // closes RECOMMENDATIONS
