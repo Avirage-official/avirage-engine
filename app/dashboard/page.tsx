@@ -42,26 +42,24 @@ export default async function DashboardPage() {
   return (
     <main style={mainStyle}>
       {/* Nav */}
-      <nav style={navStyle}>
-        <div style={navContainer}>
-          <Link href="/" style={logoStyle}>
-            Avirage
-          </Link>
-          <div style={navLinks}>
-            <Link href="/dashboard" style={{ ...navLink, color: THEME.accent }}>
-    Dashboard 
-            </Link>
-            <Link href="/insights" style={navLink}>
-              Insights
-            </Link>
-            <Link href="/quiz" style={navLink}>
-              Take Quiz Again
-            </Link>
-          </div>
-          </div>
-        </div>
-      </nav>
-
+<nav style={navStyle}>
+  <div style={navContainer}>
+    <Link href="/" style={logoStyle}>
+      Avirage
+    </Link>
+    <div style={navLinks}>
+      <Link href="/dashboard" style={{ ...navLink, color: THEME.accent }}>
+        Dashboard 
+      </Link>
+      <Link href="/insights" style={navLink}>
+        Insights
+      </Link>
+      <Link href="/quiz" style={navLink}>
+        Take Quiz Again
+      </Link>
+    </div>
+  </div>
+</nav>
       <div style={container}>
         {/* Header */}
         <div style={header}>
