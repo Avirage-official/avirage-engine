@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { CSSProperties } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import type { ReactElement } from 'react'
 import { RECOMMENDATIONS, CategoryRecommendation } from '@/lib/recommendationsData'
 
 const THEME = {
@@ -221,7 +222,7 @@ interface GeometricSymbolProps {
 }
 
 function GeometricSymbol({ categoryKey, isActive, isHovered, isUnsealing }: GeometricSymbolProps) {
-  const symbols: Record<CategoryKey, JSX.Element> = {
+ const symbols: Record<CategoryKey, ReactElement> = { 
     locations: <RotatingHexagon isActive={isActive} isHovered={isHovered} isUnsealing={isUnsealing} />,
     work: <PulsingGrid isActive={isActive} isHovered={isHovered} isUnsealing={isUnsealing} />,
     community: <InterlockingCircles isActive={isActive} isHovered={isHovered} isUnsealing={isUnsealing} />,
