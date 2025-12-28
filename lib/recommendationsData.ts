@@ -4292,5 +4292,363 @@ You feel protected and socially anchored.`,
     affiliates: [],
   },
 },
+/* ==========================================
+   ENZUKA – VITALITY, HONOR & EMBODIED STRENGTH
+   (Maasai + Zulu)
+========================================== */
+Enzuka: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is powered by **life-force and honor**. You are meant to feel strong in your body and respected in your stance. Environments that weaken vitality or blur respect drain you.
 
+**What this means:**
+You thrive where movement is natural, posture matters, and people carry themselves with pride. Weak, apathetic, or overly ironic cultures erode your fire.
+
+**When you honor this:**
+You feel confident, grounded, and alive—because your strength is visible and earned.`,
+    greenLight: [
+      {
+        title: "Vital, Embodied Environments",
+        items: [
+          "Warm climates with outdoor living",
+          "Cultures that value physical presence",
+          "Places where posture, dress, and bearing matter",
+        ],
+        reasoning: "Enzuka thrives where **strength is normalized**.",
+      },
+      {
+        title: "Land-Connected Living",
+        items: [
+          "Access to open land or nature",
+          "Daily movement built into life",
+        ],
+        reasoning: "Vitality is maintained through contact with land.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Sedentary, indoor-only lifestyles",
+        "Cultures that shame strength or pride",
+        "Environments that reward passivity",
+      ],
+      reasoning: "Your fire dims when strength is suppressed.",
+    },
+    validation: {
+      resonates: [
+        "You feel better when your body is strong",
+        "Respect and dignity matter deeply to you",
+      ],
+      doesntResonate: [
+        "You’re indifferent to physical vitality",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work best when your role allows **leadership, responsibility, and visible contribution**. You want to *stand* for something.
+
+**What this means:**
+You thrive in work that rewards courage, decisiveness, and presence. Roles that reduce you to anonymity or desk-bound passivity feel demeaning.
+
+**When you honor this:**
+You become inspiring—others trust your strength and follow your lead.`,
+    greenLight: [
+      {
+        title: "Leadership & Responsibility Roles",
+        items: [
+          "Team leadership and management",
+          "Security, safety, or protection roles",
+          "Field leadership or operations",
+          "Training, coaching, mentorship",
+        ],
+        reasoning: "Your authority comes from **embodied confidence**.",
+      },
+      {
+        title: "Respect-Based Work Cultures",
+        items: [
+          "Clear hierarchy of responsibility",
+          "Cultures that reward courage and follow-through",
+        ],
+        reasoning: "Honor fuels your motivation.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Overly passive or consensus-only cultures",
+        "Work that removes bodily agency",
+      ],
+      reasoning: "You’ll feel diminished.",
+    },
+    validation: {
+      resonates: [
+        "You like being trusted with responsibility",
+        "You perform better when your presence matters",
+      ],
+      doesntResonate: [
+        "You prefer invisible, low-stakes roles",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You bond through **mutual respect and shared strength**. Loyalty and honor define belonging.
+
+**What this means:**
+You value communities that uphold dignity, protect members, and recognize contribution. Weak boundaries or disrespect dissolve trust.
+
+**When you honor this:**
+You feel proud of who you stand with.`,
+    greenLight: [
+      {
+        title: "Honor-Based Communities",
+        items: [
+          "Tight-knit groups with clear roles",
+          "Communities that value courage and loyalty",
+        ],
+        reasoning: "Enzuka bonds through **earned respect**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Communities that tolerate disrespect",
+        "Groups that undermine strength",
+      ],
+      reasoning: "They feel unsafe or degrading.",
+    },
+    validation: {
+      resonates: [
+        "You value loyalty highly",
+        "You dislike disrespect being ignored",
+      ],
+      doesntResonate: [
+        "You’re comfortable with weak boundaries",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that express **strength, courage, and vitality**.`,
+    greenLight: [
+      {
+        title: "Strength Activities",
+        items: [
+          "Strength training",
+          "Endurance challenges",
+          "Competitive or skill-based physical pursuits",
+        ],
+        reasoning: "Your spirit sharpens through challenge.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Passive or purely sedentary hobbies"],
+      reasoning: "They weaken your edge.",
+    },
+    validation: {
+      resonates: ["You enjoy physical challenge"],
+      doesntResonate: ["You avoid exertion"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **challenge, mentorship, and testing yourself**.`,
+    greenLight: [
+      {
+        title: "Trial-Based Learning",
+        items: [
+          "Learning by doing under pressure",
+          "Mentorship with high standards",
+        ],
+        reasoning: "You grow through proving capability.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Purely theoretical learning"],
+      reasoning: "Without embodiment, it feels weak.",
+    },
+    validation: {
+      resonates: ["You like being tested"],
+      doesntResonate: ["You dislike challenge"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media to **feel strength and honor**.`,
+    greenLight: [
+      {
+        title: "Honor Media",
+        items: [
+          "Stories of courage and leadership",
+          "Narratives of resilience and pride",
+        ],
+        reasoning: "You resonate with strength done right.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Cynical or mocking content"],
+      reasoning: "It corrodes dignity.",
+    },
+    validation: {
+      resonates: ["You like stories of bravery"],
+      doesntResonate: ["You enjoy irony-heavy content"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **grounded and strength-supporting**.`,
+    greenLight: [
+      {
+        title: "Strong Living",
+        items: [
+          "Space for movement and training",
+          "Solid, functional furnishings",
+        ],
+        reasoning: "Your space should support vitality.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fragile or cramped living spaces"],
+      reasoning: "They feel constricting.",
+    },
+    validation: {
+      resonates: ["You like solid, functional spaces"],
+      doesntResonate: ["You prefer delicate aesthetics"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals reinforce **honor and readiness**.`,
+    greenLight: [
+      {
+        title: "Strength Rituals",
+        items: [
+          "Morning physical activation",
+          "Regular self-discipline practices",
+        ],
+        reasoning: "Readiness maintains dignity.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Rituals that promote passivity"],
+      reasoning: "They dull your edge.",
+    },
+    validation: {
+      resonates: ["You like rituals that build strength"],
+      doesntResonate: ["You prefer soft routines"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **expression of life-force**.`,
+    greenLight: [
+      {
+        title: "Powerful Movement",
+        items: [
+          "Strength, sprinting, jumping",
+          "Training that builds confidence",
+        ],
+        reasoning: "Movement affirms your presence.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Minimal or overly gentle movement"],
+      reasoning: "You feel under-stimulated.",
+    },
+    validation: {
+      resonates: ["You like feeling physically powerful"],
+      doesntResonate: ["You prefer very gentle movement"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness comes from **strength, respect, and discipline**.`,
+    greenLight: [
+      {
+        title: "Strength-Based Wellness",
+        items: [
+          "Consistent training and recovery",
+          "Clear personal standards",
+        ],
+        reasoning: "Strength sustains health.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Neglecting the body"],
+      reasoning: "Weakness compounds.",
+    },
+    validation: {
+      resonates: ["Physical strength improves your confidence"],
+      doesntResonate: ["You don’t connect health with strength"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy products that enhance **durability and strength**.`,
+    greenLight: [
+      {
+        title: "Durable Gear",
+        items: [
+          "Training equipment",
+          "Hard-wearing clothing and tools",
+        ],
+        reasoning: "Your tools should last.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fragile or decorative-only items"],
+      reasoning: "They feel useless.",
+    },
+    validation: {
+      resonates: ["You like tough gear"],
+      doesntResonate: ["You like delicate products"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **test strength and experience vitality**.`,
+    greenLight: [
+      {
+        title: "Challenging Travel",
+        items: [
+          "Adventure or physically engaging travel",
+          "Journeys that test endurance",
+        ],
+        reasoning: "Challenge reawakens your fire.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Passive luxury travel"],
+      reasoning: "It feels empty.",
+    },
+    validation: {
+      resonates: ["You like travel that challenges you"],
+      doesntResonate: ["You travel to avoid effort"],
+    },
+    affiliates: [],
+  },
+},
 }                 // closes RECOMMENDATIONS
