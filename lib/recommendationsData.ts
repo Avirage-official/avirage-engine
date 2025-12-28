@@ -2111,3 +2111,375 @@ You become more confident, creative, and alive—because you’re held.`,
     affiliates: [],
   },
 }, 
+/* ==========================================
+   SIYUANE – DISCIPLINED ENDURANCE & QUIET DIGNITY
+   (Ethiopian Highlands + Han Chinese)
+========================================== */
+Siyuane: {
+  locations: {
+    why: `**The Core Truth:**
+Your code is built on **endurance with dignity**. You are not driven by speed or display—you are driven by *continuity*. You survive, adapt, and progress through patience, discipline, and long memory.
+
+**What this means:**
+You thrive in environments that reward steadiness, respect effort, and value quiet competence. Places that glorify chaos, excess emotion, or constant reinvention exhaust you.
+
+**When you honor this:**
+You feel grounded, resilient, and internally proud—because your life moves forward without spectacle.`,
+    greenLight: [
+      {
+        title: "Continuity-Based Environments",
+        items: [
+          "Highland or agrarian regions with strong tradition",
+          "Cities with long civilizational memory",
+          "Places where respect is earned slowly",
+          "Environments that value order and perseverance",
+        ],
+        reasoning: "Siyuane thrives where **time is respected** and progress is cumulative.",
+      },
+      {
+        title: "Stable, Structured Neighborhoods",
+        items: [
+          "Predictable daily rhythms",
+          "Respectful public behavior",
+          "Clear social expectations",
+        ],
+        reasoning: "Your nervous system settles when life feels **reliable and ordered**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Environments",
+      items: [
+        "Hyper-chaotic or emotionally volatile cultures",
+        "Places obsessed with novelty and reinvention",
+        "Environments that reward loudness over consistency",
+      ],
+      reasoning: "You’ll feel quietly disrespected and worn down over time.",
+    },
+    validation: {
+      resonates: [
+        "You value endurance more than brilliance",
+        "You respect people who quietly carry responsibility",
+        "You prefer slow progress that lasts",
+      ],
+      doesntResonate: [
+        "You thrive on constant excitement and change",
+        "You prefer expressive chaos over stability",
+      ],
+    },
+    affiliates: [],
+  },
+
+  work: {
+    why: `**The Core Truth:**
+You work with **long-term seriousness**. You don’t chase short wins—you build something that holds over decades. Your strength is reliability, follow-through, and disciplined effort.
+
+**What this means:**
+You do best in roles where responsibility is real and continuity matters. Flashy cultures that constantly pivot make you feel unanchored.
+
+**When you honor this:**
+You become indispensable—trusted, steady, and deeply respected.`,
+    greenLight: [
+      {
+        title: "Endurance-Oriented Roles",
+        items: [
+          "Operations, systems maintenance, infrastructure",
+          "Research, engineering, long-horizon projects",
+          "Education, training, stewardship roles",
+          "Family business, institutional work",
+        ],
+        reasoning: "Your power is **staying power**—others rely on you.",
+      },
+      {
+        title: "Respectful Hierarchies",
+        items: [
+          "Clear roles and expectations",
+          "Merit built over time",
+          "Cultures that reward loyalty and consistency",
+        ],
+        reasoning: "You work best where effort compounds.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Work Environments",
+      items: [
+        "Hype-driven startups with no stability",
+        "Workplaces addicted to constant urgency",
+        "Cultures that dismiss patience as weakness",
+      ],
+      reasoning: "You’ll feel undervalued and drained, even if you perform well.",
+    },
+    validation: {
+      resonates: [
+        "You take pride in being dependable",
+        "You dislike abandoning work halfway",
+        "You prefer depth over rapid advancement",
+      ],
+      doesntResonate: [
+        "You want fast recognition and constant change",
+      ],
+    },
+    affiliates: [],
+  },
+
+  community: {
+    why: `**The Core Truth:**
+You form bonds through **shared endurance and mutual respect**, not emotional display. Trust is built slowly—and once earned, it’s strong.
+
+**What this means:**
+You value communities that are loyal, disciplined, and steady. Excessive emotional volatility or performative intimacy feels unsafe to you.
+
+**When you honor this:**
+You feel quietly supported—without needing constant reassurance.`,
+    greenLight: [
+      {
+        title: "Duty-Bound Communities",
+        items: [
+          "Family-centered networks",
+          "Communities built on mutual responsibility",
+          "Groups that show up consistently",
+        ],
+        reasoning: "Siyuane bonds through **reliability, not intensity**.",
+      },
+    ],
+    redLight: {
+      title: "Avoid These Community Patterns",
+      items: [
+        "Drama-driven social groups",
+        "Communities that fracture easily under stress",
+      ],
+      reasoning: "You withdraw when trust feels unstable.",
+    },
+    validation: {
+      resonates: [
+        "You value loyalty over emotional excitement",
+        "You trust actions more than words",
+      ],
+      doesntResonate: [
+        "You need frequent emotional expression to feel close",
+      ],
+    },
+    affiliates: [],
+  },
+
+  activities: {
+    why: `You choose activities that reward **discipline, patience, and repetition**.`,
+    greenLight: [
+      {
+        title: "Endurance Activities",
+        items: [
+          "Long walks, hiking, distance running",
+          "Skill-building through repetition",
+          "Practices that improve slowly over time",
+        ],
+        reasoning: "You feel strongest when effort accumulates.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["High-chaos activities with no structure"],
+      reasoning: "They drain rather than strengthen you.",
+    },
+    validation: {
+      resonates: ["You enjoy steady effort more than bursts"],
+      doesntResonate: ["You get bored without constant novelty"],
+    },
+    affiliates: [],
+  },
+
+  learning: {
+    why: `You learn through **discipline and repetition**. Mastery comes from patience.`,
+    greenLight: [
+      {
+        title: "Structured Learning",
+        items: [
+          "Long-term study paths",
+          "Curricula with clear progression",
+          "Practice-based learning",
+        ],
+        reasoning: "You trust learning that unfolds step by step.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Unstructured, hype-driven learning"],
+      reasoning: "Without continuity, learning feels shallow.",
+    },
+    validation: {
+      resonates: ["You respect teachers who emphasize fundamentals"],
+      doesntResonate: ["You prefer fast, unstructured learning"],
+    },
+    affiliates: [],
+  },
+
+  media: {
+    why: `You consume media for **grounding and perspective**, not stimulation.`,
+    greenLight: [
+      {
+        title: "Grounded Media",
+        items: [
+          "Historical narratives",
+          "Documentaries about endurance and survival",
+          "Stories of perseverance",
+        ],
+        reasoning: "You’re drawn to narratives that last.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Chaotic, outrage-based media"],
+      reasoning: "It unsettles your inner stability.",
+    },
+    validation: {
+      resonates: ["You prefer calm, serious content"],
+      doesntResonate: ["You enjoy constant emotional stimulation"],
+    },
+    affiliates: [],
+  },
+
+  living: {
+    why: `Your home should feel **stable, modest, and dependable**.`,
+    greenLight: [
+      {
+        title: "Grounded Living",
+        items: [
+          "Simple, functional spaces",
+          "Order and cleanliness",
+          "Objects with long-term use",
+        ],
+        reasoning: "Stability at home reinforces internal strength.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Constantly changing or chaotic spaces"],
+      reasoning: "They erode your sense of continuity.",
+    },
+    validation: {
+      resonates: ["You value reliability over aesthetics"],
+      doesntResonate: ["You enjoy frequent change at home"],
+    },
+    affiliates: [],
+  },
+
+  rituals: {
+    why: `Rituals give you **continuity and strength**.`,
+    greenLight: [
+      {
+        title: "Discipline Rituals",
+        items: [
+          "Daily routines repeated over years",
+          "Seasonal or weekly cycles",
+          "Quiet personal practices",
+        ],
+        reasoning: "Repetition anchors you.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Inconsistent or chaotic routines"],
+      reasoning: "They weaken your internal structure.",
+    },
+    validation: {
+      resonates: ["You like rituals that endure"],
+      doesntResonate: ["You dislike routine"],
+    },
+    affiliates: [],
+  },
+
+  movement: {
+    why: `Movement is **conditioning and preservation**, not display.`,
+    greenLight: [
+      {
+        title: "Endurance-Based Movement",
+        items: [
+          "Walking, hiking, steady running",
+          "Strength training with consistency",
+        ],
+        reasoning: "Your body mirrors your long-term mindset.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Flashy, injury-prone training"],
+      reasoning: "You prefer longevity over spectacle.",
+    },
+    validation: {
+      resonates: ["You train for durability"],
+      doesntResonate: ["You chase intensity"],
+    },
+    affiliates: [],
+  },
+
+  wellness: {
+    why: `Your wellness is about **resilience and prevention**.`,
+    greenLight: [
+      {
+        title: "Preventive Wellness",
+        items: [
+          "Consistent sleep",
+          "Simple nutrition routines",
+          "Regular, modest self-care",
+        ],
+        reasoning: "Small habits sustain you for decades.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Extreme wellness swings"],
+      reasoning: "They disrupt your internal balance.",
+    },
+    validation: {
+      resonates: ["You prefer consistency over extremes"],
+      doesntResonate: ["You like drastic resets"],
+    },
+    affiliates: [],
+  },
+
+  products: {
+    why: `You buy for **durability and usefulness**.`,
+    greenLight: [
+      {
+        title: "Long-Life Products",
+        items: [
+          "Durable tools",
+          "Simple, repairable items",
+        ],
+        reasoning: "You value longevity over novelty.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Trendy disposable goods"],
+      reasoning: "They feel wasteful to you.",
+    },
+    validation: {
+      resonates: ["You keep things for years"],
+      doesntResonate: ["You replace things often"],
+    },
+    affiliates: [],
+  },
+
+  travel: {
+    why: `You travel to **understand continuity and history**.`,
+    greenLight: [
+      {
+        title: "Grounded Travel",
+        items: [
+          "Slow travel with one base",
+          "Regions with deep historical continuity",
+        ],
+        reasoning: "You value understanding over novelty.",
+      },
+    ],
+    redLight: {
+      title: "Avoid",
+      items: ["Fast, chaotic travel"],
+      reasoning: "It disrupts your internal rhythm.",
+    },
+    validation: {
+      resonates: ["You prefer depth over variety in travel"],
+      doesntResonate: ["You like constant movement"],
+    },
+    affiliates: [],
+  },
+},
