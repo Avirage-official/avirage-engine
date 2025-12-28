@@ -2480,5 +2480,7 @@ You feel quietly supported—without needing constant reassurance.`,
       resonates: ["You prefer depth over variety in travel"],
       doesntResonate: ["You like constant movement"],
     },
-    affiliates: [],
-}
+        affiliates: [],
+  },              // closes travel
+},                // closes Kayori (or Shokunin / last code)
+}                 // closes RECOMMENDATIONS
