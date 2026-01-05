@@ -1,7 +1,31 @@
 /**
  * AVIRAGE TYPE DEFINITIONS
  * Core interfaces and types for the Cultural Code system
+ *
+ * Design goals:
+ * - Prevent drift (trait keys, code identity, naming)
+ * - Keep backwards compatibility with existing engine logic
+ * - Support future "mythic/archetype display layer" without touching scoring
  */
+
+// ============================================================================
+// PRIMITIVES
+// ============================================================================
+
+/** Cultural code categories */
+export type CodeType = "standalone" | "fusion";
+
+/** Sentiment used in text/pattern detection */
+export type Sentiment = "positive" | "negative" | "neutral";
+
+/**
+ * Canonical identity for a code.
+ * Keep both `id` and `code_name` because your dataset + routing relies on both.
+ */
+export interface CodeRef {
+  id: number;
+  code_name: string; // stable internal key (slug-like)
+}
 
 // ============================================================================
 // TRAIT SYSTEM
@@ -52,6 +76,7 @@ export interface TraitScores {
 
 /**
  * Trait names as a const array for iteration
+ * (Used to ensure runtime loops always follow the same canonical order.)
  */
 export const TRAIT_NAMES: (keyof TraitScores)[] = [
   // Cognitive
@@ -95,42 +120,19 @@ export const TRAIT_NAMES: (keyof TraitScores)[] = [
  * A Cultural Code represents a distinct cultural pattern
  * with specific trait ranges and cultural grounding
  */
-export interface CulturalCode {
-  id: number;
-  code_name: string;
+export interface CulturalCode extends CodeRef {
   full_name: string;
-  type: "standalone" | "fusion";
+  type: CodeType;
   origin: string;
   description: string;
   core_concepts: string[];
   source_cultures?: string[];
-  traits: {
-    abstract_thinking: number;
-    sensory_appreciation: number;
-    pattern_recognition: number;
-    detail_orientation: number;
-    present_moment_focus: number;
-    craftsmanship_drive: number;
-    structure_preference: number;
-    improvisation_comfort: number;
-    pace_preference: number;
-    output_orientation: number;
-    emotional_stability: number;
-    emotional_expressiveness: number;
-    environmental_sensitivity: number;
-    introspection_depth: number;
-    optimism_baseline: number;
-    social_energy: number;
-    group_size_preference: number;
-    conflict_navigation: number;
-    influence_drive: number;
-    collaborative_preference: number;
-    tradition_orientation: number;
-    novelty_seeking: number;
-    stability_seeking: number;
-    meaning_orientation: number;
-    nature_connection: number;
-  };
+
+  /**
+   * Canonical target trait vector for this code.
+   * (Kept 1:1 with TraitScores to prevent drift / missing keys.)
+   */
+  traits: TraitScores;
 }
 
 /**
@@ -144,12 +146,13 @@ export interface CodeMatch {
     trait: keyof TraitScores;
     userScore: number;
     codeScore: number;
-    alignment: number;
+    alignment: number; // typically 0-100
   }[];
 }
 
 /**
  * Final analysis result returned to user
+ * NOTE: This keeps your current structure so UI doesn’t break.
  */
 export interface AnalysisResult {
   primary: {
@@ -170,8 +173,10 @@ export interface AnalysisResult {
     description: string;
     matchPercentage: number;
   };
+
   traitScores: TraitScores;
   explanation: string;
+
   keyTraits: {
     trait: string;
     score: number;
@@ -180,7 +185,7 @@ export interface AnalysisResult {
 }
 
 // ============================================================================
-// TEXT ANALYSIS
+// TEXT / PATTERN ANALYSIS
 // ============================================================================
 
 /**
@@ -201,7 +206,7 @@ export interface TextAnalysisState {
   detectedPatterns: {
     trait: keyof TraitScores;
     pattern: string;
-    sentiment: "positive" | "negative" | "neutral";
+    sentiment: Sentiment;
     intensity: number;
   }[];
   rawScores: Partial<TraitScores>;
