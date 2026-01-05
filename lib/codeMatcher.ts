@@ -1,7 +1,13 @@
 /**
- * CODE MATCHER
- * Matches detected patterns to 20 Cultural Codes
- * Model B: "Relative Resonance" (rank all codes; no hard drop-off)
+ * CODE MATCHER (UPGRADED — still Model B "Relative Resonance")
+ * Matches detected patterns to 20 Cultural Codes and ranks all codes.
+ *
+ * Upgrades (better, not simpler):
+ * - Sanitizes bad data (e.g., same pattern marked core + incompatible)
+ * - Prevents double-counting across core/supporting/incompatible
+ * - Adds stronger core-coverage shaping (core matters more than supporting)
+ * - Uses confidence-aware scoring (pattern confidence influences contribution)
+ * - Produces more defensible top-3 ordering (less “random” close ties)
  */
 
 import { DetectedPatterns, PatternMatch } from "./patternDetector";
@@ -10,8 +16,8 @@ export interface CulturalCodeMatch {
   codeId: number;
   codeName: string;
   fullName: string;
-  matchScore: number;      // 0-100
-  matchPercentage: number; // Same as matchScore (for compatibility)
+  matchScore: number; // 0-100
+  matchPercentage: number; // Same as matchScore (compat)
   confidence: "high" | "moderate" | "low";
   corePatternMatches: PatternMatch[];
   supportingPatternMatches: PatternMatch[];
@@ -22,16 +28,17 @@ interface CodeRequirement {
   codeId: number;
   codeName: string;
   fullName: string;
-  corePatterns: number[];         // Pattern IDs (weight 1.0)
-  supportingPatterns: number[];   // Pattern IDs (weight 0.5)
-  incompatiblePatterns: number[]; // Pattern IDs (negative weight)
-  minimumCoreMatch: number;       // used for confidence shaping (not filtering)
+  corePatterns: number[]; // weight 1.0
+  supportingPatterns: number[]; // weight 0.5
+  incompatiblePatterns: number[]; // penalty
+  minimumCoreMatch: number; // confidence shaping (not filtering)
 }
 
-/**
- * Cultural Code requirements (all 20 codes)
- */
-const CODE_REQUIREMENTS: CodeRequirement[] = [
+/* =========================================================
+   DATA (unchanged content, but we sanitize at runtime)
+========================================================= */
+
+const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 1,
     codeName: "Khoisan",
@@ -65,7 +72,7 @@ const CODE_REQUIREMENTS: CodeRequirement[] = [
     fullName: "Maasai + Zulu Fusion",
     corePatterns: [12, 21, 11, 20, 22],
     supportingPatterns: [2, 8, 18, 26],
-    incompatiblePatterns: [17, 20, 29],
+    incompatiblePatterns: [17, 20, 29], // NOTE: overlaps (20). We'll sanitize.
     minimumCoreMatch: 3.5,
   },
   {
@@ -214,71 +221,163 @@ const CODE_REQUIREMENTS: CodeRequirement[] = [
   },
 ];
 
-/**
- * Calculate match score for a single cultural code
- * Model B: Always returns a match (never null)
- */
-function calculateCodeMatch(
-  codeReq: CodeRequirement,
-  patterns: DetectedPatterns
-): CulturalCodeMatch {
-  let score = 0;
-  let maxPossibleScore = 0;
+/* =========================================================
+   SANITIZATION + UTILITIES
+========================================================= */
 
-  let coreScore = 0;
+function uniq(arr: number[]): number[] {
+  return Array.from(new Set(arr));
+}
+
+function without(arr: number[], remove: Set<number>): number[] {
+  return arr.filter((x) => !remove.has(x));
+}
+
+/**
+ * Ensure:
+ * - core/supporting/incompatible do not overlap (core wins, supporting loses)
+ * - arrays are unique
+ */
+function sanitizeRequirement(req: CodeRequirement): CodeRequirement {
+  const core = uniq(req.corePatterns);
+  const coreSet = new Set(core);
+
+  const supportingRaw = uniq(req.supportingPatterns);
+  const supporting = without(supportingRaw, coreSet);
+  const supportingSet = new Set(supporting);
+
+  const incompatibleRaw = uniq(req.incompatiblePatterns);
+  // if something is incompatible AND core/supporting, incompatible loses (data bug)
+  const incompatible = incompatibleRaw.filter((p) => !coreSet.has(p) && !supportingSet.has(p));
+
+  return {
+    ...req,
+    corePatterns: core,
+    supportingPatterns: supporting,
+    incompatiblePatterns: incompatible,
+  };
+}
+
+const CODE_REQUIREMENTS: CodeRequirement[] = CODE_REQUIREMENTS_RAW.map(sanitizeRequirement);
+
+/* =========================================================
+   SCORING MODEL
+========================================================= */
+
+/**
+ * Weight policy:
+ * - Core patterns dominate (signal of identity)
+ * - Supporting patterns add flavor
+ * - Incompatibles penalize, but cannot “erase” a strong core
+ */
+const WEIGHTS = {
+  core: 1.0,
+  supporting: 0.55, // slightly higher than 0.5; supporting matters
+  incompatible: 0.45, // penalty strength (scaled by confidence)
+} as const;
+
+/**
+ * Core coverage shaping:
+ * If you hit a lot of core patterns, you get a mild boost.
+ * If you hit few cores, you get a mild dampener.
+ */
+function coreCoverageMultiplier(coreHitWeight: number, coreMaxWeight: number): number {
+  if (coreMaxWeight <= 0) return 1;
+  const coverage = coreHitWeight / coreMaxWeight; // 0..1
+
+  // piecewise curve:
+  // <0.35 => dampen
+  // 0.35-0.7 => neutral
+  // >0.7 => small boost
+  if (coverage < 0.35) return 0.88;
+  if (coverage > 0.7) return 1.08;
+  return 1.0;
+}
+
+function clamp100(n: number): number {
+  return Math.max(0, Math.min(100, n));
+}
+
+function avgConfidence(matches: PatternMatch[]): number {
+  if (matches.length === 0) return 0;
+  return matches.reduce((acc, m) => acc + m.confidence, 0) / matches.length;
+}
+
+/**
+ * Calculate match score for one code (always returns a match)
+ */
+function calculateCodeMatch(codeReq: CodeRequirement, patterns: DetectedPatterns): CulturalCodeMatch {
+  let score = 0;
+
+  // Max possible is “best-case” sum of weights (core + supporting)
+  // (We exclude incompatible from maxPossible so penalty can pull score down.)
+  let maxPossible = 0;
+
+  let coreHit = 0;
   let coreMax = 0;
 
   const coreMatches: PatternMatch[] = [];
   const supportingMatches: PatternMatch[] = [];
   const incompatibleMatches: PatternMatch[] = [];
 
-  // CORE PATTERNS (weight 1.0)
-  for (const patternId of codeReq.corePatterns) {
-    maxPossibleScore += 1.0;
-    coreMax += 1.0;
+  // CORE
+  for (const pid of codeReq.corePatterns) {
+    coreMax += WEIGHTS.core;
+    maxPossible += WEIGHTS.core;
 
-    const hit = patterns[patternId];
+    const hit = patterns[pid];
     if (hit) {
-      score += hit.confidence * 1.0;
-      coreScore += hit.confidence * 1.0;
+      const add = hit.confidence * WEIGHTS.core;
+      score += add;
+      coreHit += add;
       coreMatches.push(hit);
     }
   }
 
-  // SUPPORTING PATTERNS (weight 0.5)
-  for (const patternId of codeReq.supportingPatterns) {
-    maxPossibleScore += 0.5;
+  // SUPPORTING
+  for (const pid of codeReq.supportingPatterns) {
+    maxPossible += WEIGHTS.supporting;
 
-    const hit = patterns[patternId];
+    const hit = patterns[pid];
     if (hit) {
-      score += hit.confidence * 0.5;
+      score += hit.confidence * WEIGHTS.supporting;
       supportingMatches.push(hit);
     }
   }
 
-  // INCOMPATIBLE PATTERNS (negative weight -0.3)
-  for (const patternId of codeReq.incompatiblePatterns) {
-    const hit = patterns[patternId];
+  // INCOMPATIBLE (penalty, but moderated)
+  // Penalty is stronger when incompatibles are high-confidence AND multiple.
+  // Also, if you have strong core coverage, penalty is slightly softened.
+  let penalty = 0;
+  for (const pid of codeReq.incompatiblePatterns) {
+    const hit = patterns[pid];
     if (hit) {
-      score -= hit.confidence * 0.3;
+      penalty += hit.confidence * WEIGHTS.incompatible;
       incompatibleMatches.push(hit);
     }
   }
 
-  // Guard: avoid divide by zero
-  if (maxPossibleScore <= 0) maxPossibleScore = 1;
+  const coreMult = coreCoverageMultiplier(coreHit, coreMax);
+  const softenedPenalty = penalty * (coreMult > 1 ? 0.9 : 1.0);
 
-  // Normalize to 0-100, clamp
-  const rawPct = (score / maxPossibleScore) * 100;
-  const matchPercentage = Math.max(0, Math.min(100, Math.round(rawPct)));
+  score = score * coreMult - softenedPenalty;
 
-  // Confidence: use BOTH matchPercentage + whether core is reasonably met
-  // (still "relative", but keeps your intent that core matters)
-  const coreMeets = coreScore >= codeReq.minimumCoreMatch;
-  let confidence: "high" | "moderate" | "low";
-  if (matchPercentage >= 75 && coreMeets) confidence = "high";
-  else if (matchPercentage >= 60) confidence = "moderate";
-  else confidence = "low";
+  if (maxPossible <= 0) maxPossible = 1;
+
+  // Normalize to 0–100
+  const rawPct = (score / maxPossible) * 100;
+  const matchPercentage = clamp100(Math.round(rawPct));
+
+  // Confidence shaping:
+  // - coreMeets uses your existing minimumCoreMatch (in “weighted confidence” units)
+  // - also consider core coverage ratio + avg confidence of core hits
+  const coreMeets = coreHit >= codeReq.minimumCoreMatch;
+  const coreCoverage = coreMax > 0 ? coreHit / coreMax : 0; // 0..1
+  const coreAvg = avgConfidence(coreMatches);
+
+  let confidence: "high" | "moderate" | "low" = "low";
+  if (matchPercentage >= 78 && coreMeets && coreCoverage >= 0.55 && coreAvg >= 0.65) confidence = "high";
+  else if (matchPercentage >= 62 && (coreCoverage >= 0.4 || coreMeets)) confidence = "moderate";
 
   return {
     codeId: codeReq.codeId,
@@ -293,9 +392,12 @@ function calculateCodeMatch(
   };
 }
 
+/* =========================================================
+   PUBLIC API
+========================================================= */
+
 /**
- * Match patterns to all cultural codes and return top 3
- * Model B: rank all 20; no fallback
+ * Match patterns to all codes and return ranked list + top 3
  */
 export function matchCulturalCodes(patterns: DetectedPatterns): {
   primary: CulturalCodeMatch;
@@ -303,11 +405,15 @@ export function matchCulturalCodes(patterns: DetectedPatterns): {
   tertiary: CulturalCodeMatch;
   allMatches: CulturalCodeMatch[];
 } {
-  const matches: CulturalCodeMatch[] = CODE_REQUIREMENTS.map((codeReq) =>
-    calculateCodeMatch(codeReq, patterns)
-  );
+  const matches = CODE_REQUIREMENTS.map((req) => calculateCodeMatch(req, patterns));
 
-  matches.sort((a, b) => b.matchScore - a.matchScore);
+  // Sort primarily by matchScore, secondarily by confidence tier
+  const tier = (c: CulturalCodeMatch["confidence"]) => (c === "high" ? 2 : c === "moderate" ? 1 : 0);
+
+  matches.sort((a, b) => {
+    if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
+    return tier(b.confidence) - tier(a.confidence);
+  });
 
   return {
     primary: matches[0],
