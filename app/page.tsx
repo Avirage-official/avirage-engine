@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { CSSProperties } from "react";
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'; 
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+
 /* ============================
-   THEME (matching your existing style)
+   ETHOS • DISCOVERY LANDING (no “quiz” language)
+   - Mature, calm, non-demanding
 ============================ */
 
 const THEME = {
@@ -22,10 +24,6 @@ const THEME = {
 const DISPLAY_FONT = "'Cinzel', serif";
 const BODY_FONT = "'Inter', system-ui, sans-serif";
 
-/* ============================
-   COMPONENT
-============================ */
-
 export default function LandingPage() {
   return (
     <main style={mainStyle}>
@@ -33,7 +31,7 @@ export default function LandingPage() {
       <nav style={navStyle}>
         <div style={navContainer}>
           <Link href="/" style={logoStyle}>
-            Avirage
+            ETHOS
           </Link>
 
           <div style={navLinks}>
@@ -46,20 +44,22 @@ export default function LandingPage() {
             <Link href="/faq" style={navLink}>
               FAQ
             </Link>
-             <SignedIn>
-  <Link href="/dashboard" style={navLink}>
-    Dashboard
-  </Link>
-</SignedIn>
-            <SignedOut>
-  <SignInButton mode="modal">
-    <button style={signInBtn}>Sign In</button>
-  </SignInButton>
-</SignedOut>
 
-<SignedIn>
-  <UserButton />
-</SignedIn>
+            <SignedIn>
+              <Link href="/dashboard" style={navLink}>
+                Dashboard
+              </Link>
+            </SignedIn>
+
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button style={signInBtn}>Sign In</button>
+              </SignInButton>
+            </SignedOut>
+
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
         </div>
       </nav>
@@ -72,25 +72,25 @@ export default function LandingPage() {
 
           {/* Main Headline */}
           <h1 style={h1}>
-            Discover Your
+            Find the lens
             <br />
-            <span style={accentText}>Archetypal Tradition</span>
+            <span style={accentText}>you naturally live through</span>
           </h1>
 
           {/* Subheading */}
           <p style={subheading}>
-            Avirage maps the cultural lens through which you naturally experience and navigate the world.
+            ETHOS maps the cultural lens through which you tend to perceive, decide, and move through the world.
             <br />
-            Not a personality test—a lens identification system grounded in behavioral patterns and cultural archetypes.
+            Not a personality test — a calm, grounded discovery experience built around patterns and archetypes.
           </p>
 
           {/* CTAs */}
           <div style={ctaRow}>
             <Link href="/quiz" style={primaryBtn}>
-              Start Free Quiz
+              Start Lens Session
             </Link>
-            <button onClick={() => scrollToSection('explainer')} style={secondaryBtn}>
-              Learn More
+            <button onClick={() => scrollToSection("explainer")} style={secondaryBtn}>
+              How it works
             </button>
           </div>
 
@@ -101,46 +101,51 @@ export default function LandingPage() {
               Multi-framework triangulation • Culturally grounded • Non-deterministic
             </span>
           </div>
+
+          {/* Soft reassurance */}
+          <div style={softReassurance}>
+            No pressure. You can stop anytime. Takes ~8–10 minutes.
+          </div>
         </div>
       </section>
 
       {/* Explainer Section */}
       <section id="explainer" style={explainerSection}>
         <div style={container}>
-          <h2 style={h2}>How Avirage Works</h2>
+          <h2 style={h2}>How ETHOS Works</h2>
           <p style={sectionDesc}>
             A structured interpretive system that identifies archetypal cultural traditions
-            through cross-framework behavioral pattern analysis.
+            through cross-framework behavioral pattern analysis — designed to feel human, not clinical.
           </p>
 
           <div style={threeColGrid}>
             {/* What */}
             <div style={featureCard}>
               <div style={featureIcon}>1</div>
-              <h3 style={featureTitle}>What</h3>
+              <h3 style={featureTitle}>What you get</h3>
               <p style={featureText}>
-                Maps your archetypal cultural lens—the tradition through which you naturally
-                perceive, decide, and navigate the world.
+                Your Cultural Code — an archetypal lens that reflects how you naturally process,
+                choose, and relate to the world.
               </p>
             </div>
 
             {/* How */}
             <div style={featureCard}>
               <div style={featureIcon}>2</div>
-              <h3 style={featureTitle}>How</h3>
+              <h3 style={featureTitle}>How it’s found</h3>
               <p style={featureText}>
-                30 questions → 4 frameworks (Big Five, MBTI, Enneagram, Astrology) → 25 behavioral
-                patterns → Your Cultural Code match.
+                A guided set of prompts → triangulation across frameworks →
+                behavioral pattern map → a ranked Cultural Code match.
               </p>
             </div>
 
             {/* Why */}
             <div style={featureCard}>
               <div style={featureIcon}>3</div>
-              <h3 style={featureTitle}>Why</h3>
+              <h3 style={featureTitle}>Why it matters</h3>
               <p style={featureText}>
-                Self-knowledge, lifestyle alignment, community fit, creative direction, and
-                understanding the lens through which you operate.
+                Lifestyle alignment, creative direction, relationship clarity, community fit —
+                and a practical way to understand your internal “operating lens”.
               </p>
             </div>
           </div>
@@ -193,11 +198,14 @@ export default function LandingPage() {
         <div style={finalCtaCard}>
           <h2 style={finalCtaTitle}>Ready to discover your lens?</h2>
           <p style={finalCtaText}>
-            Takes 10 minutes. Free. No login required to start.
+            A short guided session — calm, private, and free to begin.
           </p>
           <Link href="/quiz" style={primaryBtnLarge}>
-            Start Quiz Now
+            Begin Discovery
           </Link>
+          <div style={finalCtaSub}>
+            No login required to start.
+          </div>
         </div>
       </section>
 
@@ -205,7 +213,7 @@ export default function LandingPage() {
       <footer style={footerStyle}>
         <div style={footerContainer}>
           <div style={footerBrand}>
-            <div style={footerLogo}>Avirage</div>
+            <div style={footerLogo}>ETHOS</div>
             <p style={footerTagline}>Cultural lens identification system</p>
           </div>
 
@@ -226,7 +234,7 @@ export default function LandingPage() {
             <div style={footerCol}>
               <div style={footerColTitle}>Start</div>
               <Link href="/quiz" style={footerLink}>
-                Take Quiz
+                Lens Session
               </Link>
               <Link href="/quiz" style={footerLink}>
                 Sign In
@@ -236,7 +244,7 @@ export default function LandingPage() {
         </div>
 
         <div style={footerBottom}>
-          <p style={footerCopyright}>© 2025 Avirage. All rights reserved.</p>
+          <p style={footerCopyright}>© 2026 ETHOS. All rights reserved.</p>
         </div>
       </footer>
     </main>
@@ -271,7 +279,7 @@ function CodePreviewCard({
 }
 
 function scrollToSection(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
 /* ============================
@@ -341,12 +349,12 @@ const signInBtn: CSSProperties = {
 
 // Hero
 const heroSection: CSSProperties = {
-  padding: "120px 24px 100px",
+  padding: "120px 24px 92px",
   textAlign: "center",
 };
 
 const heroContent: CSSProperties = {
-  maxWidth: 800,
+  maxWidth: 860,
   margin: "0 auto",
 };
 
@@ -356,15 +364,15 @@ const heroKicker: CSSProperties = {
   textTransform: "uppercase",
   color: THEME.accent,
   fontWeight: 900,
-  marginBottom: 24,
+  marginBottom: 22,
 };
 
 const h1: CSSProperties = {
   fontFamily: DISPLAY_FONT,
-  fontSize: 64,
+  fontSize: 60,
   fontWeight: 900,
-  lineHeight: 1.1,
-  margin: "0 0 24px",
+  lineHeight: 1.08,
+  margin: "0 0 22px",
   color: THEME.textPrimary,
 };
 
@@ -379,15 +387,15 @@ const subheading: CSSProperties = {
   fontSize: 18,
   lineHeight: 1.7,
   color: THEME.textSecondary,
-  maxWidth: 680,
-  margin: "0 auto 40px",
+  maxWidth: 720,
+  margin: "0 auto 34px",
 };
 
 const ctaRow: CSSProperties = {
   display: "flex",
   gap: 16,
   justifyContent: "center",
-  marginBottom: 24,
+  marginBottom: 18,
 };
 
 const primaryBtn: CSSProperties = {
@@ -438,6 +446,14 @@ const trustText: CSSProperties = {
   fontWeight: 600,
 };
 
+const softReassurance: CSSProperties = {
+  marginTop: 14,
+  fontSize: 12,
+  color: "rgba(154,163,173,0.85)",
+  fontWeight: 600,
+  letterSpacing: "0.02em",
+};
+
 // Sections
 const explainerSection: CSSProperties = {
   padding: "80px 24px",
@@ -461,7 +477,7 @@ const sectionDesc: CSSProperties = {
   fontSize: 16,
   color: THEME.textSecondary,
   textAlign: "center",
-  maxWidth: 680,
+  maxWidth: 720,
   margin: "0 auto 60px",
   lineHeight: 1.7,
 };
@@ -587,7 +603,7 @@ const finalCtaSection: CSSProperties = {
 };
 
 const finalCtaCard: CSSProperties = {
-  maxWidth: 680,
+  maxWidth: 720,
   margin: "0 auto",
   padding: 60,
   borderRadius: 20,
@@ -600,19 +616,26 @@ const finalCtaTitle: CSSProperties = {
   fontFamily: DISPLAY_FONT,
   fontSize: 36,
   fontWeight: 900,
-  marginBottom: 16,
+  marginBottom: 14,
 };
 
 const finalCtaText: CSSProperties = {
   fontSize: 16,
   color: THEME.textSecondary,
-  marginBottom: 32,
+  marginBottom: 26,
 };
 
 const primaryBtnLarge: CSSProperties = {
   ...primaryBtn,
   padding: "18px 40px",
   fontSize: 15,
+};
+
+const finalCtaSub: CSSProperties = {
+  marginTop: 14,
+  fontSize: 12,
+  color: "rgba(154,163,173,0.80)",
+  fontWeight: 600,
 };
 
 // Footer
