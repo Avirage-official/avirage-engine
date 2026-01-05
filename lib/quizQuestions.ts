@@ -1,4 +1,4 @@
-```ts
+
 /**
  * AVIRAGE QUIZ QUESTIONS - SITUATIONAL EDITION
  * 35 questions designed to detect Big 5, MBTI, Enneagram, Astrology
