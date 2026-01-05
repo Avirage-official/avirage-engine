@@ -1,91 +1,130 @@
 /**
- * CULTURAL HERITAGE DATA
- * Deep historical context for each Cultural Code
+ * HERITAGE DATA
+ *
+ * PURPOSE:
+ * - Provide historical / cultural reference data
+ * - NOT used for scoring
+ * - NOT used for personality labeling
+ *
+ * This file exists purely for:
+ * - educational context
+ * - long-form explanations
+ * - optional “learn more” sections
+ *
+ * CRITICAL RULE:
+ * ➜ NOTHING in this file should affect algorithmic outcomes.
+ * ➜ Personality identity ≠ real-world culture.
+ *
+ * This is where we reduce cultural risk properly.
  */
 
-export interface HeritageChapter {
-  id: string
-  title: string
-  subtitle: string
-  era?: string
-  content: {
-    intro: string
-    sections: {
-      heading: string
-      paragraphs: string[]
-      highlights?: string[]
-      quote?: {
-        text: string
-        attribution: string
-      }
-    }[]
-  }
+export interface HeritageReference {
+  code_name: string;          // must match CulturalCode.code_name
+  regions: string[];
+  timeframes: string[];
+  themes: string[];
+  practices: string[];
+  values: string[];
+  notes?: string;
 }
 
-export interface HeritageData {
-  codeName: string
-  cultureType: 'single' | 'fusion'
-  level1: string
-  level2?: string
-  mapImage?: string
-  chapters: HeritageChapter[]
+/**
+ * Canonical heritage reference set
+ * Names here are descriptive, not identity claims.
+ */
+export const HERITAGE_DATA: HeritageReference[] = [
+  {
+    code_name: "khoisan",
+    regions: ["Southern Africa"],
+    timeframes: ["Ancient", "Pre-colonial"],
+    themes: ["hunter-gatherer life", "ecological awareness", "oral tradition"],
+    practices: ["tracking", "storytelling", "communal living"],
+    values: ["presence", "adaptability", "community"],
+    notes:
+      "Referenced for worldview patterns, not lineage or ancestry claims.",
+  },
+  {
+    code_name: "kayori",
+    regions: ["West Africa"],
+    timeframes: ["Pre-colonial", "Classical"],
+    themes: ["rhythm", "myth", "community expression"],
+    practices: ["music", "dance", "oral history"],
+    values: ["expression", "connection", "shared meaning"],
+  },
+  {
+    code_name: "sahen",
+    regions: ["Sahara", "Sahel"],
+    timeframes: ["Nomadic eras"],
+    themes: ["mobility", "resilience", "self-sufficiency"],
+    practices: ["nomadic trade", "navigation", "minimalism"],
+    values: ["endurance", "autonomy", "adaptation"],
+  },
+  {
+    code_name: "enzuka",
+    regions: ["East Africa", "Southern Africa"],
+    timeframes: ["Pre-colonial"],
+    themes: ["warrior societies", "social order"],
+    practices: ["rites of passage", "age-based leadership"],
+    values: ["responsibility", "protection", "order"],
+  },
+  {
+    code_name: "siyuane",
+    regions: ["East Africa", "East Asia"],
+    timeframes: ["Classical", "Imperial"],
+    themes: ["discipline", "craft mastery"],
+    practices: ["artisan systems", "structured learning"],
+    values: ["precision", "long-term thinking", "discipline"],
+  },
+  {
+    code_name: "jaejin",
+    regions: ["Korean Peninsula"],
+    timeframes: ["Joseon period", "Modern"],
+    themes: ["hierarchy", "social harmony"],
+    practices: ["ritual respect", "collective responsibility"],
+    values: ["duty", "respect", "harmony"],
+  },
+  {
+    code_name: "namsea",
+    regions: ["Southeast Asia"],
+    timeframes: ["Pre-modern", "Agrarian eras"],
+    themes: ["flow-based living", "environmental adaptation"],
+    practices: ["wet-rice agriculture", "communal cooperation"],
+    values: ["balance", "flexibility", "relationship"],
+  },
+  {
+    code_name: "shokunin",
+    regions: ["Japan"],
+    timeframes: ["Feudal", "Modern"],
+    themes: ["craft devotion", "process mastery"],
+    practices: ["artisan guilds", "mentorship"],
+    values: ["precision", "patience", "excellence"],
+  },
+  {
+    code_name: "khoruun",
+    regions: ["Central Asia"],
+    timeframes: ["Nomadic empires"],
+    themes: ["freedom", "open landscapes"],
+    practices: ["pastoral nomadism", "horsemanship"],
+    values: ["self-reliance", "mobility", "endurance"],
+  },
+  {
+    code_name: "lhumir",
+    regions: ["Himalayan regions"],
+    timeframes: ["Ancient", "Monastic eras"],
+    themes: ["inner life", "meaning"],
+    practices: ["meditation", "ritual study"],
+    values: ["clarity", "stillness", "purpose"],
+  },
+];
+
+/**
+ * Lookup helpers
+ */
+
+export function getHeritageByCode(code_name: string): HeritageReference | undefined {
+  return HERITAGE_DATA.find((h) => h.code_name === code_name);
 }
 
-export const HERITAGE_DATA: Record<string, HeritageData> = {
-  jaejin: {
-    codeName: 'Jaejin',
-    cultureType: 'single',
-    level1: 'Korean',
-    chapters: [
-      {
-        id: 'foundations',
-        title: 'Ancient Foundations',
-        subtitle: 'The roots of collective resilience',
-        era: '57 BCE - 935 CE',
-        content: {
-          intro: 'Korean culture emerged on a mountainous peninsula caught between three empires: China, Japan, and the northern nomadic tribes. Geography shaped destiny - survival required unity, speed, and unwavering collective resolve.',
-          sections: [
-            {
-              heading: 'The Three Kingdoms and Unity',
-              paragraphs: [
-                'From 57 BCE to 668 CE, three kingdoms (Goguryeo, Baekje, and Silla) competed fiercely for dominance on the Korean peninsula. This was not mere political rivalry - it was an existential crucible that forged the Korean psyche. Victory required total mobilization: every farmer could be called to war, every artisan redirected to defense.',
-                'The eventual unification under Silla (668 CE) did not erase this competitive intensity - it internalized it. Koreans learned that survival demanded not just individual excellence, but synchronized collective effort. The concept of uri (we/us) became more fundamental than I. Your fate was inseparable from your community fate.',
-                'This period established a pattern: when pressure mounted, Koreans did not fragment - they compressed into a unified force. Speed of response became cultural doctrine. Hesitation meant conquest.',
-              ],
-              highlights: [
-                'Geography as pressure: peninsula position meant constant threat from all sides',
-                'Unity through crisis: survival required collective mobilization',
-                'Speed as virtue: slow response equals annihilation',
-              ],
-            },
-          ],
-        },
-      },
-      {
-        id: 'placeholder',
-        title: 'More Chapters Coming',
-        subtitle: 'Additional heritage content',
-        content: {
-          intro: 'Additional chapters will be added with full historical detail.',
-          sections: [],
-        },
-      },
-    ],
-  },
-  shokunin: {
-    codeName: 'Shokunin',
-    cultureType: 'single',
-    level1: 'Japanese',
-    chapters: [
-      {
-        id: 'placeholder',
-        title: 'Heritage Coming Soon',
-        subtitle: 'Deep dive into Japanese craft mastery traditions',
-        content: {
-          intro: 'Full heritage content for Shokunin will be available soon.',
-          sections: [],
-        },
-      },
-    ],
-  },
+export function getAllHeritage(): HeritageReference[] {
+  return HERITAGE_DATA;
 }
