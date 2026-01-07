@@ -103,28 +103,6 @@ function convertBig5ToScore(level: string): number {
  * Code descriptions (reused from analyse route)
  */
 function getCodeDescription(codeName: string): string {
-  const descriptions: Record<string, string> = {
-    "Khoisan": "Hyper-acute environmental perception, radical egalitarianism, immediate-return economy, conflict avoidance, present-moment survival intelligence",
-    "Kayori": "Expressive ritual creativity, destiny-aware, communal intellect, Ifá divination logic, oral-intellectual tradition",
-    "Sahen": "Introspective poetic identity, desert wisdom, existential longing, nomadic autonomy",
-    "Enzuka": "Strength through people, courage as social duty, warrior discipline, collective honor",
-    "Siyuane": "Harmony sustained across generations, long continuity, hierarchical order, disciplined tradition",
-    "Jaejin": "Strength forged under constraint, compressed emotion (Han), intense loyalty, extreme diligence",
-    "Namsea": "Grace under movement, water-based cognition, calm resilience, gentle ease, conflict avoidance mastery",
-    "Shokunin": "Perfectionist craftsmanship, group harmony (Wa), aesthetic discipline, ritualized order",
-    "Khoruun": "Freedom sustained by movement, nomadic mobility intelligence, decentralized strength",
-    "Lhumir": "Stillness that includes others, contemplative consciousness, impermanence worldview, compassion discipline",
-    "Yatevar": "Order embodied through duty, law as lived ritual, metaphysical abstraction, warrior-philosopher",
-    "Renara": "Order maintained through balance, refined subtlety (Halus), emotional restraint, hierarchical harmony",
-    "Karayni": "Sacred balance through reciprocity, mutual responsibility (humans-spirits-land), communal ritual labor",
-    "Wohaka": "Existence as relationship, all beings as kin, warrior-spiritual synthesis, land-identity fusion",
-    "Tjukari": "Land remembers through us, Dreamtime cosmology, Songline navigation, non-linear time, deep time consciousness",
-    "Kinmora": "Mastery of cycles, mathematical cosmology, cyclical time consciousness, astronomical precision",
-    "Siljoa": "Living in dialogue with climate and place, environment as thinking partner, Arctic survival intelligence",
-    "Skenari": "Responsibility to the unborn, Seventh Generation principle, consensus governance, future-oriented ethics",
-    "Ashkara": "Truth enacted not believed, moral choice as sacred action, ethical dualism, fire symbolism",
-    "Alethir": "To live by seeking what is real, truth emerges through inquiry and dialogue, logos-centered thinking",
-  }
-
-  return descriptions[codeName] || "Cultural code description"
+  const code = getCulturalCode(codeName.toLowerCase());
+  return code?.archetype_essence || code?.description || "Cultural code";
 }
