@@ -1,7 +1,10 @@
 /**
  * lib/codePages.ts
  *
- * This file is CONTRACT-LOCKED to app/codepages/[slug]/CodePageClient.tsx.
+ * CONTRACT-LOCKED to:
+ * - app/codepages/[slug]/CodePageClient.tsx
+ * - app/codepages/[slug]/page.tsx
+ *
  * Display-only. Does NOT affect scoring / algorithms.
  */
 
@@ -37,6 +40,7 @@ export interface CodeRecommendations {
 
 export interface CodePage {
   codeName: string;
+  fullName: string; // ✅ required by /app/codepages/[slug]/page.tsx
   snapshot: string;
 
   origin: CodeOrigin;
@@ -52,14 +56,10 @@ export interface CodePage {
   notes?: string[];
 }
 
-/**
- * IMPORTANT:
- * Keys here MUST match your route slugs (the [slug] param).
- * Add the remaining codes here using the same structure.
- */
 export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   Shokunin: {
     codeName: "Shokunin",
+    fullName: "Shokunin (The Craft Path)",
     snapshot:
       "You’re at your best when you can go deep, move with intention, and produce work that feels clean, precise, and worth your name.",
 
@@ -137,13 +137,14 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
     ],
 
     notes: [
-      "This is a display layer — it does not define identity or culture.",
-      "If this doesn’t resonate, it’s a signal to adjust weighting / questions, not force-fit.",
+      "Display layer only — not an identity or ancestry claim.",
+      "If it doesn’t resonate, adjust questions/weights; don’t force-fit.",
     ],
   },
 
   Renara: {
     codeName: "Renara",
+    fullName: "Renara (Harmony Weaver)",
     snapshot:
       "You create stability by softening friction — you’re the person who makes environments feel calmer, smoother, and more livable.",
 
@@ -216,10 +217,6 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
     ],
   },
 };
-
-/* =========================
-   HELPERS (USED AROUND THE APP)
-========================= */
 
 export const CODE_SLUGS = Object.keys(CODE_PAGES) as CodeSlug[];
 
