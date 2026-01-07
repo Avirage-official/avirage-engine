@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { QUIZ_QUESTIONS } from "@/lib/quizQuestions";
 
 /* ============================
-   TYPES (matches your API response)
+   TYPES
 ============================ */
 
 interface AnalysisResult {
@@ -19,32 +20,27 @@ interface AnalysisResult {
 }
 
 /* ============================
-   HELPERS (simple + safe)
+   HELPERS
 ============================ */
 
-function clamp(n: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, n));
-}
-function pad2(n: number) {
-  return String(n).padStart(2, "0");
-}
-function daysInMonth(year: number, month: number) {
-  return new Date(year, month, 0).getDate(); // month: 1-12
-}
-function buildISODate(year: number, month: number, day: number) {
-  return `${year}-${pad2(month)}-${pad2(day)}`;
-}
-function safeSlugFromCodeName(codeName: unknown): string {
-  // We intentionally avoid codePages.ts type guards here.
-  // This keeps quiz page stable and avoids TS “never” issues.
-  if (typeof codeName !== "string") return "";
-  const slug = codeName
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-]/g, "");
-  return encodeURIComponent(slug);
-}
+const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
+const pad2 = (n: number) => String(n).padStart(2, "0");
+const daysInMonth = (y: number, m: number) => new Date(y, m, 0).getDate();
+const buildISODate = (y: number, m: number, d: number) => `${y}-${pad2(m)}-${pad2(d)}`;
+
+/* ============================
+   MOTION PRESETS
+============================ */
+
+const fadeUp = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -12 },
+  transition: { duration: 0.35, ease: "easeOut" },
+};
+
+const cardHover =
+  "transition-transform duration-300 hover:-translate-y-[2px] hover:shadow-[0_25px_80px_rgba(2,6,23,0.12)]";
 
 /* ============================
    COMPONENT
@@ -53,38 +49,33 @@ function safeSlugFromCodeName(codeName: unknown): string {
 export default function QuizPage() {
   const [step, setStep] = useState<"info" | "quiz" | "loading" | "result">("info");
 
-  // Info fields
+  // Info
   const [name, setName] = useState("");
   const [gender, setGender] = useState<"male" | "female" | "other" | "">("");
   const [genderOther, setGenderOther] = useState("");
   const [city, setCity] = useState("");
   const [ethnicity, setEthnicity] = useState("");
 
-  // Birthdate (fast)
+  // Birth
   const now = new Date();
   const currentYear = now.getFullYear();
-  const minYear = 1940;
-  const maxYear = currentYear;
-
-  const [birthYear, setBirthYear] = useState<number>(1998);
-  const [birthMonth, setBirthMonth] = useState<number>(1);
-  const [birthDay, setBirthDay] = useState<number>(1);
-  const [birthDateISO, setBirthDateISO] = useState<string>(""); // optional typed input YYYY-MM-DD
+  const [birthYear, setBirthYear] = useState(1998);
+  const [birthMonth, setBirthMonth] = useState(1);
+  const [birthDay, setBirthDay] = useState(1);
 
   useEffect(() => {
-    const dim = daysInMonth(birthYear, birthMonth);
-    setBirthDay((d) => clamp(d, 1, dim));
+    setBirthDay((d) => clamp(d, 1, daysInMonth(birthYear, birthMonth)));
   }, [birthYear, birthMonth]);
 
-  const resolvedBirthDate = useMemo(() => {
-    if (birthDateISO && /^\d{4}-\d{2}-\d{2}$/.test(birthDateISO)) return birthDateISO;
-    return buildISODate(birthYear, birthMonth, birthDay);
-  }, [birthDateISO, birthYear, birthMonth, birthDay]);
+  const birthDate = useMemo(
+    () => buildISODate(birthYear, birthMonth, birthDay),
+    [birthYear, birthMonth, birthDay]
+  );
 
-  // Quiz state
+  // Quiz
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(null);
 
   // Result
   const [result, setResult] = useState<AnalysisResult | null>(null);
@@ -93,117 +84,59 @@ export default function QuizPage() {
   const total = QUIZ_QUESTIONS.length;
   const progress = Math.round(((currentQuestionIndex + 1) / total) * 100);
 
-  const stepTitle = useMemo(() => {
-    if (step === "info") return "Let’s map your vibe";
-    if (step === "quiz") return "Quick calibration";
-    if (step === "loading") return "Triangulating your code";
-    return "Your result";
-  }, [step]);
-
   /* ============================
      ACTIONS
   ============================ */
 
-  function validateInfo(): string | null {
-    if (!name.trim()) return "Please enter your name.";
-    if (!gender) return "Please select a gender.";
-    if (gender === "other" && !genderOther.trim()) return "Please specify your gender.";
-    if (!city.trim()) return "Please enter your city.";
-    if (!ethnicity.trim()) return "Please enter your ethnicity/background.";
-
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(resolvedBirthDate)) return "Birthdate looks invalid.";
-    const dt = new Date(resolvedBirthDate + "T00:00:00");
-    if (Number.isNaN(dt.getTime())) return "Birthdate looks invalid.";
-
-    return null;
-  }
-
   function start() {
-    const err = validateInfo();
-    if (err) {
-      setError(err);
+    if (!name || !gender || !city || !ethnicity) {
+      setError("Please complete all fields.");
       return;
     }
     setError(null);
     setStep("quiz");
   }
 
-  function goBack() {
-    if (step !== "quiz") return;
-    if (currentQuestionIndex === 0) {
-      setStep("info");
-      return;
-    }
-    setCurrentQuestionIndex((i) => Math.max(0, i - 1));
-    setSelectedOption(null);
-  }
-
-  async function submit(finalAnswers: Record<string, number>) {
-    setStep("loading");
-    setError(null);
-
-    try {
-      const payload = {
-        userName: name.trim(),
-        gender: gender === "other" ? genderOther.trim() : gender,
-        birthDate: resolvedBirthDate,
-        city: city.trim(),
-        ethnicity: ethnicity.trim(),
-        answers: finalAnswers,
-      };
-
-      const res = await fetch("/api/analyse", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const t = await res.text();
-        throw new Error(t || "Analyse failed");
-      }
-
-      const data = (await res.json()) as AnalysisResult;
-      setResult(data);
-      setStep("result");
-
-      try {
-        sessionStorage.setItem("ethos:lastResult", JSON.stringify(data));
-      } catch {
-        // ignore
-      }
-    } catch (e: any) {
-      setError(e?.message || "Something went wrong.");
-      setStep("quiz");
-    }
-  }
-
-  function answer(optionIndex: number) {
-    // keep it snappy + deterministic
-    setSelectedOption(optionIndex);
-
+  function answer(idx: number) {
     const q = QUIZ_QUESTIONS[currentQuestionIndex];
-    const next = { ...answers, [q.id]: optionIndex }; // ✅ 0/1/2 (important)
+    const next = { ...answers, [q.id]: idx };
+
+    setSelected(idx);
     setAnswers(next);
 
-    window.setTimeout(() => {
-      setSelectedOption(null);
-
+    setTimeout(() => {
+      setSelected(null);
       if (currentQuestionIndex < total - 1) {
         setCurrentQuestionIndex((i) => i + 1);
       } else {
         submit(next);
       }
-    }, 160);
+    }, 220);
   }
 
-  function resetAll() {
-    setStep("info");
-    setCurrentQuestionIndex(0);
-    setAnswers({});
-    setSelectedOption(null);
-    setResult(null);
-    setError(null);
+  async function submit(payloadAnswers: Record<string, number>) {
+    setStep("loading");
+    try {
+      const res = await fetch("/api/analyse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userName: name,
+          gender: gender === "other" ? genderOther : gender,
+          birthDate,
+          city,
+          ethnicity,
+          answers: payloadAnswers,
+        }),
+      });
+      if (!res.ok) throw new Error("Analyse failed");
+      const data = await res.json();
+      setResult(data);
+      setStep("result");
+    } catch {
+      setError("Something went wrong.");
+      setStep("quiz");
+    }
   }
 
   /* ============================
@@ -211,378 +144,158 @@ export default function QuizPage() {
   ============================ */
 
   return (
-    <main className="min-h-screen">
-      {/* Bright coastal background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(1200px_700px_at_18%_12%,rgba(14,165,233,0.30),transparent_60%),radial-gradient(1000px_600px_at_85%_18%,rgba(251,113,133,0.22),transparent_55%),radial-gradient(1100px_700px_at_50%_92%,rgba(253,230,138,0.36),transparent_58%),linear-gradient(180deg,#ffffff_0%,#e0f2fe_26%,#fff7ed_68%,#ffffff_100%)]" />
-        <div className="absolute inset-0 opacity-[0.35] bg-[linear-gradient(to_right,rgba(15,23,42,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.06)_1px,transparent_1px)] bg-[size:64px_64px]" />
-      </div>
+    <main className="min-h-screen relative overflow-hidden">
+      {/* Ambient future gradient */}
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(1200px_700px_at_20%_10%,rgba(56,189,248,0.35),transparent_60%),radial-gradient(900px_600px_at_80%_20%,rgba(244,114,182,0.25),transparent_55%),linear-gradient(180deg,#ffffff,#f8fafc)]" />
 
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
-        {/* Top Bar */}
-        <div className="mb-8 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-2xl border border-slate-900/10 bg-white/70 shadow-sm backdrop-blur">
-              <span className="text-lg">🌊</span>
-            </div>
-            <div>
-              <div className="text-sm font-extrabold tracking-tight text-slate-900">Ethos</div>
-              <div className="text-xs text-slate-600">Cultural code mapping</div>
-            </div>
+      <div className="mx-auto max-w-5xl px-4 py-12">
+        {/* Header */}
+        <div className="mb-10 flex items-center justify-between">
+          <div>
+            <div className="text-xs tracking-widest text-slate-500">ETHOS</div>
+            <div className="text-lg font-black text-slate-900">Cultural Code Mapping</div>
           </div>
-
-          <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              className="rounded-2xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-900/5"
-            >
-              Home
-            </Link>
-            <Link
-              href="/codes"
-              className="rounded-2xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-900/5"
-            >
-              Codes
-            </Link>
-          </div>
+          <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-slate-900">
+            Exit
+          </Link>
         </div>
 
-        {/* Heading */}
-        <div className="mb-6">
-          <div className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">{stepTitle}</div>
-          <div className="mt-1 text-sm text-slate-600">
-            Fast, casual, high-signal. No therapy talk — just how you move.
-          </div>
-        </div>
-
-        {error && (
-          <div className="mb-6 rounded-2xl border border-rose-500/20 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-            {error}
-          </div>
-        )}
-
-        {/* Shared card wrapper */}
-        <div className="rounded-3xl border border-slate-900/10 bg-white/70 shadow-[0_20px_80px_rgba(2,6,23,0.10)] backdrop-blur-xl">
+        <AnimatePresence mode="wait">
           {/* INFO */}
           {step === "info" && (
-            <div className="p-6 sm:p-8">
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                {/* Basics */}
-                <div>
-                  <div className="text-sm font-extrabold text-slate-900">Basics</div>
-                  <div className="mt-3 space-y-3">
-                    <label className="block">
-                      <div className="text-xs font-semibold text-slate-700">Name</div>
-                      <input
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="mt-1 w-full rounded-2xl border border-slate-900/10 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none focus:ring-4 focus:ring-sky-200"
-                        placeholder="Your name"
-                      />
-                    </label>
+            <motion.section key="info" {...fadeUp} className={`rounded-3xl bg-white/80 p-8 ${cardHover}`}>
+              <div className="text-2xl font-black mb-2">Let’s calibrate</div>
+              <p className="text-sm text-slate-600 mb-8">
+                This isn’t a personality test. Just instinct.
+              </p>
 
-                    <label className="block">
-                      <div className="text-xs font-semibold text-slate-700">Gender</div>
-                      <div className="mt-1 flex flex-wrap gap-2">
-                        {[
-                          { v: "male", t: "Male" },
-                          { v: "female", t: "Female" },
-                          { v: "other", t: "Other" },
-                        ].map((x) => (
-                          <button
-                            key={x.v}
-                            onClick={() => setGender(x.v as any)}
-                            className={[
-                              "rounded-2xl px-4 py-2 text-sm font-semibold border transition",
-                              gender === x.v
-                                ? "bg-slate-900 text-white border-slate-900"
-                                : "bg-white/80 text-slate-800 border-slate-900/10 hover:bg-white",
-                            ].join(" ")}
-                          >
-                            {x.t}
-                          </button>
-                        ))}
-                      </div>
-                      {gender === "other" && (
-                        <input
-                          value={genderOther}
-                          onChange={(e) => setGenderOther(e.target.value)}
-                          className="mt-2 w-full rounded-2xl border border-slate-900/10 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none focus:ring-4 focus:ring-sky-200"
-                          placeholder="Type it here"
-                        />
-                      )}
-                    </label>
-                  </div>
-                </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <input
+                  className="rounded-2xl border px-4 py-3"
+                  placeholder="Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <input
+                  className="rounded-2xl border px-4 py-3"
+                  placeholder="City"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+                <input
+                  className="rounded-2xl border px-4 py-3"
+                  placeholder="Ethnicity / background"
+                  value={ethnicity}
+                  onChange={(e) => setEthnicity(e.target.value)}
+                />
 
-                {/* Context */}
-                <div>
-                  <div className="text-sm font-extrabold text-slate-900">Context</div>
-                  <div className="mt-3 space-y-3">
-                    <label className="block">
-                      <div className="text-xs font-semibold text-slate-700">Birthdate (fast)</div>
-
-                      {/* Year/Month/Day selectors */}
-                      <div className="mt-1 grid grid-cols-3 gap-2">
-                        <input
-                          type="number"
-                          min={minYear}
-                          max={maxYear}
-                          value={birthYear}
-                          onChange={(e) =>
-                            setBirthYear(clamp(Number(e.target.value || 0), minYear, maxYear))
-                          }
-                          className="w-full rounded-2xl border border-slate-900/10 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none focus:ring-4 focus:ring-sky-200"
-                          placeholder="Year"
-                        />
-                        <select
-                          value={birthMonth}
-                          onChange={(e) => setBirthMonth(Number(e.target.value))}
-                          className="w-full rounded-2xl border border-slate-900/10 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none focus:ring-4 focus:ring-sky-200"
-                        >
-                          {Array.from({ length: 12 }).map((_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              {i + 1}
-                            </option>
-                          ))}
-                        </select>
-                        <select
-                          value={birthDay}
-                          onChange={(e) => setBirthDay(Number(e.target.value))}
-                          className="w-full rounded-2xl border border-slate-900/10 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none focus:ring-4 focus:ring-sky-200"
-                        >
-                          {Array.from({ length: daysInMonth(birthYear, birthMonth) }).map((_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              {i + 1}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* Optional direct input */}
-                      <div className="mt-2">
-                        <div className="text-[11px] font-semibold text-slate-600">
-                          Optional: type directly (YYYY-MM-DD)
-                        </div>
-                        <input
-                          value={birthDateISO}
-                          onChange={(e) => setBirthDateISO(e.target.value)}
-                          className="mt-1 w-full rounded-2xl border border-slate-900/10 bg-white/70 px-4 py-3 text-sm text-slate-900 outline-none focus:ring-4 focus:ring-sky-200"
-                          placeholder={buildISODate(birthYear, birthMonth, birthDay)}
-                        />
-                        <div className="mt-1 text-[11px] text-slate-500">
-                          Using: <span className="font-semibold">{resolvedBirthDate}</span>
-                        </div>
-                      </div>
-                    </label>
-
-                    <label className="block">
-                      <div className="text-xs font-semibold text-slate-700">City</div>
-                      <input
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        className="mt-1 w-full rounded-2xl border border-slate-900/10 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none focus:ring-4 focus:ring-sky-200"
-                        placeholder="Where you live"
-                      />
-                    </label>
-
-                    <label className="block">
-                      <div className="text-xs font-semibold text-slate-700">Ethnicity / background</div>
-                      <input
-                        value={ethnicity}
-                        onChange={(e) => setEthnicity(e.target.value)}
-                        className="mt-1 w-full rounded-2xl border border-slate-900/10 bg-white/80 px-4 py-3 text-sm text-slate-900 outline-none focus:ring-4 focus:ring-sky-200"
-                        placeholder="Short answer"
-                      />
-                      <div className="mt-1 text-[11px] text-slate-500">
-                        We use this for heritage-lens display, not stereotyping.
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-xs text-slate-500">~2 minutes • 3 options per question • tap your instinct.</div>
-                <button
-                  onClick={start}
-                  className="inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-extrabold text-white bg-sky-500 hover:bg-sky-600 transition shadow-[0_14px_34px_rgba(14,165,233,0.25)]"
+                <select
+                  className="rounded-2xl border px-4 py-3"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value as any)}
                 >
-                  Start
-                </button>
+                  <option value="">Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
               </div>
-            </div>
+
+              <div className="mt-6 grid grid-cols-3 gap-2">
+                <input
+                  type="number"
+                  className="rounded-2xl border px-3 py-2"
+                  value={birthYear}
+                  onChange={(e) => setBirthYear(Number(e.target.value))}
+                />
+                <input
+                  type="number"
+                  className="rounded-2xl border px-3 py-2"
+                  value={birthMonth}
+                  onChange={(e) => setBirthMonth(Number(e.target.value))}
+                />
+                <input
+                  type="number"
+                  className="rounded-2xl border px-3 py-2"
+                  value={birthDay}
+                  onChange={(e) => setBirthDay(Number(e.target.value))}
+                />
+              </div>
+
+              {error && <div className="mt-4 text-sm text-rose-600">{error}</div>}
+
+              <button
+                onClick={start}
+                className="mt-8 w-full rounded-2xl bg-sky-500 py-3 font-bold text-white hover:bg-sky-600"
+              >
+                Begin
+              </button>
+            </motion.section>
           )}
 
           {/* QUIZ */}
           {step === "quiz" && (
-            <div className="p-6 sm:p-8">
-              <div className="flex items-center justify-between gap-4">
-                <div className="text-xs font-semibold text-slate-600">
+            <motion.section key="quiz" {...fadeUp} className={`rounded-3xl bg-white/85 p-8 ${cardHover}`}>
+              <div className="flex justify-between mb-6 text-xs font-semibold text-slate-500">
+                <span>
                   Question {currentQuestionIndex + 1} / {total}
-                </div>
-
-                <div className="w-44 sm:w-64">
-                  <div className="h-2 rounded-full bg-slate-900/10">
-                    <div className="h-2 rounded-full bg-sky-500 transition-all" style={{ width: `${progress}%` }} />
-                  </div>
-                </div>
+                </span>
+                <span>{progress}%</span>
               </div>
 
-              <div className="mt-6 text-xl sm:text-2xl font-black tracking-tight text-slate-900">
-                {QUIZ_QUESTIONS[currentQuestionIndex]?.question}
+              <div className="h-2 rounded-full bg-slate-200 mb-8">
+                <div className="h-2 rounded-full bg-sky-500 transition-all" style={{ width: `${progress}%` }} />
               </div>
 
-              <div className="mt-6 grid grid-cols-1 gap-3">
-                {QUIZ_QUESTIONS[currentQuestionIndex]?.options.map((opt, idx) => {
-                  const active = selectedOption === idx;
-                  return (
-                    <button
-                      key={idx}
-                      onClick={() => answer(idx)}
-                      className={[
-                        "w-full rounded-3xl border px-5 py-4 text-left transition",
-                        "bg-white/80 border-slate-900/10 hover:bg-white",
-                        active ? "ring-4 ring-sky-200 scale-[0.998]" : "",
-                      ].join(" ")}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="mt-0.5 grid h-10 w-10 place-items-center rounded-2xl bg-slate-900/5 text-lg">
-                          {opt.emoji ?? "✨"}
-                        </div>
-                        <div>
-                          <div className="text-sm font-semibold text-slate-900">{opt.text}</div>
-                          <div className="mt-1 text-xs text-slate-500">Tap what’s closest. No overthinking.</div>
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
+              <div className="text-2xl font-black mb-6">
+                {QUIZ_QUESTIONS[currentQuestionIndex].question}
               </div>
 
-              <div className="mt-8 flex items-center justify-between">
-                <button
-                  onClick={goBack}
-                  className="rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-900/5 transition"
-                >
-                  ← Back
-                </button>
-                <div className="text-xs text-slate-500">Saved as you go.</div>
+              <div className="space-y-3">
+                {QUIZ_QUESTIONS[currentQuestionIndex].options.map((opt, i) => (
+                  <button
+                    key={i}
+                    onClick={() => answer(i)}
+                    className={`w-full rounded-3xl border px-6 py-4 text-left transition ${
+                      selected === i
+                        ? "border-sky-400 bg-sky-50"
+                        : "bg-white hover:bg-slate-50"
+                    }`}
+                  >
+                    <div className="font-semibold">{opt.text}</div>
+                  </button>
+                ))}
               </div>
-            </div>
+            </motion.section>
           )}
 
           {/* LOADING */}
           {step === "loading" && (
-            <div className="p-8 sm:p-10">
-              <div className="text-sm font-extrabold text-slate-900">Working…</div>
-              <div className="mt-2 text-sm text-slate-600">Triangulating patterns across frameworks.</div>
-
-              <div className="mt-6 h-2 rounded-full bg-slate-900/10 overflow-hidden">
-                <div className="h-2 w-2/3 rounded-full bg-sky-500 animate-pulse" />
+            <motion.section key="loading" {...fadeUp} className="rounded-3xl bg-white/80 p-12 text-center">
+              <div className="text-lg font-black mb-2">Mapping patterns…</div>
+              <div className="text-sm text-slate-600">Aligning layers</div>
+              <div className="mt-6 h-2 w-full rounded-full bg-slate-200 overflow-hidden">
+                <div className="h-2 w-1/2 bg-sky-500 animate-pulse" />
               </div>
-
-              <div className="mt-4 text-xs text-slate-500">
-                If this hangs, it’s usually the API route or missing env vars.
-              </div>
-            </div>
+            </motion.section>
           )}
 
           {/* RESULT */}
           {step === "result" && result && (
-            <div className="p-6 sm:p-8">
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <div className="text-xs font-extrabold text-slate-600">Your primary code</div>
-                  <div className="mt-2 text-3xl font-black tracking-tight text-slate-900">{result.primary.code_name}</div>
-                  <div className="mt-1 text-sm text-slate-600">{result.primary.full_name}</div>
-                  <div className="mt-3 text-sm text-slate-700 max-w-2xl">{result.primary.description}</div>
-                </div>
+            <motion.section key="result" {...fadeUp} className="rounded-3xl bg-white/90 p-10">
+              <div className="text-xs text-slate-500 mb-2">Your primary code</div>
+              <div className="text-3xl font-black mb-2">{result.primary.code_name}</div>
+              <p className="text-slate-700 mb-6">{result.primary.description}</p>
 
-                <div className="rounded-3xl border border-slate-900/10 bg-white/80 px-5 py-4">
-                  <div className="text-xs font-bold text-slate-600">Astrology layer</div>
-                  <div className="mt-1 text-sm font-extrabold text-slate-900">
-                    {result.astrologyData?.sunSign} • {result.astrologyData?.element} • {result.astrologyData?.modality}
-                  </div>
-                  <div className="mt-1 text-xs text-slate-500">Secondary influence only.</div>
-                </div>
-              </div>
-
-              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                {/* Secondary */}
-                <div className="rounded-3xl border border-slate-900/10 bg-white/80 p-5">
-                  <div className="text-xs font-extrabold text-slate-600">Secondary</div>
-                  <div className="mt-2 text-lg font-black text-slate-900">{result.secondary.code_name}</div>
-                  <div className="mt-1 text-xs text-slate-600">{result.secondary.full_name}</div>
-                  <div className="mt-3 text-sm text-slate-700">{result.secondary.description}</div>
-                </div>
-
-                {/* Tertiary */}
-                <div className="rounded-3xl border border-slate-900/10 bg-white/80 p-5">
-                  <div className="text-xs font-extrabold text-slate-600">Tertiary</div>
-                  <div className="mt-2 text-lg font-black text-slate-900">{result.tertiary.code_name}</div>
-                  <div className="mt-1 text-xs text-slate-600">{result.tertiary.full_name}</div>
-                  <div className="mt-3 text-sm text-slate-700">{result.tertiary.description}</div>
-                </div>
-
-                {/* Key traits */}
-                <div className="rounded-3xl border border-slate-900/10 bg-white/80 p-5">
-                  <div className="text-xs font-extrabold text-slate-600">Key traits</div>
-                  <div className="mt-3 space-y-2">
-                    {(result.keyTraits || []).slice(0, 4).map((t, idx) => (
-                      <div key={idx} className="rounded-2xl bg-slate-900/5 px-3 py-2">
-                        <div className="text-xs font-extrabold text-slate-900">
-                          {t.trait} <span className="text-slate-500">({t.score})</span>
-                        </div>
-                        <div className="text-xs text-slate-600">{t.description}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 rounded-3xl border border-slate-900/10 bg-white/80 p-6">
-                <div className="text-xs font-extrabold text-slate-600">Explanation</div>
-                <div className="mt-2 text-sm text-slate-700 whitespace-pre-line">{result.explanation}</div>
-              </div>
-
-              {/* Links */}
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { label: "Primary page", code: result.primary.code_name },
-                    { label: "Secondary page", code: result.secondary.code_name },
-                    { label: "Tertiary page", code: result.tertiary.code_name },
-                  ].map((x) => {
-                    const slug = safeSlugFromCodeName(x.code);
-                    const href = slug ? `/codepages/${slug}` : "/codes";
-                    return (
-                      <Link
-                        key={x.label}
-                        href={href}
-                        className="rounded-2xl border border-slate-900/10 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-900 hover:bg-white transition"
-                      >
-                        {x.label}
-                      </Link>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={resetAll}
-                  className="rounded-2xl px-5 py-3 text-sm font-extrabold text-slate-900 bg-slate-900/5 hover:bg-slate-900/10 transition"
-                >
-                  Retake
-                </button>
-              </div>
-            </div>
+              <button
+                onClick={() => location.reload()}
+                className="mt-6 rounded-2xl border px-5 py-3 font-semibold"
+              >
+                Retake
+              </button>
+            </motion.section>
           )}
-        </div>
-
-        {/* Footer micro */}
-        <div className="mt-6 text-center text-xs text-slate-500">
-          Built for clarity • not labels • you can retake anytime
-        </div>
+        </AnimatePresence>
       </div>
     </main>
   );
