@@ -9,171 +9,199 @@ export type CodeDisplay = {
 };
 
 /**
- * IMPORTANT:
- * - No imports
- * - No dependency on ./types
- * - Keys are inferred automatically
- * - Engine-safe, UI-only
+ * CRITICAL: Keys must match code_name values from culturalCodes.ts exactly
+ * This is the ONLY place where archetype display names are defined
+ * 
+ * Architecture:
+ * - Keys = internal code_name (lowercase, engine-facing)
+ * - label = mythical archetype (user-facing)
+ * - essence = archetype_essence (user-facing tagline)
+ * - description = user-friendly explanation
+ * - icon = visual identifier (for future use)
+ * - tone = emotional category
  */
 
 export const CODE_DISPLAY_MAP = {
-  Shokunin: {
+  khoisan: {
+    label: "Earthlistener",
+    essence: "Presence • attunement • environmental intelligence",
+    description: "You're deeply grounded and perceptive. You notice patterns others miss and move with natural rhythm.",
+    icon: "spiral-stone",
+    tone: "mystic",
+  },
+
+  kayori: {
+    label: "Fireweaver",
+    essence: "Expression • emotional transmission • collective rhythm",
+    description: "You're expressive and communal. Your energy connects people and brings shared meaning to life.",
+    icon: "ember-drum",
+    tone: "electric",
+  },
+
+  sahen: {
+    label: "HorizonWalker",
+    essence: "Endurance • solitude • internal strength",
+    description: "You're quietly resilient and inwardly strong. You're comfortable with solitude and long horizons.",
+    icon: "distant-sun",
+    tone: "calm",
+  },
+
+  enzuka: {
+    label: "Shieldbearer",
+    essence: "Protective leadership • order • responsibility",
+    description: "You lead through strength and clarity. You create safety and structure for those around you.",
+    icon: "iron-circle",
+    tone: "bold",
+  },
+
+  siyuane: {
     label: "Kitsune",
     essence: "Precision • mastery • quiet excellence",
-    description: "You refine instead of rushing. Craft speaks louder than noise.",
-    icon: "kitsune",
+    description: "You're disciplined and precise. You value mastery, structure, and long-term progress over shortcuts.",
+    icon: "folded-blade",
     tone: "calm",
   },
 
-  Ubuntu: {
-    label: "Hearthbear",
-    essence: "Belonging • care • shared strength",
-    description: "You create safety through presence. People feel held around you.",
-    icon: "hearthbear",
+  jaejin: {
+    label: "Harmonist",
+    essence: "Order • respect • social equilibrium",
+    description: "You're respectful and socially attuned. You balance hierarchy with care for harmony.",
+    icon: "balanced-knot",
     tone: "warm",
   },
 
-  Han: {
-    label: "Moonwolf",
-    essence: "Depth • endurance • quiet longing",
-    description: "You carry emotional weight without breaking under it.",
-    icon: "moonwolf",
+  namsea: {
+    label: "Flowbinder",
+    essence: "Adaptation • relational balance • fluid intelligence",
+    description: "You're fluid and adaptable. You move with change rather than against it, finding balance naturally.",
+    icon: "tidal-ring",
+    tone: "calm",
+  },
+
+  shokunin: {
+    label: "BladeSmith",
+    essence: "Craft devotion • repetition • exactness",
+    description: "You're devoted to craft and quiet excellence. Precision through repetition is your way.",
+    icon: "anvil-mark",
+    tone: "calm",
+  },
+
+  khoruun: {
+    label: "SkyRider",
+    essence: "Freedom • resilience • wide-horizon thinking",
+    description: "You're independent and resilient, rooted in vast open environments and free movement.",
+    icon: "wind-horse",
+    tone: "bold",
+  },
+
+  lhumir: {
+    label: "StillMind",
+    essence: "Inner clarity • contemplation • disciplined calm",
+    description: "You're calm and contemplative. You value inner clarity over outward noise.",
+    icon: "silent-flame",
     tone: "mystic",
   },
 
-  Hygge: {
-    label: "Snowhare",
-    essence: "Comfort • softness • emotional warmth",
-    description: "You seek gentle joy and small sanctuaries in everyday life.",
-    icon: "snowhare",
+  yatevar: {
+    label: "CycleKeeper",
+    essence: "Ritual • layered meaning • cosmic order",
+    description: "You're layered and philosophical. You're devoted to ritual precision and cosmic understanding.",
+    icon: "turning-wheel",
+    tone: "mystic",
+  },
+
+  tahiri: {
+    label: "HeartBearer",
+    essence: "Honor • hospitality • expressive warmth",
+    description: "You're passionate and expressive, grounded in shared values and generous warmth.",
+    icon: "open-palm",
     tone: "warm",
   },
 
-  Lagom: {
-    label: "StoneDeer",
-    essence: "Balance • restraint • grounded clarity",
-    description: "You know when enough is enough — and stop there.",
-    icon: "stonedeer",
-    tone: "calm",
-  },
-
-  Sisu: {
-    label: "IronOx",
-    essence: "Resilience • grit • unshakeable will",
-    description: "You endure when others quit. Strength lives quietly in you.",
-    icon: "ironox",
-    tone: "bold",
-  },
-
-  JoieDeVivre: {
-    label: "Sunfox",
-    essence: "Joy • expression • aliveness",
-    description: "Your energy lifts rooms. You remind people how to feel alive.",
-    icon: "sunfox",
+  athenos: {
+    label: "MuseBearer",
+    essence: "Beauty • passion • expressive vitality",
+    description: "You're passionate and social. You deeply appreciate beauty and expression in all forms.",
+    icon: "laurel-flame",
     tone: "electric",
   },
 
-  PuraVida: {
-    label: "WaveOtter",
-    essence: "Ease • presence • natural flow",
-    description: "You move with life instead of forcing it.",
-    icon: "waveotter",
-    tone: "calm",
-  },
-
-  Samba: {
-    label: "FireMacaw",
-    essence: "Rhythm • vitality • emotional release",
-    description: "You express through movement, color, and feeling.",
-    icon: "firemacaw",
-    tone: "electric",
-  },
-
-  Flamenco: {
-    label: "EmberStag",
-    essence: "Intensity • pride • emotional power",
-    description: "You feel deeply and express boldly. Your presence commands space.",
-    icon: "emberstag",
-    tone: "bold",
-  },
-
-  Tarab: {
-    label: "EchoNightingale",
-    essence: "Transcendence • resonance • emotional immersion",
-    description: "You dissolve into moments that move the soul.",
-    icon: "echonightingale",
-    tone: "mystic",
-  },
-
-  Meraki: {
-    label: "GoldenSpider",
-    essence: "Devotion • soulful creation • care",
-    description: "You pour yourself into what you make.",
-    icon: "goldenspider",
-    tone: "calm",
-  },
-
-  WabiSabi: {
-    label: "MossTurtle",
-    essence: "Acceptance • imperfection • quiet wisdom",
-    description: "You see beauty where others see flaws.",
-    icon: "mossturtle",
-    tone: "mystic",
-  },
-
-  Gemuetlichkeit: {
-    label: "OakBadger",
-    essence: "Stability • familiarity • grounded warmth",
-    description: "You value roots, rituals, and steady connection.",
-    icon: "oakbadger",
+  udumai: {
+    label: "AncestorRoot",
+    essence: "Collective memory • environmental unity",
+    description: "You're deeply interconnected and communal. You carry collective memory and environmental connection.",
+    icon: "woven-root",
     tone: "warm",
   },
 
-  Bazaar: {
-    label: "CrowMerchant",
-    essence: "Adaptability • curiosity • exchange",
-    description: "You thrive in movement, ideas, and shared energy.",
-    icon: "crowmerchant",
-    tone: "electric",
+  tjukari: {
+    label: "SonglineKeeper",
+    essence: "Deep time • land-memory • continuity",
+    description: "You carry deep time consciousness. You navigate through land-memory and ancient continuity.",
+    icon: "echo-path",
+    tone: "mystic",
   },
 
-  Vikingur: {
-    label: "StormRaven",
-    essence: "Exploration • courage • defiant freedom",
-    description: "You are driven by horizons, not comfort.",
-    icon: "stormraven",
-    tone: "bold",
+  kinmora: {
+    label: "TimeArchitect",
+    essence: "Cycles • precision • cosmic structure",
+    description: "You understand mathematical cosmology and cyclical time. Precision in cosmic patterns drives you.",
+    icon: "celestial-grid",
+    tone: "mystic",
   },
 
-  Piazza: {
-    label: "MarbleLion",
-    essence: "Presence • influence • civic confidence",
-    description: "You thrive in shared spaces where ideas collide.",
-    icon: "marblelion",
-    tone: "bold",
-  },
-
-  MbukiMvuki: {
-    label: "ThunderMonkey",
-    essence: "Play • disruption • liberating joy",
-    description: "You break seriousness and reset the room.",
-    icon: "thundermonkey",
-    tone: "electric",
-  },
-
-  Dadirri: {
-    label: "StillHeron",
-    essence: "Deep listening • patience • inner quiet",
-    description: "You listen beneath words. Silence is your strength.",
-    icon: "stillheron",
+  siljoa: {
+    label: "FrostSentinel",
+    essence: "Climate attunement • resilience • cooperation",
+    description: "You live in dialogue with climate and place. Your resilience comes from environmental partnership.",
+    icon: "ice-mark",
     tone: "calm",
   },
 
-  CaPhe: {
-    label: "DawnSparrow",
-    essence: "Pause • reflection • gentle ritual",
-    description: "You create meaning through small intentional moments.",
-    icon: "dawnsparrow",
-    tone: "calm",
+  skenari: {
+    label: "FutureGuardian",
+    essence: "Long-horizon ethics • collective responsibility",
+    description: "You hold responsibility to future generations. You think in long horizons and collective care.",
+    icon: "seven-rings",
+    tone: "warm",
+  },
+
+  ashkara: {
+    label: "TruthForger",
+    essence: "Ethical action • moral clarity • integrity",
+    description: "You enact truth through ethical choice. Moral clarity and integrity guide your every action.",
+    icon: "dual-flame",
+    tone: "bold",
+  },
+
+  alethir: {
+    label: "Seeker",
+    essence: "Inquiry • reason • pursuit of truth",
+    description: "Truth emerges through inquiry and dialogue for you. You pursue understanding through reasoning.",
+    icon: "open-eye",
+    tone: "mystic",
   },
 } as const;
+
+/**
+ * Type-safe accessor
+ * Usage: getCodeDisplay("shokunin") returns the display data or undefined
+ */
+export function getCodeDisplay(codeName: string): CodeDisplay | undefined {
+  return CODE_DISPLAY_MAP[codeName as keyof typeof CODE_DISPLAY_MAP];
+}
+
+/**
+ * Get archetype label by code name
+ * Usage: getArchetypeLabel("shokunin") returns "BladeSmith"
+ */
+export function getArchetypeLabel(codeName: string): string {
+  return getCodeDisplay(codeName)?.label || codeName;
+}
+
+/**
+ * Get all code names (keys)
+ */
+export function getAllDisplayCodeNames(): string[] {
+  return Object.keys(CODE_DISPLAY_MAP);
+}
