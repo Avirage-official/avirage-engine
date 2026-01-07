@@ -67,7 +67,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "Earthlistener",
     archetype_essence: "Presence • attunement • environmental intelligence",
     archetype_symbol: "spiral-stone",
-    cultural_lineage: "Southern Africa",
+    origin: "Southern Africa",
     description:
       "Deeply grounded, perceptive, and present. Strong connection to land, rhythm, and subtle pattern awareness.",
     core_concepts: ["presence", "nature", "community", "adaptation"],
@@ -100,7 +100,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "Fireweaver",
     archetype_essence: "Expression • emotional transmission • collective rhythm",
     archetype_symbol: "ember-drum",
-    cultural_lineage: "West Africa",
+    origin: "West Africa",
     description:
       "Expressive, communal, and emotionally rich. Values rhythm, storytelling, and shared meaning.",
     core_concepts: ["expression", "community", "emotion", "connection"],
@@ -131,7 +131,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "HorizonWalker",
     archetype_essence: "Endurance • solitude • internal strength",
     archetype_symbol: "distant-sun",
-    cultural_lineage: "Nomadic desert ecologies",
+    origin: "Nomadic desert ecologies",
     description:
       "Quietly resilient, inwardly strong, and independent. Comfortable with solitude and long horizons.",
     core_concepts: ["endurance", "autonomy", "introspection", "movement"],
@@ -165,7 +165,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "Shieldbearer",
     archetype_essence: "Protective leadership • order • responsibility",
     archetype_symbol: "iron-circle",
-    cultural_lineage: "East & Southern Africa",
+    origin: "East & Southern Africa",
     description:
       "Grounded leadership through strength, clarity, and protection of the group.",
     core_concepts: ["strength", "order", "responsibility", "leadership"],
@@ -199,7 +199,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "Kitsune",
     archetype_essence: "Precision • mastery • quiet excellence",
     archetype_symbol: "folded-blade",
-    cultural_lineage: "East Africa & East Asia",
+    origin: "East Africa & East Asia",
     description:
       "Disciplined, precise, and quietly driven. Values mastery, structure, and long-term progress.",
     core_concepts: ["discipline", "mastery", "order", "craft"],
@@ -233,7 +233,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "Harmonist",
     archetype_essence: "Order • respect • social equilibrium",
     archetype_symbol: "balanced-knot",
-    cultural_lineage: "Korea",
+    origin: "Korea",
     description:
       "Respectful, structured, and socially attuned. Balances hierarchy with care for harmony.",
     core_concepts: ["respect", "structure", "harmony", "duty"],
@@ -264,7 +264,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "Flowbinder",
     archetype_essence: "Adaptation • relational balance • fluid intelligence",
     archetype_symbol: "tidal-ring",
-    cultural_lineage: "Southeast Asia",
+    origin: "Southeast Asia",
     description:
       "Fluid, adaptable, and relational. Moves with change rather than against it.",
     core_concepts: ["flow", "adaptation", "balance", "relationship"],
@@ -302,7 +302,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "BladeSmith",
     archetype_essence: "Craft devotion • repetition • exactness",
     archetype_symbol: "anvil-mark",
-    cultural_lineage: "Japan",
+    origin: "Japan",
     description:
       "Devotion to craft, quiet excellence, and precision through repetition.",
     core_concepts: ["craft", "discipline", "precision", "mastery"],
@@ -338,7 +338,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "SkyRider",
     archetype_essence: "Freedom • resilience • wide-horizon thinking",
     archetype_symbol: "wind-horse",
-    cultural_lineage: "Mongolia",
+    origin: "Mongolia",
     description:
       "Independent, resilient, and rooted in vast open environments.",
     core_concepts: ["freedom", "self-reliance", "nature", "endurance"],
@@ -375,7 +375,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "StillMind",
     archetype_essence: "Inner clarity • contemplation • disciplined calm",
     archetype_symbol: "silent-flame",
-    cultural_lineage: "Tibet",
+    origin: "Tibet",
     description:
       "Calm, contemplative, and meaning-oriented. Values inner clarity over outward noise.",
     core_concepts: ["contemplation", "meaning", "calm", "discipline"],
@@ -409,11 +409,11 @@ export const CULTURAL_CODES: CulturalCode[] = [
 
   {
     id: 11,
-    code_name: "Yatevar",
+    code_name: "yatevar",
     archetype_name: "CycleKeeper",
     archetype_essence: "Ritual • layered meaning • cosmic order",
     archetype_symbol: "turning-wheel",
-    cultural_lineage: "South Asia",
+    origin: "South Asia",
     description:
       "Layered, philosophical, and devoted to ritual precision.",
     core_concepts: ["ritual", "cycles", "devotion", "order"],
@@ -450,7 +450,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "HeartBearer",
     archetype_essence: "Honor • hospitality • expressive warmth",
     archetype_symbol: "open-palm",
-    cultural_lineage: "Middle East & North Africa",
+    origin: "Middle East & North Africa",
     description:
       "Passionate, expressive, and grounded in shared values.",
     core_concepts: ["honor", "hospitality", "expression", "kinship"],
@@ -489,7 +489,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "MuseBearer",
     archetype_essence: "Beauty • passion • expressive vitality",
     archetype_symbol: "laurel-flame",
-    cultural_lineage: "Mediterranean",
+    origin: "Mediterranean",
     description:
       "Passionate, social, and deeply appreciative of beauty and expression.",
     core_concepts: ["beauty", "passion", "community", "expression"],
@@ -527,7 +527,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "AncestorRoot",
     archetype_essence: "Collective memory • environmental unity",
     archetype_symbol: "woven-root",
-    cultural_lineage: "South Pacific",
+    origin: "South Pacific",
     description:
       "Deeply interconnected, communal, and environment-focused.",
     core_concepts: ["collective", "ancestors", "environment", "strength"],
@@ -564,7 +564,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "SonglineKeeper",
     archetype_essence: "Deep time • land-memory • continuity",
     archetype_symbol: "echo-path",
-    cultural_lineage: "Australia",
+    origin: "Australia",
     description:
       "Deep time consciousness, songline navigation, and ecological intelligence.",
     core_concepts: ["continuity", "land-law", "memory", "navigation"],
@@ -601,7 +601,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "TimeArchitect",
     archetype_essence: "Cycles • precision • cosmic structure",
     archetype_symbol: "celestial-grid",
-    cultural_lineage: "Mesoamerica",
+    origin: "Mesoamerica",
     description:
       "Mathematical cosmology and cyclical time consciousness.",
     core_concepts: ["cycles", "time", "precision", "cosmology"],
@@ -636,7 +636,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "FrostSentinel",
     archetype_essence: "Climate attunement • resilience • cooperation",
     archetype_symbol: "ice-mark",
-    cultural_lineage: "Circumpolar Arctic",
+    origin: "Circumpolar Arctic",
     description:
       "Living in dialogue with climate and place.",
     core_concepts: ["climate", "resilience", "cooperation", "attunement"],
@@ -671,7 +671,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "FutureGuardian",
     archetype_essence: "Long-horizon ethics • collective responsibility",
     archetype_symbol: "seven-rings",
-    cultural_lineage: "Eastern Woodlands, North America",
+    origin: "Eastern Woodlands, North America",
     description:
       "Responsibility to future generations through consensus governance.",
     core_concepts: ["future", "consensus", "peace", "responsibility"],
@@ -704,7 +704,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "TruthForger",
     archetype_essence: "Ethical action • moral clarity • integrity",
     archetype_symbol: "dual-flame",
-    cultural_lineage: "Ancient Persia",
+    origin: "Ancient Persia",
     description:
       "Truth enacted through ethical choice and action.",
     core_concepts: ["truth", "ethics", "action", "purity"],
@@ -736,7 +736,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
     archetype_name: "Seeker",
     archetype_essence: "Inquiry • reason • pursuit of truth",
     archetype_symbol: "open-eye",
-    cultural_lineage: "Ancient Greece",
+    origin: "Ancient Greece",
     description:
       "Truth emerges through inquiry, dialogue, and excellence.",
     core_concepts: ["inquiry", "reason", "truth", "excellence"],
