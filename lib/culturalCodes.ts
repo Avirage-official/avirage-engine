@@ -409,7 +409,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
 
   {
     id: 11,
-    code_name: "sanskara",
+    code_name: "Yatevar",
     archetype_name: "CycleKeeper",
     archetype_essence: "Ritual • layered meaning • cosmic order",
     archetype_symbol: "turning-wheel",
