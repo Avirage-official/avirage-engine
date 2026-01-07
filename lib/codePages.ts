@@ -1,17 +1,12 @@
 /**
  * CODE PAGES
  *
- * PURPOSE:
- * - Long-form narrative + meaning layer for each Cultural Code
- * - Used ONLY for display (results pages, deep dives)
- * - Does NOT affect scoring, matching, or traits
- *
- * DESIGN PRINCIPLES:
- * - No ancestry claims
- * - No moral framing (good/bad)
- * - Language = reflective, grounded, human
- * - Identity = operating style, not culture
+ * Narrative + meaning layer for each Cultural Code.
+ * Used ONLY for display.
+ * Does NOT affect scoring or matching.
  */
+
+export type CodeSlug = string
 
 export interface CodePageSection {
   title: string
@@ -32,145 +27,89 @@ export interface CodePage {
 }
 
 /* ======================================================
-   CODE PAGES (CANONICAL)
+   CODE PAGES (CANONICAL CONTENT)
 ====================================================== */
 
-export const CODE_PAGES: Record<string, CodePage> = {
+export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   Shokunin: {
     codeName: "Shokunin",
     headline: "The Path of Quiet Mastery",
-    subheadline: "You are wired for depth, precision, and long-term excellence.",
+    subheadline: "Depth over speed. Precision over noise.",
     essence:
-      "Shokunin represents an operating style centered on craft, discipline, and refinement. You are not driven by speed or recognition, but by the internal satisfaction of doing something properly. Your nervous system calms when standards are clear and quality is respected.",
-
+      "You are wired for craft, focus, and refinement. Progress comes through consistency and care, not urgency.",
     sections: [
       {
-        title: "How You Move Through the World",
+        title: "How You Move",
         content: [
-          "You tend to approach life the way a craftsperson approaches their work: patiently, deliberately, and with care.",
-          "You notice details others miss, and you feel unsettled when things are rushed or sloppy.",
-          "Progress for you is not about quick wins, but about steady accumulation of skill and clarity."
-        ]
-      },
-      {
-        title: "What Energizes You",
-        content: [
-          "Deep focus and uninterrupted time.",
-          "Clear systems where effort directly translates into improvement.",
-          "Environments that reward consistency rather than urgency."
-        ]
-      },
-      {
-        title: "What Drains You",
-        content: [
-          "Chaotic environments with constant last-minute changes.",
-          "Being forced to prioritize speed over quality.",
-          "Work cultures that dismiss care as perfectionism."
-        ]
-      },
-      {
-        title: "Growth Path",
-        content: [
-          "Your growth accelerates when you protect your focus and choose fewer, higher-quality commitments.",
-          "Learning to release work when it is *good enough* — without abandoning standards — prevents burnout.",
-          "Teaching or mentoring others can deepen your own mastery."
+          "You prefer depth over breadth.",
+          "You notice flaws others ignore.",
+          "You value systems that reward patience."
         ]
       }
     ],
-
     tensions: {
       strengths: [
-        "Exceptional attention to detail",
-        "High internal standards",
-        "Strong sense of personal responsibility",
-        "Ability to master complex systems"
+        "Exceptional focus",
+        "High standards",
+        "Mastery-driven"
       ],
       challenges: [
-        "Overworking in pursuit of excellence",
-        "Difficulty operating in chaotic environments",
-        "Being misunderstood as slow or rigid",
-        "Reluctance to delegate"
+        "Overworking",
+        "Difficulty delegating",
+        "Struggles in chaotic systems"
       ]
     },
-
     reflectionPrompts: [
-      "Where in your life does quality matter more than speed?",
-      "What would it look like to protect your focus more intentionally?",
-      "Are your standards serving you — or exhausting you?"
+      "Where does quality matter most in your life?",
+      "What deserves your full attention?"
     ]
   },
 
   Renara: {
     codeName: "Renara",
     headline: "The Art of Balance",
-    subheadline: "You create stability through harmony, not force.",
+    subheadline: "Stability through harmony.",
     essence:
-      "Renara reflects an operating style focused on balance, relational awareness, and emotional intelligence. You are sensitive to atmosphere, tone, and group dynamics. Rather than dominating systems, you soften them — creating flow where others create friction.",
-
+      "You stabilize systems by sensing imbalance early and softening tension before it escalates.",
     sections: [
       {
-        title: "How You Move Through the World",
+        title: "How You Move",
         content: [
-          "You instinctively sense imbalance — in rooms, conversations, and systems.",
-          "You often act as a quiet stabilizer, smoothing tension before it escalates.",
-          "Your influence is subtle, but deeply felt."
-        ]
-      },
-      {
-        title: "What Energizes You",
-        content: [
-          "Calm, aesthetically pleasing environments.",
-          "Predictable rhythms and respectful interactions.",
-          "Spaces where cooperation is valued over competition."
-        ]
-      },
-      {
-        title: "What Drains You",
-        content: [
-          "Aggressive conflict and constant confrontation.",
-          "Chaotic systems with unclear boundaries.",
-          "Being forced to choose sides in unnecessary tension."
-        ]
-      },
-      {
-        title: "Growth Path",
-        content: [
-          "Your growth deepens when you learn to set firmer boundaries without abandoning kindness.",
-          "Expressing needs early prevents quiet resentment.",
-          "You are most effective when balance includes yourself, not just others."
+          "You sense emotional undercurrents.",
+          "You prioritize harmony over dominance."
         ]
       }
     ],
-
     tensions: {
       strengths: [
-        "Strong emotional awareness",
-        "Ability to reduce conflict",
-        "Consistency and reliability",
-        "High relational intelligence"
+        "Emotional intelligence",
+        "Conflict reduction",
+        "Relational awareness"
       ],
       challenges: [
-        "Avoiding necessary confrontation",
-        "Over-accommodating others",
-        "Suppressing personal desires for harmony",
-        "Difficulty thriving in aggressive environments"
+        "Avoiding confrontation",
+        "Over-accommodation"
       ]
     },
-
     reflectionPrompts: [
-      "Where are you maintaining harmony at your own expense?",
-      "What boundaries would create more balance in your life?",
-      "How do you recharge when emotional energy runs low?"
+      "Where are you maintaining balance at a cost?",
+      "What boundaries restore harmony?"
     ]
   }
 }
 
 /* ======================================================
-   HELPERS
+   SLUG HELPERS (REQUIRED BY UI)
 ====================================================== */
 
-export function getCodePage(codeName: string): CodePage | null {
-  return CODE_PAGES[codeName] ?? null
+export const CODE_SLUGS = Object.keys(CODE_PAGES) as CodeSlug[]
+
+export function isCodeSlug(value: string): value is CodeSlug {
+  return value in CODE_PAGES
+}
+
+export function getCodePage(slug: CodeSlug): CodePage {
+  return CODE_PAGES[slug]
 }
 
 export function getAllCodePages(): CodePage[] {
