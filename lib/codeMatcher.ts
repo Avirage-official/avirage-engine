@@ -35,7 +35,7 @@ interface CodeRequirement {
 }
 
 /* =========================================================
-   DATA (FIXED: All codeName values now lowercase to match culturalCodes.ts)
+   DATA (unchanged content, but we sanitize at runtime)
 ========================================================= */
 
 const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
