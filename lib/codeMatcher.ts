@@ -7,7 +7,7 @@
  * - Prevents double-counting across core/supporting/incompatible
  * - Adds stronger core-coverage shaping (core matters more than supporting)
  * - Uses confidence-aware scoring (pattern confidence influences contribution)
- * - Produces more defensible top-3 ordering (less “random” close ties)
+ * - Produces more defensible top-3 ordering (less "random" close ties)
  */
 
 import { DetectedPatterns, PatternMatch } from "./patternDetector";
@@ -35,13 +35,13 @@ interface CodeRequirement {
 }
 
 /* =========================================================
-   DATA (unchanged content, but we sanitize at runtime)
+   DATA (FIXED: All codeName values now lowercase to match culturalCodes.ts)
 ========================================================= */
 
 const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 1,
-    codeName: "Khoisan",
+    codeName: "khoisan",
     fullName: "San/Khoisan",
     corePatterns: [4, 3, 6, 15, 26],
     supportingPatterns: [9, 17, 19, 20],
@@ -50,7 +50,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 2,
-    codeName: "Kayori",
+    codeName: "kayori",
     fullName: "Yoruba",
     corePatterns: [1, 7, 13, 18, 25],
     supportingPatterns: [4, 21, 22, 27],
@@ -59,7 +59,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 3,
-    codeName: "Sahen",
+    codeName: "sahen",
     fullName: "Tuareg",
     corePatterns: [1, 16, 15, 26, 29],
     supportingPatterns: [17, 19, 14, 2],
@@ -68,16 +68,16 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 4,
-    codeName: "Enzuka",
+    codeName: "enzuka",
     fullName: "Maasai + Zulu Fusion",
     corePatterns: [12, 21, 11, 20, 22],
     supportingPatterns: [2, 8, 18, 26],
-    incompatiblePatterns: [17, 20, 29], // NOTE: overlaps (20). We'll sanitize.
+    incompatiblePatterns: [17, 20, 29],
     minimumCoreMatch: 3.5,
   },
   {
     codeId: 5,
-    codeName: "Siyuane",
+    codeName: "siyuane",
     fullName: "Ethiopian + Han Chinese Fusion",
     corePatterns: [8, 22, 24, 14, 30],
     supportingPatterns: [5, 10, 21, 25],
@@ -86,7 +86,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 6,
-    codeName: "Jaejin",
+    codeName: "jaejin",
     fullName: "Korean",
     corePatterns: [11, 21, 14, 8, 7],
     supportingPatterns: [2, 22, 19, 12],
@@ -95,7 +95,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 7,
-    codeName: "Namsea",
+    codeName: "namsea",
     fullName: "Vietnamese + Thai Fusion",
     corePatterns: [6, 9, 20, 27, 15],
     supportingPatterns: [4, 18, 21, 26],
@@ -104,7 +104,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 8,
-    codeName: "Shokunin",
+    codeName: "shokunin",
     fullName: "Japanese",
     corePatterns: [7, 5, 8, 4, 11],
     supportingPatterns: [2, 22, 14, 15, 21],
@@ -113,7 +113,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 9,
-    codeName: "Khoruun",
+    codeName: "khoruun",
     fullName: "Mongolian",
     corePatterns: [9, 29, 15, 26, 12],
     supportingPatterns: [3, 2, 17, 20],
@@ -122,7 +122,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 10,
-    codeName: "Lhumir",
+    codeName: "lhumir",
     fullName: "Tibetan",
     corePatterns: [1, 6, 12, 16, 25],
     supportingPatterns: [10, 17, 21, 22],
@@ -131,7 +131,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 11,
-    codeName: "Yatevar",
+    codeName: "yatevar",
     fullName: "Indian Vedic + Nahua Fusion",
     corePatterns: [1, 16, 25, 22, 8],
     supportingPatterns: [7, 13, 15, 26],
@@ -140,7 +140,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 12,
-    codeName: "Renara",
+    codeName: "renara",
     fullName: "Javanese",
     corePatterns: [8, 12, 14, 22, 24],
     supportingPatterns: [10, 21, 20, 7],
@@ -149,7 +149,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 13,
-    codeName: "Karayni",
+    codeName: "karayni",
     fullName: "Balinese + Quechua Fusion",
     corePatterns: [15, 21, 25, 26, 28],
     supportingPatterns: [4, 7, 22, 18],
@@ -158,7 +158,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 14,
-    codeName: "Wohaka",
+    codeName: "wohaka",
     fullName: "Maori + Lakota Fusion",
     corePatterns: [15, 21, 22, 25, 26],
     supportingPatterns: [13, 18, 20, 27],
@@ -167,7 +167,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 15,
-    codeName: "Tjukari",
+    codeName: "tjukari",
     fullName: "Aboriginal Australian",
     corePatterns: [1, 4, 3, 6, 26],
     supportingPatterns: [15, 22, 25, 19],
@@ -176,7 +176,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 16,
-    codeName: "Kinmora",
+    codeName: "kinmora",
     fullName: "Maya",
     corePatterns: [1, 3, 5, 22, 25],
     supportingPatterns: [8, 24, 30, 26],
@@ -185,7 +185,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 17,
-    codeName: "Siljoa",
+    codeName: "siljoa",
     fullName: "Inuit + Sami Fusion",
     corePatterns: [3, 15, 26, 12, 9],
     supportingPatterns: [2, 17, 19, 24],
@@ -194,7 +194,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 18,
-    codeName: "Skenari",
+    codeName: "skenari",
     fullName: "Haudenosaunee",
     corePatterns: [8, 21, 22, 24, 30],
     supportingPatterns: [25, 28, 20, 26],
@@ -203,7 +203,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 19,
-    codeName: "Ashkara",
+    codeName: "ashkara",
     fullName: "Persian/Zoroastrian",
     corePatterns: [1, 16, 25, 11, 22],
     supportingPatterns: [7, 8, 12, 26],
@@ -212,7 +212,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 20,
-    codeName: "Alethir",
+    codeName: "alethir",
     fullName: "Ancient Greek",
     corePatterns: [1, 3, 16, 25, 23],
     supportingPatterns: [13, 18, 7, 26],
@@ -268,7 +268,7 @@ const CODE_REQUIREMENTS: CodeRequirement[] = CODE_REQUIREMENTS_RAW.map(sanitizeR
  * Weight policy:
  * - Core patterns dominate (signal of identity)
  * - Supporting patterns add flavor
- * - Incompatibles penalize, but cannot “erase” a strong core
+ * - Incompatibles penalize, but cannot "erase" a strong core
  */
 const WEIGHTS = {
   core: 1.0,
@@ -309,7 +309,7 @@ function avgConfidence(matches: PatternMatch[]): number {
 function calculateCodeMatch(codeReq: CodeRequirement, patterns: DetectedPatterns): CulturalCodeMatch {
   let score = 0;
 
-  // Max possible is “best-case” sum of weights (core + supporting)
+  // Max possible is "best-case" sum of weights (core + supporting)
   // (We exclude incompatible from maxPossible so penalty can pull score down.)
   let maxPossible = 0;
 
@@ -369,7 +369,7 @@ function calculateCodeMatch(codeReq: CodeRequirement, patterns: DetectedPatterns
   const matchPercentage = clamp100(Math.round(rawPct));
 
   // Confidence shaping:
-  // - coreMeets uses your existing minimumCoreMatch (in “weighted confidence” units)
+  // - coreMeets uses your existing minimumCoreMatch (in "weighted confidence" units)
   // - also consider core coverage ratio + avg confidence of core hits
   const coreMeets = coreHit >= codeReq.minimumCoreMatch;
   const coreCoverage = coreMax > 0 ? coreHit / coreMax : 0; // 0..1
