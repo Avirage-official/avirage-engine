@@ -110,6 +110,6 @@ function convertBig5ToScore(level: string): number {
  * Code descriptions (reused from analyse route)
  */
 function getCodeDescription(codeName: string): string {
-  const code = getCulturalCode(codeName.toLowerCase());
-  return code?.archetype_essence || code?.description || "Cultural code";
+  const code = getCulturalCode(codeName);  // ✅ Already lowercase
+  return code?.description || "Cultural code description";  // ✅ Right field
 }
