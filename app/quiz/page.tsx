@@ -11,6 +11,7 @@ import {
   useTransform,
   useInView,
 } from "framer-motion";
+import { CODE_PAGES, CODE_SLUGS } from "@/lib/codePages";
 
 /**
  * AVIRAGE LANDING PAGE (2025 REDESIGN)
@@ -25,57 +26,50 @@ import {
  * - Floating organic shapes
  */
 
-// Sample code data (replace with actual data later)
-const FEATURED_CODES = [
-  { 
-    slug: "shokunin", 
-    name: "Shokunin", 
-    title: "The Craftsperson",
-    desc: "Precision • Mastery • Excellence",
-    color: "from-blue-500 to-cyan-500",
-    icon: "🎯"
-  },
-  { 
-    slug: "khoisan", 
-    name: "Khoisan", 
-    title: "The Earthlistener",
-    desc: "Presence • Attunement • Flow",
-    color: "from-amber-500 to-orange-500",
-    icon: "🌍"
-  },
-  { 
-    slug: "yatevar", 
-    name: "Yatevar", 
-    title: "The Philosopher-Warrior",
-    desc: "Order • Duty • Wisdom",
-    color: "from-purple-500 to-pink-500",
-    icon: "⚡"
-  },
-  { 
-    slug: "namsea", 
-    name: "Namsea", 
-    title: "The Flow Master",
-    desc: "Grace • Adaptability • Ease",
-    color: "from-teal-500 to-emerald-500",
-    icon: "💧"
-  },
-  { 
-    slug: "alethir", 
-    name: "Alethir", 
-    title: "The Truth Seeker",
-    desc: "Inquiry • Reason • Pursuit",
-    color: "from-indigo-500 to-blue-500",
-    icon: "👁️"
-  },
-  { 
-    slug: "enzuka", 
-    name: "Enzuka", 
-    title: "The Collective Warrior",
-    desc: "Strength • Honor • Unity",
-    color: "from-red-500 to-rose-500",
-    icon: "🛡️"
-  },
-];
+// Icon mapping for featured codes
+const CODE_ICONS: Record<string, string> = {
+  shokunin: "🎯",
+  khoisan: "🌍",
+  yatevar: "⚡",
+  namsea: "💧",
+  alethir: "👁️",
+  enzuka: "🛡️",
+  kayori: "🎭",
+  sahen: "🏜️",
+};
+
+// Gradient mapping for featured codes
+const CODE_GRADIENTS: Record<string, string> = {
+  shokunin: "from-blue-500 to-cyan-500",
+  khoisan: "from-amber-500 to-orange-500",
+  yatevar: "from-purple-500 to-pink-500",
+  namsea: "from-teal-500 to-emerald-500",
+  alethir: "from-indigo-500 to-blue-500",
+  enzuka: "from-red-500 to-rose-500",
+  kayori: "from-fuchsia-500 to-purple-500",
+  sahen: "from-orange-500 to-red-500",
+};
+
+// Get 6 featured codes from actual data
+const FEATURED_CODE_SLUGS = ["shokunin", "khoisan", "yatevar", "namsea", "alethir", "enzuka"];
+
+const FEATURED_CODES = FEATURED_CODE_SLUGS.map(slug => {
+  const slugLower = slug.toLowerCase();
+  // CODE_PAGES keys are capitalized, so we need to find the right key
+  const codeKey = Object.keys(CODE_PAGES).find(k => k.toLowerCase() === slugLower);
+  if (!codeKey) return null;
+  
+  const codeData = CODE_PAGES[codeKey];
+  return {
+    slug: slugLower,
+    name: codeData.codeName,
+    title: codeData.fullName,
+    desc: codeData.lens.title,
+    snapshot: codeData.snapshot,
+    color: CODE_GRADIENTS[slugLower] || "from-gray-500 to-gray-600",
+    icon: CODE_ICONS[slugLower] || "✨"
+  };
+}).filter((code): code is NonNullable<typeof code> => code !== null);
 
 // Magnetic button component
 function MagneticButton({ 
@@ -456,15 +450,15 @@ export default function HomePage() {
 
                     {/* Title */}
                     <h3 className="text-2xl font-black mb-2 group-hover:text-white/90 transition-colors">
-                      {code.name}
+                      {code.title}
                     </h3>
 
                     {/* Subtitle */}
-                    <p className="text-sm text-white/50 mb-4 font-semibold">{code.title}</p>
+                    <p className="text-sm text-white/50 mb-4 font-semibold">{code.desc}</p>
 
                     {/* Description */}
                     <p className="text-white/70 text-sm leading-relaxed mb-6">
-                      {code.desc}
+                      {code.snapshot}
                     </p>
 
                     {/* Arrow */}
