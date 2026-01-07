@@ -2,8 +2,8 @@
  * CODE PAGES
  *
  * Display-only content model.
- * This file is a SUPERSET of all UI expectations.
- * It does NOT affect scoring or algorithms.
+ * SUPERSET of UI expectations.
+ * Does NOT affect scoring or algorithms.
  */
 
 export type CodeSlug = string;
@@ -43,7 +43,10 @@ export interface CodePageSection {
 export interface CodePage {
   codeName: string;
 
-  /* ---- UI blocks ---- */
+  // HERO
+  snapshot: string;
+
+  // UI blocks
   lens: CodeLens;
   traits: CodeTraitsBlock;
   recommendations: CodeRecommendationsBlock;
@@ -52,7 +55,7 @@ export interface CodePage {
   watchouts: string[];
   tryThisWeek: string[];
 
-  /* ---- Narrative ---- */
+  // Narrative
   headline: string;
   subheadline: string;
   essence: string;
@@ -69,6 +72,9 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   Shokunin: {
     codeName: "Shokunin",
 
+    snapshot:
+      "You’re at your best when you can go deep, move with intention, and produce work that feels clean, precise, and worth your name.",
+
     lens: {
       title: "Quiet Mastery",
       description: "Precision, patience, and craft-first thinking.",
@@ -82,7 +88,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
     traits: {
       headline: "Core Traits",
       highlights: [
-        { label: "Craft-driven", meaning: "Motivated by mastery, not shortcuts." },
+        { label: "Craft-driven", meaning: "Motivated by mastery and refinement, not shortcuts." },
         { label: "Detail-oriented", meaning: "You naturally refine what others overlook." },
         { label: "Focused", meaning: "Deep work suits you better than rapid switching." },
       ],
@@ -97,26 +103,16 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
         "Quiet, design-forward neighborhoods.",
         "Workspaces that respect order and tools.",
       ],
-      music: [
-        "Instrumental, ambient, minimal electronic.",
-      ],
+      music: ["Instrumental, ambient, minimal electronic."],
       activities: [
         "Skill-based hobbies (craft, coding, cooking).",
         "Training that rewards technique over chaos.",
       ],
     },
 
-    strengths: [
-      "Exceptional attention to detail",
-      "Consistency and reliability",
-      "Ability to master complex systems",
-    ],
+    strengths: ["Exceptional attention to detail", "Consistency and reliability", "Ability to master complex systems"],
 
-    watchouts: [
-      "Overworking in pursuit of perfection",
-      "Difficulty delegating",
-      "Burnout in chaotic environments",
-    ],
+    watchouts: ["Overworking in pursuit of perfection", "Difficulty delegating", "Burnout in chaotic environments"],
 
     tryThisWeek: [
       "Protect one uninterrupted block of deep work.",
@@ -130,40 +126,23 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
       "You’re wired for craft, focus, and refinement. Progress comes through consistency and care, not urgency.",
 
     sections: [
-      {
-        title: "How You Move",
-        content: [
-          "You prefer depth over breadth.",
-          "You refine until things feel correct.",
-        ],
-      },
-      {
-        title: "What Energizes You",
-        content: [
-          "Clear standards.",
-          "Time for deep focus.",
-          "Respect for quality.",
-        ],
-      },
+      { title: "How You Move", content: ["You prefer depth over breadth.", "You refine until things feel correct."] },
+      { title: "What Energizes You", content: ["Clear standards.", "Time for deep focus.", "Respect for quality."] },
     ],
 
-    reflectionPrompts: [
-      "Where does quality matter most right now?",
-      "What deserves your full attention?",
-    ],
+    reflectionPrompts: ["Where does quality matter most right now?", "What deserves your full attention?"],
   },
 
   Renara: {
     codeName: "Renara",
 
+    snapshot:
+      "You create stability by softening friction — you’re the person who makes environments feel calmer, smoother, and more livable.",
+
     lens: {
       title: "Balance & Harmony",
       description: "Stability through calm awareness and soft power.",
-      inPlainEnglish: [
-        "You sense tension quickly.",
-        "You smooth conflict naturally.",
-        "You thrive in calm environments.",
-      ],
+      inPlainEnglish: ["You sense tension quickly.", "You smooth conflict naturally.", "You thrive in calm environments."],
     },
 
     traits: {
@@ -176,59 +155,26 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
     },
 
     recommendations: {
-      lifestyle: [
-        "Keep routines gentle and consistent.",
-        "Choose stability over drama.",
-      ],
-      places: [
-        "Calm, beautiful neighborhoods.",
-        "Spaces with respectful social rhythm.",
-      ],
-      music: [
-        "Warm, melodic, emotionally balanced music.",
-      ],
-      activities: [
-        "Yoga, walking, swimming.",
-        "Creative flow activities.",
-      ],
+      lifestyle: ["Keep routines gentle and consistent.", "Choose stability over drama."],
+      places: ["Calm, beautiful neighborhoods.", "Spaces with respectful social rhythm."],
+      music: ["Warm, melodic, emotionally balanced music."],
+      activities: ["Yoga, walking, swimming.", "Creative flow activities."],
     },
 
-    strengths: [
-      "Emotional intelligence",
-      "Conflict reduction",
-      "Relationship awareness",
-    ],
+    strengths: ["Emotional intelligence", "Conflict reduction", "Relationship awareness"],
 
-    watchouts: [
-      "Avoiding necessary confrontation",
-      "Over-accommodating others",
-    ],
+    watchouts: ["Avoiding necessary confrontation", "Over-accommodating others"],
 
-    tryThisWeek: [
-      "Say no once without explaining.",
-      "Do one thing purely for calm.",
-      "Set one clear boundary.",
-    ],
+    tryThisWeek: ["Say no once without explaining.", "Do one thing purely for calm.", "Set one clear boundary."],
 
     headline: "The Art of Balance",
     subheadline: "Stability through harmony.",
     essence:
       "You stabilize systems by sensing imbalance early and softening friction before it escalates.",
 
-    sections: [
-      {
-        title: "How You Move",
-        content: [
-          "You sense emotional undercurrents.",
-          "You prioritize cooperation.",
-        ],
-      },
-    ],
+    sections: [{ title: "How You Move", content: ["You sense emotional undercurrents.", "You prioritize cooperation."] }],
 
-    reflectionPrompts: [
-      "Where are you maintaining balance at your expense?",
-      "What boundary would restore harmony?",
-    ],
+    reflectionPrompts: ["Where are you maintaining balance at your expense?", "What boundary would restore harmony?"],
   },
 };
 
