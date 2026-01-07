@@ -152,7 +152,7 @@ export default function QuizPage() {
         answers: finalAnswers,
       };
 
-      const res = await fetch("/api/analyze", {
+      const res = await fetch("/api/analyse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -160,7 +160,7 @@ export default function QuizPage() {
 
       if (!res.ok) {
         const t = await res.text();
-        throw new Error(t || "Analyze failed");
+        throw new Error(t || "Analyse failed");
       }
 
       const data = (await res.json()) as AnalysisResult;
