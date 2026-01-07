@@ -1,39 +1,38 @@
 /**
- * FRAMEWORK CALCULATOR
- * Converts 35 quiz answers into Big 5, MBTI, Enneagram, Astrology scores
+ * FRAMEWORK CALCULATOR (REVIEW + UPGRADE)
+ * Converts 35 situational quiz answers into:
+ * - Big 5
+ * - MBTI
+ * - Enneagram (core + wing)
+ * - Astrology (sun sign + element + modality)
  *
- * Upgrades (non-breaking):
- * - Neutral handling for missing answers (prevents skew)
- * - Smoother Big5 scaling (still 3 options)
- * - MBTI returns optional strength scores (kept backward compatible)
- * - Enneagram: improved scoring + wing selection via feature-fit (less arbitrary)
+ * Key upgrades:
+ * - Missing answers => neutral (prevents bias)
+ * - Smoother scaling for 3-choice items
+ * - MBTI returns optional strength (0-100 per dichotomy)
+ * - Enneagram uses stronger separation + wing affinity model
  */
 
 export interface QuizAnswers {
-  [questionId: string]: number; // question ID → selected option index (0, 1, or 2)
+  [questionId: string]: number; // question ID -> option index (0,1,2)
 }
 
 export interface Big5Scores {
-  openness: number;           // 0-100
-  conscientiousness: number;  // 0-100
-  extraversion: number;       // 0-100
-  agreeableness: number;      // 0-100
-  neuroticism: number;        // 0-100 (higher = more reactive)
+  openness: number; // 0-100
+  conscientiousness: number;
+  extraversion: number;
+  agreeableness: number;
+  neuroticism: number; // higher = more reactive
 }
 
 export interface MBTIType {
-  type: string;               // e.g., "ISTJ"
+  type: string; // e.g., "INTJ"
   preferences: {
     IE: "I" | "E";
     SN: "S" | "N";
     TF: "T" | "F";
     JP: "J" | "P";
   };
-
-  /**
-   * Optional: strength of each dichotomy, 0-100 (how strongly one side won)
-   * Backward compatible because it's optional.
-   */
   strength?: {
     IE: number;
     SN: number;
@@ -44,12 +43,8 @@ export interface MBTIType {
 
 export interface EnneagramType {
   coreType: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  wing: string;                     // e.g., "6w5", "4w3"
-  scores: Record<number, number>;   // Score for each type 1-9
-
-  /**
-   * Optional: wing affinity scores (diagnostic)
-   */
+  wing: string; // e.g., "6w5"
+  scores: Record<number, number>;
   wingAffinity?: {
     lowerWing: number;
     higherWing: number;
@@ -57,9 +52,9 @@ export interface EnneagramType {
 }
 
 export interface AstrologyData {
-  sunSign: string;            // e.g., "Virgo"
-  element: string;            // Fire, Earth, Air, Water
-  modality: string;           // Cardinal, Fixed, Mutable
+  sunSign: string;
+  element: string;  // Fire/Earth/Air/Water
+  modality: string; // Cardinal/Fixed/Mutable
 }
 
 export interface FrameworkScores {
@@ -69,50 +64,87 @@ export interface FrameworkScores {
   astrology: AstrologyData;
 }
 
-/* ============================
+/* =========================
    HELPERS
-============================ */
+========================= */
+
+const clamp = (n: number, min = 0, max = 100) => Math.max(min, Math.min(max, n));
 
 /**
- * Safe getter with neutral default for missing answers.
- * For 3-option questions: neutral is 1 (middle option).
+ * Neutral default for 3-option questions is 1 ("middle").
  */
-function getAnswer(answers: QuizAnswers, q: string, neutral: 0 | 1 | 2 = 1): 0 | 1 | 2 {
+function get3(answers: QuizAnswers, q: string, neutral: 0 | 1 | 2 = 1): 0 | 1 | 2 {
   const v = answers[q];
-  if (v === 0 || v === 1 || v === 2) return v;
-  return neutral;
+  return v === 0 || v === 1 || v === 2 ? v : neutral;
 }
 
 /**
- * For MBTI questions:
- * - 0 means left letter
- * - 1 means right letter
- * - 2 means "both/depends" (split vote)
- * - undefined treated as split vote (neutral)
+ * Stable deterministic tie-breaker from the answer set.
+ * (No randomness, same input -> same output)
  */
-function voteSplit(answer: number | undefined): { left: number; right: number } {
-  if (answer === 0) return { left: 1, right: 0 };
-  if (answer === 1) return { left: 0, right: 1 };
-  // answer === 2 OR undefined
-  return { left: 0.5, right: 0.5 };
-}
-
-/**
- * Deterministic 0/1 pick from answers + salt
- * (stable per exact answer set; not random)
- */
-function deterministicTiePick(answers: QuizAnswers, salt: string): 0 | 1 {
+function tiePick(answers: QuizAnswers, salt: string): 0 | 1 {
   const keys = Object.keys(answers).sort();
   let str = salt;
   for (const k of keys) str += `|${k}:${answers[k]}`;
 
-  // FNV-like hash
   let hash = 2166136261;
   for (let i = 0; i < str.length; i++) {
     hash ^= str.charCodeAt(i);
     hash = Math.imul(hash, 16777619);
   }
   return (hash & 1) as 0 | 1;
+}
+
+/* =========================
+   BIG 5 (Q9–Q23)
+========================= */
+
+/**
+ * 3-option scale tuned for better spread:
+ * 0 -> 20, 1 -> 50, 2 -> 80 (classic), then lightly expanded by centering math.
+ * We keep it explainable + stable.
+ */
+const BIG5_MAP: [number, number, number] = [20, 50, 80];
+
+function big5Item(a: 0 | 1 | 2): number {
+  return BIG5_MAP[a];
+}
+
+function avg(nums: number[]): number {
+  if (!nums.length) return 50;
+  return Math.round(nums.reduce((s, n) => s + n, 0) / nums.length);
+}
+
+function calculateBig5(answers: QuizAnswers): Big5Scores {
+  const openness = avg([big5Item(get3(answers, "q9")), big5Item(get3(answers, "q10")), big5Item(get3(answers, "q11"))]);
+  const conscientiousness = avg([big5Item(get3(answers, "q12")), big5Item(get3(answers, "q13")), big5Item(get3(answers, "q14"))]);
+  const extraversion = avg([big5Item(get3(answers, "q15")), big5Item(get3(answers, "q16")), big5Item(get3(answers, "q17"))]);
+  const agreeableness = avg([big5Item(get3(answers, "q18")), big5Item(get3(answers, "q19")), big5Item(get3(answers, "q20"))]);
+  const neuroticism = avg([big5Item(get3(answers, "q21")), big5Item(get3(answers, "q22")), big5Item(get3(answers, "q23"))]);
+
+  return {
+    openness: clamp(openness),
+    conscientiousness: clamp(conscientiousness),
+    extraversion: clamp(extraversion),
+    agreeableness: clamp(agreeableness),
+    neuroticism: clamp(neuroticism),
+  };
+}
+
+/* =========================
+   MBTI (Q1–Q8)
+========================= */
+
+/**
+ * For MBTI:
+ * 0 = left letter
+ * 1 = right letter
+ * 2 = "both/depends" => split vote
+ */
+function voteMBTI(v: number | undefined): { left: number; right: number } {
+  if (v === 0) return { left: 1, right: 0 };
+  if (v === 1) return { left: 0, right: 1 };
+  return { left: 0.5, right: 0.5 };
 }
 
 function pickDichotomy<L extends string, R extends string>(
@@ -122,100 +154,22 @@ function pickDichotomy<L extends string, R extends string>(
   left: L,
   right: R
 ): { pref: L | R; strength: number } {
-  const a = voteSplit(answers[qA]);
-  const b = voteSplit(answers[qB]);
+  const a = voteMBTI(answers[qA]);
+  const b = voteMBTI(answers[qB]);
 
-  const leftScore = a.left + b.left;
-  const rightScore = a.right + b.right;
+  const leftScore = a.left + b.left;   // 0..2
+  const rightScore = a.right + b.right; // 0..2
 
-  // strength: 0 (tie) -> 100 (full 2 votes on one side)
-  const diff = Math.abs(leftScore - rightScore);
-  const strength = Math.round((diff / 2) * 100);
+  // strength: abs diff mapped 0..100
+  const strength = Math.round((Math.abs(leftScore - rightScore) / 2) * 100);
 
   if (leftScore === rightScore) {
-    const tiePick = deterministicTiePick(answers, `${qA}|${qB}|${left}|${right}`);
-    return { pref: tiePick === 0 ? left : right, strength: 0 };
+    const pick = tiePick(answers, `mbti-${qA}-${qB}-${left}-${right}`);
+    return { pref: pick === 0 ? left : right, strength: 0 };
   }
-
   return { pref: leftScore > rightScore ? left : right, strength };
 }
 
-/**
- * Tie-break core type deterministically (stable)
- */
-function breakCoreTypeTie(tiedTypes: number[], answers: QuizAnswers): number {
-  if (tiedTypes.length === 1) return tiedTypes[0];
-
-  const pickBit = deterministicTiePick(answers, `ennea-core-${tiedTypes.join(",")}`);
-  const idx = pickBit === 0 ? 0 : tiedTypes.length - 1;
-  return tiedTypes[idx];
-}
-
-/* ============================
-   BIG 5
-============================ */
-
-/**
- * We still have 3 options per item.
- * Upgrade: use a slightly wider + smoother mapping than [20,50,80].
- * This reduces “everyone clusters at 50” and gives more separation.
- */
-const BIG5_MAP: [number, number, number] = [15, 50, 85];
-
-function avg3(a: number, b: number, c: number): number {
-  return Math.round((a + b + c) / 3);
-}
-
-function scoreBig5Item(answer: 0 | 1 | 2): number {
-  return BIG5_MAP[answer];
-}
-
-/**
- * Calculate Big 5 scores from questions 9-23 (15 questions, 3 per trait)
- * Missing answers default to neutral (middle option).
- */
-function calculateBig5(answers: QuizAnswers): Big5Scores {
-  const openness = avg3(
-    scoreBig5Item(getAnswer(answers, "q9")),
-    scoreBig5Item(getAnswer(answers, "q10")),
-    scoreBig5Item(getAnswer(answers, "q11"))
-  );
-
-  const conscientiousness = avg3(
-    scoreBig5Item(getAnswer(answers, "q12")),
-    scoreBig5Item(getAnswer(answers, "q13")),
-    scoreBig5Item(getAnswer(answers, "q14"))
-  );
-
-  const extraversion = avg3(
-    scoreBig5Item(getAnswer(answers, "q15")),
-    scoreBig5Item(getAnswer(answers, "q16")),
-    scoreBig5Item(getAnswer(answers, "q17"))
-  );
-
-  const agreeableness = avg3(
-    scoreBig5Item(getAnswer(answers, "q18")),
-    scoreBig5Item(getAnswer(answers, "q19")),
-    scoreBig5Item(getAnswer(answers, "q20"))
-  );
-
-  const neuroticism = avg3(
-    scoreBig5Item(getAnswer(answers, "q21")),
-    scoreBig5Item(getAnswer(answers, "q22")),
-    scoreBig5Item(getAnswer(answers, "q23"))
-  );
-
-  return { openness, conscientiousness, extraversion, agreeableness, neuroticism };
-}
-
-/* ============================
-   MBTI
-============================ */
-
-/**
- * Calculate MBTI type from questions 1-8 (8 questions, 2 per dichotomy)
- * "Both/depends" remains a split vote (0.5 / 0.5).
- */
 function calculateMBTI(answers: QuizAnswers): MBTIType {
   const ie = pickDichotomy(answers, "q1", "q2", "I", "E");
   const sn = pickDichotomy(answers, "q3", "q4", "S", "N");
@@ -230,37 +184,33 @@ function calculateMBTI(answers: QuizAnswers): MBTIType {
   return {
     type: `${IE}${SN}${TF}${JP}`,
     preferences: { IE, SN, TF, JP },
-    strength: {
-      IE: ie.strength,
-      SN: sn.strength,
-      TF: tf.strength,
-      JP: jp.strength,
-    },
+    strength: { IE: ie.strength, SN: sn.strength, TF: tf.strength, JP: jp.strength },
   };
 }
 
-/* ============================
-   ENNEAGRAM
-============================ */
+/* =========================
+   ENNEAGRAM (Q24–Q35)
+========================= */
 
 /**
- * Each core-type question (q24-q32) targets one type.
- * We treat:
- * - option 0 = low expression
- * - option 1 = moderate/healthy expression
- * - option 2 = strong/default expression
- *
- * Upgrade: use a curve [0, 2, 5] instead of [0,1,3]
- * This increases separation for strong signals, without making it binary.
+ * Q24–Q32: one per type (1..9)
+ * Score map tuned for better separation while keeping “middle” meaningful:
+ * 0 -> 0, 1 -> 2, 2 -> 5
  */
-const ENNEA_CORE_MAP: [number, number, number] = [0, 2, 5];
+const ENNEA_MAP: [number, number, number] = [0, 2, 5];
 
 type EnneaCore = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-function calculateEnneagram(answers: QuizAnswers): EnneagramType {
-  const typeScores: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
+function breakCoreTie(tied: number[], answers: QuizAnswers): number {
+  if (tied.length <= 1) return tied[0];
+  const pick = tiePick(answers, `ennea-core-${tied.join(",")}`);
+  return pick === 0 ? tied[0] : tied[tied.length - 1];
+}
 
-  const typeQuestions: { q: string; type: EnneaCore }[] = [
+function calculateEnneagram(answers: QuizAnswers): EnneagramType {
+  const scores: Record<number, number> = { 1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0 };
+
+  const mapping: { q: string; type: EnneaCore }[] = [
     { q: "q24", type: 1 },
     { q: "q25", type: 2 },
     { q: "q26", type: 3 },
@@ -272,24 +222,20 @@ function calculateEnneagram(answers: QuizAnswers): EnneagramType {
     { q: "q32", type: 9 },
   ];
 
-  // core scoring (neutral default)
-  for (const { q, type } of typeQuestions) {
-    const a = getAnswer(answers, q, 1);
-    typeScores[type] += ENNEA_CORE_MAP[a];
+  for (const { q, type } of mapping) {
+    const a = get3(answers, q, 1);
+    scores[type] += ENNEA_MAP[a];
   }
 
-  // Choose core type with tie-safe deterministic rule
-  const entries = Object.entries(typeScores).map(([k, v]) => ({ type: Number(k), score: v }));
-  const maxScore = Math.max(...entries.map((e) => e.score));
-  const tied = entries
-    .filter((e) => e.score === maxScore)
-    .map((e) => e.type)
+  const max = Math.max(...Object.values(scores));
+  const tied = Object.entries(scores)
+    .filter(([, v]) => v === max)
+    .map(([k]) => Number(k))
     .sort((a, b) => a - b);
 
-  const chosenCore = breakCoreTypeTie(tied, answers) as EnneaCore;
-  const coreType = chosenCore;
+  const coreType = breakCoreTie(tied, answers) as EnneaCore;
 
-  // Wing candidates (adjacent types)
+  // wing candidates
   const wingMap: Record<EnneaCore, [EnneaCore, EnneaCore]> = {
     1: [9, 2],
     2: [1, 3],
@@ -305,72 +251,58 @@ function calculateEnneagram(answers: QuizAnswers): EnneagramType {
   const [lowerWing, higherWing] = wingMap[coreType];
 
   /**
-   * Wing selection upgrade:
-   * Use wing questions (q33-q35) as feature signals, and compare against wing “profiles”.
-   *
-   * Features:
-   * - warmth (q33): 0 reserved, 1 balanced, 2 warm
-   * - structure (q34): 0 structured, 1 balanced, 2 flowing
-   * - drive (q35): 0 mastery/achievement, 1 connection, 2 freedom/experience
+   * Wing questions:
+   * q33 warmth: 0 reserved, 1 balanced, 2 warm
+   * q34 structure: 0 structured, 1 balanced, 2 flowing
+   * q35 drive: 0 mastery, 1 connection, 2 freedom
    */
-  const warmth = getAnswer(answers, "q33", 1);   // 0..2
-  const structure = getAnswer(answers, "q34", 1); // 0..2
-  const drive = getAnswer(answers, "q35", 1);     // 0..2
+  const warmth = get3(answers, "q33", 1) / 2;        // 0..1
+  const structured = 1 - get3(answers, "q34", 1) / 2; // 1..0
+  const freedom = get3(answers, "q35", 1) / 2;        // 0..1
 
-  // Convert to 0..1 floats
-  const fWarm = warmth / 2;
-  const fStruct = 1 - structure / 2; // 1=structured, 0=flowing
-  const fDrive = drive / 2;          // 0 mastery -> 1 freedom
-
-  /**
-   * Wing archetype vectors (0..1):
-   * These aren’t stereotypes; they’re small nudges to choose between two adjacent wings.
-   */
-  const wingVector: Record<EnneaCore, { warm: number; struct: number; freedom: number }> = {
-    1: { warm: 0.35, struct: 0.95, freedom: 0.15 },
-    2: { warm: 0.90, struct: 0.45, freedom: 0.35 },
-    3: { warm: 0.55, struct: 0.80, freedom: 0.25 },
-    4: { warm: 0.65, struct: 0.35, freedom: 0.70 },
-    5: { warm: 0.20, struct: 0.70, freedom: 0.40 },
-    6: { warm: 0.45, struct: 0.85, freedom: 0.20 },
-    7: { warm: 0.75, struct: 0.25, freedom: 0.95 },
-    8: { warm: 0.40, struct: 0.55, freedom: 0.80 },
-    9: { warm: 0.60, struct: 0.40, freedom: 0.55 },
+  // Light feature “vectors” per type for wing selection (nudges only)
+  const vec: Record<EnneaCore, { warm: number; struct: number; free: number }> = {
+    1: { warm: 0.35, struct: 0.95, free: 0.15 },
+    2: { warm: 0.90, struct: 0.45, free: 0.35 },
+    3: { warm: 0.55, struct: 0.80, free: 0.25 },
+    4: { warm: 0.65, struct: 0.35, free: 0.70 },
+    5: { warm: 0.20, struct: 0.70, free: 0.40 },
+    6: { warm: 0.45, struct: 0.85, free: 0.20 },
+    7: { warm: 0.75, struct: 0.25, free: 0.95 },
+    8: { warm: 0.40, struct: 0.55, free: 0.80 },
+    9: { warm: 0.60, struct: 0.40, free: 0.55 },
   };
 
-  function similarity(type: EnneaCore): number {
-    const v = wingVector[type];
-    // Weighted cosine-ish similarity (simple, stable, explainable)
-    const dw = 1 - Math.abs(fWarm - v.warm);
-    const ds = 1 - Math.abs(fStruct - v.struct);
-    const df = 1 - Math.abs(fDrive - v.freedom);
-    // structure is slightly more decisive in wings than warmth
-    return (dw * 0.3) + (ds * 0.4) + (df * 0.3);
-  }
+  const sim = (t: EnneaCore) => {
+    const v = vec[t];
+    const dw = 1 - Math.abs(warmth - v.warm);
+    const ds = 1 - Math.abs(structured - v.struct);
+    const df = 1 - Math.abs(freedom - v.free);
+    // structure slightly more decisive
+    return dw * 0.3 + ds * 0.4 + df * 0.3;
+  };
 
-  const lowerAff = similarity(lowerWing);
-  const higherAff = similarity(higherWing);
+  const lowerAff = sim(lowerWing);
+  const higherAff = sim(higherWing);
 
   let wingNum: EnneaCore;
   if (lowerAff === higherAff) {
-    wingNum = deterministicTiePick(answers, `ennea-wing-${coreType}`) === 0 ? lowerWing : higherWing;
+    wingNum = tiePick(answers, `ennea-wing-${coreType}`) === 0 ? lowerWing : higherWing;
   } else {
     wingNum = lowerAff > higherAff ? lowerWing : higherWing;
   }
 
-  const wing = `${coreType}w${wingNum}`;
-
   return {
     coreType,
-    wing,
-    scores: typeScores,
+    wing: `${coreType}w${wingNum}`,
+    scores,
     wingAffinity: { lowerWing: Math.round(lowerAff * 100), higherWing: Math.round(higherAff * 100) },
   };
 }
 
-/* ============================
-   ASTROLOGY
-============================ */
+/* =========================
+   ASTROLOGY (Sun sign only)
+========================= */
 
 function calculateAstrology(birthDate: Date): AstrologyData {
   const month = birthDate.getMonth() + 1;
@@ -403,21 +335,14 @@ function calculateAstrology(birthDate: Date): AstrologyData {
     Gemini: "Mutable", Virgo: "Mutable", Sagittarius: "Mutable", Pisces: "Mutable",
   };
 
-  return {
-    sunSign,
-    element: elementMap[sunSign],
-    modality: modalityMap[sunSign],
-  };
+  return { sunSign, element: elementMap[sunSign], modality: modalityMap[sunSign] };
 }
 
-/* ============================
-   MAIN
-============================ */
+/* =========================
+   MAIN EXPORT
+========================= */
 
-export function calculateFrameworks(
-  answers: QuizAnswers,
-  birthDate: Date
-): FrameworkScores {
+export function calculateFrameworks(answers: QuizAnswers, birthDate: Date): FrameworkScores {
   return {
     big5: calculateBig5(answers),
     mbti: calculateMBTI(answers),
