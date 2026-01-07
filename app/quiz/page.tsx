@@ -157,13 +157,16 @@ export default function QuizPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userName: name.trim(),
-          gender: gender === "other" ? genderOther.trim() : gender,
-          birthDate,
-          city: city.trim(),
-          ethnicity: ethnicity.trim(),
-          answers: payloadAnswers,
-        }),
+  name: name.trim(),
+  birthDate,
+  quizAnswers: payloadAnswers,
+
+  // optional extras (won’t break anything)
+  gender: gender === "other" ? genderOther.trim() : gender,
+  city: city.trim(),
+  ethnicity: ethnicity.trim(),
+}),
+
       });
 
       if (!res.ok) {
