@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { QUIZ_QUESTIONS } from "@/lib/quizQuestions";
 import { CODE_DISPLAY_MAP } from "@/lib/codeDisplayMap";
 
+type CodeKey = keyof typeof CODE_DISPLAY_MAP;
+
 /* ============================
    TYPES
 ============================ */
@@ -254,8 +256,8 @@ export default function QuizPage() {
             {step === "result" && result && (
               <motion.section key="result" {...fade} className="p-10">
                 <div className="text-3xl font-black text-slate-900">
-                  {CODE_DISPLAY_MAP[result.primary.code_name]?.label ??
-                    result.primary.code_name}
+                  {CODE_DISPLAY_MAP[result.primary.code_name as CodeKey]?.label ??
+                  result.primary.code_name}
                 </div>
                 <div className="mt-2 text-sm text-slate-600">
                   {result.primary.description}
