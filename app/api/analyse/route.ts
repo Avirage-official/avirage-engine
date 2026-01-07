@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { runTriangulation, validateQuizAnswers } from "@/lib/triangulationEngine";
 import { QuizAnswers } from "@/lib/frameworkCalculator";
+import { getCulturalCode } from "@/lib/culturalCodes";
 
 export async function POST(request: NextRequest) {
   try {
