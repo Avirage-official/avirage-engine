@@ -64,6 +64,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 1,
     code_name: "khoisan",
+    full_name: "San/Khoisan",
+    type: "standalone",
     archetype_name: "Earthlistener",
     archetype_essence: "Presence • attunement • environmental intelligence",
     archetype_symbol: "spiral-stone",
@@ -97,6 +99,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 2,
     code_name: "kayori",
+    full_name: "Yoruba",
+    type: "standalone",
     archetype_name: "Fireweaver",
     archetype_essence: "Expression • emotional transmission • collective rhythm",
     archetype_symbol: "ember-drum",
@@ -128,6 +132,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 3,
     code_name: "sahen",
+    full_name: "Tuareg",
+    type: "standalone",
     archetype_name: "HorizonWalker",
     archetype_essence: "Endurance • solitude • internal strength",
     archetype_symbol: "distant-sun",
@@ -162,6 +168,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 4,
     code_name: "enzuka",
+    full_name: "Maasai + Zulu Fusion",
+    type: "fusion",
     archetype_name: "Shieldbearer",
     archetype_essence: "Protective leadership • order • responsibility",
     archetype_symbol: "iron-circle",
@@ -196,6 +204,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 5,
     code_name: "siyuane",
+    full_name: "Ethiopian + Han Chinese Fusion",
+    type: "fusion",
     archetype_name: "Kitsune",
     archetype_essence: "Precision • mastery • quiet excellence",
     archetype_symbol: "folded-blade",
@@ -230,6 +240,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 6,
     code_name: "jaejin",
+    full_name: "Korean",
+    type: "standalone",
     archetype_name: "Harmonist",
     archetype_essence: "Order • respect • social equilibrium",
     archetype_symbol: "balanced-knot",
@@ -261,6 +273,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 7,
     code_name: "namsea",
+    full_name: "Vietnamese + Thai Fusion",
+    type: "fusion",
     archetype_name: "Flowbinder",
     archetype_essence: "Adaptation • relational balance • fluid intelligence",
     archetype_symbol: "tidal-ring",
@@ -299,6 +313,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 8,
     code_name: "shokunin",
+    full_name: "Japanese",
+    type: "standalone",
     archetype_name: "BladeSmith",
     archetype_essence: "Craft devotion • repetition • exactness",
     archetype_symbol: "anvil-mark",
@@ -335,6 +351,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 9,
     code_name: "khoruun",
+    full_name: "Mongolian",
+    type: "standalone",
     archetype_name: "SkyRider",
     archetype_essence: "Freedom • resilience • wide-horizon thinking",
     archetype_symbol: "wind-horse",
@@ -372,6 +390,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 10,
     code_name: "lhumir",
+    full_name: "Tibetan",
+    type: "standalone",
     archetype_name: "StillMind",
     archetype_essence: "Inner clarity • contemplation • disciplined calm",
     archetype_symbol: "silent-flame",
@@ -410,6 +430,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 11,
     code_name: "yatevar",
+    full_name: "Indian Vedic + Nahua Fusion",
+    type: "fusion",
     archetype_name: "CycleKeeper",
     archetype_essence: "Ritual • layered meaning • cosmic order",
     archetype_symbol: "turning-wheel",
@@ -447,6 +469,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 12,
     code_name: "tahiri",
+    full_name: "Middle Eastern & North African",
+    type: "standalone",
     archetype_name: "HeartBearer",
     archetype_essence: "Honor • hospitality • expressive warmth",
     archetype_symbol: "open-palm",
@@ -486,6 +510,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 13,
     code_name: "athenos",
+    full_name: "Mediterranean",
+    type: "standalone",
     archetype_name: "MuseBearer",
     archetype_essence: "Beauty • passion • expressive vitality",
     archetype_symbol: "laurel-flame",
@@ -524,6 +550,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 14,
     code_name: "udumai",
+    full_name: "South Pacific",
+    type: "standalone",
     archetype_name: "AncestorRoot",
     archetype_essence: "Collective memory • environmental unity",
     archetype_symbol: "woven-root",
@@ -561,6 +589,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 15,
     code_name: "tjukari",
+    full_name: "Aboriginal Australian",
+    type: "standalone",
     archetype_name: "SonglineKeeper",
     archetype_essence: "Deep time • land-memory • continuity",
     archetype_symbol: "echo-path",
@@ -598,6 +628,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 16,
     code_name: "kinmora",
+    full_name: "Maya",
+    type: "standalone",
     archetype_name: "TimeArchitect",
     archetype_essence: "Cycles • precision • cosmic structure",
     archetype_symbol: "celestial-grid",
@@ -633,6 +665,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 17,
     code_name: "siljoa",
+    full_name: "Inuit + Sami Fusion",
+    type: "fusion",
     archetype_name: "FrostSentinel",
     archetype_essence: "Climate attunement • resilience • cooperation",
     archetype_symbol: "ice-mark",
@@ -668,6 +702,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 18,
     code_name: "skenari",
+    full_name: "Haudenosaunee",
+    type: "standalone",
     archetype_name: "FutureGuardian",
     archetype_essence: "Long-horizon ethics • collective responsibility",
     archetype_symbol: "seven-rings",
@@ -701,6 +737,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 19,
     code_name: "ashkara",
+    full_name: "Persian/Zoroastrian",
+    type: "standalone",
     archetype_name: "TruthForger",
     archetype_essence: "Ethical action • moral clarity • integrity",
     archetype_symbol: "dual-flame",
@@ -733,6 +771,8 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 20,
     code_name: "alethir",
+    full_name: "Ancient Greek",
+    type: "standalone",
     archetype_name: "Seeker",
     archetype_essence: "Inquiry • reason • pursuit of truth",
     archetype_symbol: "open-eye",
