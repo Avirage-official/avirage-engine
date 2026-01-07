@@ -7,6 +7,39 @@ import { getCulturalCode } from '@/lib/culturalCodes'
  * Profile-Based Analysis
  * Bypasses quiz → Uses self-reported frameworks → Same triangulation logic
  */
+
+/**
+ * Get code description - FIXED VERSION with lowercase keys
+ * Use this in BOTH:
+ * - app/api/analyse/route.ts
+ * - app/api/analyse-profile/route.ts
+ */
+function getCodeDescription(codeName: string): string {
+  const descriptions: Record<string, string> = {
+    "khoisan": "Hyper-acute environmental perception, radical egalitarianism, immediate-return economy, conflict avoidance, present-moment survival intelligence",
+    "kayori": "Expressive ritual creativity, destiny-aware, communal intellect, Ifá divination logic, oral-intellectual tradition",
+    "sahen": "Introspective poetic identity, desert wisdom, existential longing, nomadic autonomy",
+    "enzuka": "Strength through people, courage as social duty, warrior discipline, collective honor",
+    "siyuane": "Harmony sustained across generations, long continuity, hierarchical order, disciplined tradition",
+    "jaejin": "Strength forged under constraint, compressed emotion (Han), intense loyalty, extreme diligence",
+    "namsea": "Grace under movement, water-based cognition, calm resilience, gentle ease, conflict avoidance mastery",
+    "shokunin": "Perfectionist craftsmanship, group harmony (Wa), aesthetic discipline, ritualized order",
+    "khoruun": "Freedom sustained by movement, nomadic mobility intelligence, decentralized strength",
+    "lhumir": "Stillness that includes others, contemplative consciousness, impermanence worldview, compassion discipline",
+    "yatevar": "Order embodied through duty, law as lived ritual, metaphysical abstraction, warrior-philosopher",
+    "renara": "Order maintained through balance, refined subtlety (Halus), emotional restraint, hierarchical harmony",
+    "karayni": "Sacred balance through reciprocity, mutual responsibility (humans-spirits-land), communal ritual labor",
+    "wohaka": "Existence as relationship, all beings as kin, warrior-spiritual synthesis, land-identity fusion",
+    "tjukari": "Land remembers through us, Dreamtime cosmology, Songline navigation, non-linear time, deep time consciousness",
+    "kinmora": "Mastery of cycles, mathematical cosmology, cyclical time consciousness, astronomical precision",
+    "siljoa": "Living in dialogue with climate and place, environment as thinking partner, Arctic survival intelligence",
+    "skenari": "Responsibility to the unborn, Seventh Generation principle, consensus governance, future-oriented ethics",
+    "ashkara": "Truth enacted not believed, moral choice as sacred action, ethical dualism, fire symbolism",
+    "alethir": "To live by seeking what is real, truth emerges through inquiry and dialogue, logos-centered thinking",
+  };
+
+  return descriptions[codeName] || "Cultural code description";
+}
 export async function POST(req: Request) {
   try {
     const body = await req.json()
