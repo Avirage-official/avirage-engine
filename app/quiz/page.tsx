@@ -33,17 +33,20 @@ function stripAccents(str: string): string {
  * - tries normalized lowercase
  * This avoids the "shokunin vs Shokunin" mismatch.
  */
-function toCodeSlug(codeName: string | null | undefined): CodeSlug | null {
-  if (!codeName) return null;
+function toCodeSlug(codeName: unknown): CodeSlug | null {
+  if (typeof codeName !== "string") return null;
 
-  const raw = stripAccents(codeName).trim();
+  const raw: string = stripAccents(codeName).trim();
+  if (!raw) return null;
+
   if (isCodeSlug(raw)) return raw;
 
-  const lower = raw.toLowerCase();
+  const lower: string = raw.toLowerCase();
   if (isCodeSlug(lower)) return lower;
 
   return null;
 }
+
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
