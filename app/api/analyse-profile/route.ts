@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { detectPatterns } from '@/lib/patternDetector'
 import { matchCulturalCodes } from '@/lib/codeMatcher'
 import { FrameworkScores } from '@/lib/frameworkCalculator'
-
+import { getCulturalCode } from '@/lib/culturalCodes'
 /**
  * Profile-Based Analysis
  * Bypasses quiz → Uses self-reported frameworks → Same triangulation logic
