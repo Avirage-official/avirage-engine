@@ -1,16 +1,14 @@
 /**
- * CULTURAL CODES (ENGINE CANONICAL DATA)
+ * IDENTITY CODES (ENGINE CANONICAL DATA)
  *
- * IMPORTANT:
- * - This file is the SINGLE SOURCE OF TRUTH for code identity + trait targets.
- * - These names are INTERNAL (engine-safe), not marketing labels.
- * - Display / mythic / archetype naming will live elsewhere later.
+ * RULES (LOCKED):
+ * - SINGLE SOURCE OF TRUTH for identity vectors + trait targets
+ * - Cultural data = lineage / scientific grounding ONLY
+ * - User-facing identity = MYTHIC ARCHETYPES
+ * - No simplification, no moral framing, no loss of precision
  *
- * What we improve here:
- * - Clean, consistent naming conventions
- * - Trait vectors aligned with the 30 detected patterns
- * - No emotional / moral framing (pure behavioral tendencies)
- * - Traits are TARGET VECTORS, not stereotypes
+ * Pipeline:
+ * Behavioral data → Cultural research → Abstract vectors → Mythic identity
  */
 
 import { CulturalCode, TraitScores } from "./types";
@@ -59,16 +57,17 @@ function t(partial: Partial<TraitScores>): TraitScores {
 }
 
 /* =========================================================
-   CULTURAL CODE DEFINITIONS (20)
+   IDENTITY CODE DEFINITIONS (20)
 ========================================================= */
 
 export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 1,
     code_name: "khoisan",
-    full_name: "Khoisan",
-    type: "standalone",
-    origin: "Southern Africa",
+    archetype_name: "Earthlistener",
+    archetype_essence: "Presence • attunement • environmental intelligence",
+    archetype_symbol: "spiral-stone",
+    cultural_lineage: "Southern Africa",
     description:
       "Deeply grounded, perceptive, and present. Strong connection to land, rhythm, and subtle pattern awareness.",
     core_concepts: ["presence", "nature", "community", "adaptation"],
@@ -94,12 +93,14 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 95,
     }),
   },
+
   {
     id: 2,
     code_name: "kayori",
-    full_name: "Kayori",
-    type: "standalone",
-    origin: "West Africa",
+    archetype_name: "Fireweaver",
+    archetype_essence: "Expression • emotional transmission • collective rhythm",
+    archetype_symbol: "ember-drum",
+    cultural_lineage: "West Africa",
     description:
       "Expressive, communal, and emotionally rich. Values rhythm, storytelling, and shared meaning.",
     core_concepts: ["expression", "community", "emotion", "connection"],
@@ -123,12 +124,14 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 85,
     }),
   },
+
   {
     id: 3,
     code_name: "sahen",
-    full_name: "Sahen",
-    type: "standalone",
-    origin: "Sahara / Nomadic",
+    archetype_name: "HorizonWalker",
+    archetype_essence: "Endurance • solitude • internal strength",
+    archetype_symbol: "distant-sun",
+    cultural_lineage: "Nomadic desert ecologies",
     description:
       "Quietly resilient, inwardly strong, and independent. Comfortable with solitude and long horizons.",
     core_concepts: ["endurance", "autonomy", "introspection", "movement"],
@@ -155,12 +158,14 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 95,
     }),
   },
+
   {
     id: 4,
     code_name: "enzuka",
-    full_name: "Enzuka",
-    type: "fusion",
-    origin: "East & Southern Africa",
+    archetype_name: "Shieldbearer",
+    archetype_essence: "Protective leadership • order • responsibility",
+    archetype_symbol: "iron-circle",
+    cultural_lineage: "East & Southern Africa",
     description:
       "Grounded leadership through strength, clarity, and protection of the group.",
     core_concepts: ["strength", "order", "responsibility", "leadership"],
@@ -187,12 +192,14 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 85,
     }),
   },
+
   {
     id: 5,
     code_name: "siyuane",
-    full_name: "Siyuane",
-    type: "fusion",
-    origin: "East Africa & East Asia",
+    archetype_name: "Kitsune",
+    archetype_essence: "Precision • mastery • quiet excellence",
+    archetype_symbol: "folded-blade",
+    cultural_lineage: "East Africa & East Asia",
     description:
       "Disciplined, precise, and quietly driven. Values mastery, structure, and long-term progress.",
     core_concepts: ["discipline", "mastery", "order", "craft"],
@@ -219,12 +226,14 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 68,
     }),
   },
+
   {
     id: 6,
     code_name: "jaejin",
-    full_name: "Jaejin",
-    type: "standalone",
-    origin: "Korea",
+    archetype_name: "Harmonist",
+    archetype_essence: "Order • respect • social equilibrium",
+    archetype_symbol: "balanced-knot",
+    cultural_lineage: "Korea",
     description:
       "Respectful, structured, and socially attuned. Balances hierarchy with care for harmony.",
     core_concepts: ["respect", "structure", "harmony", "duty"],
@@ -248,12 +257,14 @@ export const CULTURAL_CODES: CulturalCode[] = [
       meaning_orientation: 75,
     }),
   },
+
   {
     id: 7,
     code_name: "namsea",
-    full_name: "Namsea",
-    type: "fusion",
-    origin: "Southeast Asia",
+    archetype_name: "Flowbinder",
+    archetype_essence: "Adaptation • relational balance • fluid intelligence",
+    archetype_symbol: "tidal-ring",
+    cultural_lineage: "Southeast Asia",
     description:
       "Fluid, adaptable, and relational. Moves with change rather than against it.",
     core_concepts: ["flow", "adaptation", "balance", "relationship"],
@@ -284,12 +295,14 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 75,
     }),
   },
+
   {
     id: 8,
     code_name: "shokunin",
-    full_name: "Shokunin",
-    type: "standalone",
-    origin: "Japan",
+    archetype_name: "BladeSmith",
+    archetype_essence: "Craft devotion • repetition • exactness",
+    archetype_symbol: "anvil-mark",
+    cultural_lineage: "Japan",
     description:
       "Devotion to craft, quiet excellence, and precision through repetition.",
     core_concepts: ["craft", "discipline", "precision", "mastery"],
@@ -318,12 +331,14 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 75,
     }),
   },
+
   {
     id: 9,
     code_name: "khoruun",
-    full_name: "Khoruun",
-    type: "standalone",
-    origin: "Mongolia",
+    archetype_name: "SkyRider",
+    archetype_essence: "Freedom • resilience • wide-horizon thinking",
+    archetype_symbol: "wind-horse",
+    cultural_lineage: "Mongolia",
     description:
       "Independent, resilient, and rooted in vast open environments.",
     core_concepts: ["freedom", "self-reliance", "nature", "endurance"],
@@ -353,12 +368,14 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 80,
     }),
   },
+
   {
     id: 10,
     code_name: "lhumir",
-    full_name: "Lhumir",
-    type: "standalone",
-    origin: "Tibet",
+    archetype_name: "StillMind",
+    archetype_essence: "Inner clarity • contemplation • disciplined calm",
+    archetype_symbol: "silent-flame",
+    cultural_lineage: "Tibet",
     description:
       "Calm, contemplative, and meaning-oriented. Values inner clarity over outward noise.",
     core_concepts: ["contemplation", "meaning", "calm", "discipline"],
@@ -389,15 +406,17 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 85,
     }),
   },
+
   {
     id: 11,
     code_name: "sanskara",
-    full_name: "Sanskara",
-    type: "standalone",
-    origin: "South Asia",
+    archetype_name: "CycleKeeper",
+    archetype_essence: "Ritual • layered meaning • cosmic order",
+    archetype_symbol: "turning-wheel",
+    cultural_lineage: "South Asia",
     description:
-      "Layered, philosophical, and devoted to ritual precision. Balances cosmic order with earthly complexity.",
-    core_concepts: ["dharma", "ritual", "devotion", "cycles"],
+      "Layered, philosophical, and devoted to ritual precision.",
+    core_concepts: ["ritual", "cycles", "devotion", "order"],
     traits: t({
       abstract_thinking: 95,
       sensory_appreciation: 75,
@@ -424,14 +443,16 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 75,
     }),
   },
+
   {
     id: 12,
     code_name: "tahiri",
-    full_name: "Tahiri",
-    type: "fusion",
-    origin: "Middle East & North Africa",
+    archetype_name: "HeartBearer",
+    archetype_essence: "Honor • hospitality • expressive warmth",
+    archetype_symbol: "open-palm",
+    cultural_lineage: "Middle East & North Africa",
     description:
-      "Passionate, expressive, and grounded in shared values. Strong sense of honor and hospitality.",
+      "Passionate, expressive, and grounded in shared values.",
     core_concepts: ["honor", "hospitality", "expression", "kinship"],
     traits: t({
       abstract_thinking: 75,
@@ -461,14 +482,16 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 75,
     }),
   },
+
   {
     id: 13,
     code_name: "athenos",
-    full_name: "Athenos",
-    type: "fusion",
-    origin: "Mediterranean",
+    archetype_name: "MuseBearer",
+    archetype_essence: "Beauty • passion • expressive vitality",
+    archetype_symbol: "laurel-flame",
+    cultural_lineage: "Mediterranean",
     description:
-      "Passionate, social, and deeply appreciative of beauty and expression. Balances tradition with creative spontaneity.",
+      "Passionate, social, and deeply appreciative of beauty and expression.",
     core_concepts: ["beauty", "passion", "community", "expression"],
     traits: t({
       abstract_thinking: 75,
@@ -497,14 +520,16 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 68,
     }),
   },
+
   {
     id: 14,
     code_name: "udumai",
-    full_name: "Udumai",
-    type: "fusion",
-    origin: "South Pacific",
+    archetype_name: "AncestorRoot",
+    archetype_essence: "Collective memory • environmental unity",
+    archetype_symbol: "woven-root",
+    cultural_lineage: "South Pacific",
     description:
-      "Deeply interconnected, communal, and environment-focused. Values collective strength and ancestral wisdom.",
+      "Deeply interconnected, communal, and environment-focused.",
     core_concepts: ["collective", "ancestors", "environment", "strength"],
     traits: t({
       abstract_thinking: 63,
@@ -532,15 +557,17 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 95,
     }),
   },
+
   {
     id: 15,
     code_name: "tjukari",
-    full_name: "Tjukari",
-    type: "standalone",
-    origin: "Australia",
+    archetype_name: "SonglineKeeper",
+    archetype_essence: "Deep time • land-memory • continuity",
+    archetype_symbol: "echo-path",
+    cultural_lineage: "Australia",
     description:
-      "Land remembers through us. Deep time consciousness, songline navigation, and profound ecological intelligence.",
-    core_concepts: ["dreamtime", "songlines", "land-law", "continuity"],
+      "Deep time consciousness, songline navigation, and ecological intelligence.",
+    core_concepts: ["continuity", "land-law", "memory", "navigation"],
     traits: t({
       abstract_thinking: 95,
       sensory_appreciation: 95,
@@ -567,14 +594,16 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 95,
     }),
   },
+
   {
     id: 16,
     code_name: "kinmora",
-    full_name: "Kinmora",
-    type: "standalone",
-    origin: "Mesoamerica",
+    archetype_name: "TimeArchitect",
+    archetype_essence: "Cycles • precision • cosmic structure",
+    archetype_symbol: "celestial-grid",
+    cultural_lineage: "Mesoamerica",
     description:
-      "Mastery of cycles. Mathematical cosmology, cyclical time consciousness, and astronomical precision.",
+      "Mathematical cosmology and cyclical time consciousness.",
     core_concepts: ["cycles", "time", "precision", "cosmology"],
     traits: t({
       abstract_thinking: 95,
@@ -600,14 +629,16 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 95,
     }),
   },
+
   {
     id: 17,
     code_name: "siljoa",
-    full_name: "Siljoa",
-    type: "fusion",
-    origin: "Circumpolar Arctic",
+    archetype_name: "FrostSentinel",
+    archetype_essence: "Climate attunement • resilience • cooperation",
+    archetype_symbol: "ice-mark",
+    cultural_lineage: "Circumpolar Arctic",
     description:
-      "Living in dialogue with climate and place. Environment as thinking partner with Arctic survival intelligence.",
+      "Living in dialogue with climate and place.",
     core_concepts: ["climate", "resilience", "cooperation", "attunement"],
     traits: t({
       sensory_appreciation: 75,
@@ -633,15 +664,17 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 95,
     }),
   },
+
   {
     id: 18,
     code_name: "skenari",
-    full_name: "Skenari",
-    type: "standalone",
-    origin: "Eastern Woodlands, North America",
+    archetype_name: "FutureGuardian",
+    archetype_essence: "Long-horizon ethics • collective responsibility",
+    archetype_symbol: "seven-rings",
+    cultural_lineage: "Eastern Woodlands, North America",
     description:
-      "Responsibility to the unborn. Seventh Generation principle with consensus governance and future-oriented ethics.",
-    core_concepts: ["seven-generations", "consensus", "future", "peace"],
+      "Responsibility to future generations through consensus governance.",
+    core_concepts: ["future", "consensus", "peace", "responsibility"],
     traits: t({
       abstract_thinking: 75,
       pattern_recognition: 75,
@@ -664,14 +697,16 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 75,
     }),
   },
+
   {
     id: 19,
     code_name: "ashkara",
-    full_name: "Ashkara",
-    type: "standalone",
-    origin: "Ancient Persia",
+    archetype_name: "TruthForger",
+    archetype_essence: "Ethical action • moral clarity • integrity",
+    archetype_symbol: "dual-flame",
+    cultural_lineage: "Ancient Persia",
     description:
-      "Truth enacted, not believed. Moral choice as sacred action through ethical dualism.",
+      "Truth enacted through ethical choice and action.",
     core_concepts: ["truth", "ethics", "action", "purity"],
     traits: t({
       abstract_thinking: 95,
@@ -694,14 +729,16 @@ export const CULTURAL_CODES: CulturalCode[] = [
       nature_connection: 85,
     }),
   },
+
   {
     id: 20,
     code_name: "alethir",
-    full_name: "Alethir",
-    type: "standalone",
-    origin: "Ancient Greece",
+    archetype_name: "Seeker",
+    archetype_essence: "Inquiry • reason • pursuit of truth",
+    archetype_symbol: "open-eye",
+    cultural_lineage: "Ancient Greece",
     description:
-      "To live by seeking what is real. Truth emerges through inquiry and dialogue.",
+      "Truth emerges through inquiry, dialogue, and excellence.",
     core_concepts: ["inquiry", "reason", "truth", "excellence"],
     traits: t({
       abstract_thinking: 95,
@@ -723,23 +760,18 @@ export const CULTURAL_CODES: CulturalCode[] = [
   },
 ];
 
-/**
- * Get cultural code by internal name
- */
+/* =========================================================
+   ACCESSORS (UNCHANGED)
+========================================================= */
+
 export function getCulturalCode(codeName: string): CulturalCode | undefined {
   return CULTURAL_CODES.find((c) => c.code_name === codeName);
 }
 
-/**
- * Get all cultural codes
- */
 export function getAllCulturalCodes(): CulturalCode[] {
   return CULTURAL_CODES;
 }
 
-/**
- * Get all code names
- */
 export function getAllCodeNames(): string[] {
   return CULTURAL_CODES.map((c) => c.code_name);
 }
