@@ -1,16 +1,16 @@
 /**
- * CODE PAGES
+ * lib/codePages.ts
  *
- * Display-only content model.
- * SUPERSET of UI expectations.
- * Does NOT affect scoring or algorithms.
+ * This file is CONTRACT-LOCKED to app/codepages/[slug]/CodePageClient.tsx.
+ * Display-only. Does NOT affect scoring / algorithms.
  */
 
 export type CodeSlug = string;
 
-/* =========================
-   UI MODELS
-========================= */
+export interface CodeOrigin {
+  level1: string;
+  lineage: string[];
+}
 
 export interface CodeLens {
   title: string;
@@ -23,64 +23,62 @@ export interface CodeTraitHighlight {
   meaning: string;
 }
 
-export interface CodeTraitsBlock {
+export interface CodeTraits {
   headline: string;
   highlights: CodeTraitHighlight[];
 }
 
-export interface CodeRecommendationsBlock {
+export interface CodeRecommendations {
   lifestyle: string[];
   places: string[];
   music: string[];
   activities: string[];
 }
 
-export interface CodePageSection {
-  title: string;
-  content: string[];
-}
-
 export interface CodePage {
   codeName: string;
-
-  // HERO
   snapshot: string;
 
-  // UI blocks
+  origin: CodeOrigin;
+
   lens: CodeLens;
-  traits: CodeTraitsBlock;
-  recommendations: CodeRecommendationsBlock;
+  traits: CodeTraits;
+  recommendations: CodeRecommendations;
 
   strengths: string[];
   watchouts: string[];
   tryThisWeek: string[];
 
-  // Narrative
-  headline: string;
-  subheadline: string;
-  essence: string;
-  sections: CodePageSection[];
-
-  reflectionPrompts: string[];
+  notes?: string[];
 }
 
-/* =========================
-   CODE PAGES
-========================= */
-
+/**
+ * IMPORTANT:
+ * Keys here MUST match your route slugs (the [slug] param).
+ * Add the remaining codes here using the same structure.
+ */
 export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   Shokunin: {
     codeName: "Shokunin",
-
     snapshot:
       "You’re at your best when you can go deep, move with intention, and produce work that feels clean, precise, and worth your name.",
 
+    origin: {
+      level1: "Japanese",
+      lineage: [
+        "Craft devotion (mastery over shortcuts)",
+        "Discipline through repetition",
+        "Precision culture",
+        "Quiet excellence (results speak)",
+      ],
+    },
+
     lens: {
       title: "Quiet Mastery",
-      description: "Precision, patience, and craft-first thinking.",
+      description: "Precision, patience, and craft-first thinking — depth over speed.",
       inPlainEnglish: [
         "You care more about quality than speed.",
-        "You notice details others miss.",
+        "You notice details other people miss.",
         "You work best with focus and clear standards.",
       ],
     },
@@ -88,61 +86,85 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
     traits: {
       headline: "Core Traits",
       highlights: [
-        { label: "Craft-driven", meaning: "Motivated by mastery and refinement, not shortcuts." },
-        { label: "Detail-oriented", meaning: "You naturally refine what others overlook." },
-        { label: "Focused", meaning: "Deep work suits you better than rapid switching." },
+        { label: "Craft-driven", meaning: "You’re motivated by mastery and refinement, not shortcuts." },
+        { label: "Detail-oriented", meaning: "You naturally spot what’s off and want to improve it." },
+        { label: "Focused", meaning: "Deep work suits you better than rapid context-switching." },
+        { label: "High standards", meaning: "You feel best when you can ship work you’d sign your name to." },
       ],
     },
 
     recommendations: {
       lifestyle: [
         "Build a calm daily rhythm with deep-focus blocks.",
-        "Reduce noise — fewer commitments, higher quality.",
+        "Reduce noise: fewer commitments, higher quality.",
+        "Create a ‘clean reset’ ritual after work (10–15 min).",
       ],
       places: [
-        "Quiet, design-forward neighborhoods.",
-        "Workspaces that respect order and tools.",
+        "Quiet, design-forward neighborhoods with a steady rhythm.",
+        "Spaces with good light and fewer distractions (libraries, studios).",
+        "Nature resets: parks, coastlines, slow mornings.",
       ],
-      music: ["Instrumental, ambient, minimal electronic."],
+      music: [
+        "Instrumental focus (lo-fi, ambient, minimal).",
+        "Clean-structure electronic or modern classical.",
+        "Anything that feels precise rather than chaotic.",
+      ],
       activities: [
-        "Skill-based hobbies (craft, coding, cooking).",
-        "Training that rewards technique over chaos.",
+        "Skill-based hobbies (cooking, photography, coding, design).",
+        "Training with technique focus (lifting form, climbing, yoga alignment).",
+        "Workshops where mastery compounds.",
       ],
     },
 
-    strengths: ["Exceptional attention to detail", "Consistency and reliability", "Ability to master complex systems"],
+    strengths: [
+      "Exceptional attention to detail",
+      "Consistency and reliability",
+      "Ability to master complex systems",
+      "Strong sense of personal responsibility",
+    ],
 
-    watchouts: ["Overworking in pursuit of perfection", "Difficulty delegating", "Burnout in chaotic environments"],
+    watchouts: [
+      "Overworking in pursuit of perfection",
+      "Difficulty delegating",
+      "Getting stuck refining when shipping would be enough",
+      "Burnout in chaotic environments",
+    ],
 
     tryThisWeek: [
-      "Protect one uninterrupted block of deep work.",
-      "Ship something when it’s good enough — not perfect.",
-      "Declutter one workspace.",
+      "Protect one uninterrupted deep-work block (60–90 mins).",
+      "Ship one thing at ‘clean enough’ (not perfect).",
+      "Declutter one workspace surface and keep it clean for 7 days.",
     ],
 
-    headline: "The Path of Quiet Mastery",
-    subheadline: "Depth over speed. Precision over noise.",
-    essence:
-      "You’re wired for craft, focus, and refinement. Progress comes through consistency and care, not urgency.",
-
-    sections: [
-      { title: "How You Move", content: ["You prefer depth over breadth.", "You refine until things feel correct."] },
-      { title: "What Energizes You", content: ["Clear standards.", "Time for deep focus.", "Respect for quality."] },
+    notes: [
+      "This is a display layer — it does not define identity or culture.",
+      "If this doesn’t resonate, it’s a signal to adjust weighting / questions, not force-fit.",
     ],
-
-    reflectionPrompts: ["Where does quality matter most right now?", "What deserves your full attention?"],
   },
 
   Renara: {
     codeName: "Renara",
-
     snapshot:
       "You create stability by softening friction — you’re the person who makes environments feel calmer, smoother, and more livable.",
 
+    origin: {
+      level1: "Javanese",
+      lineage: [
+        "Harmony-first social rhythm",
+        "Soft power influence (subtle, effective)",
+        "Balance + restraint",
+        "Community stability",
+      ],
+    },
+
     lens: {
       title: "Balance & Harmony",
-      description: "Stability through calm awareness and soft power.",
-      inPlainEnglish: ["You sense tension quickly.", "You smooth conflict naturally.", "You thrive in calm environments."],
+      description: "Stability through calm awareness, emotional intelligence, and soft power.",
+      inPlainEnglish: [
+        "You feel tension quickly.",
+        "You smooth conflict naturally.",
+        "You thrive in calm, respectful environments.",
+      ],
     },
 
     traits: {
@@ -151,35 +173,52 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
         { label: "Emotionally aware", meaning: "You read atmosphere and tone early." },
         { label: "Stabilizing", meaning: "You reduce friction and restore flow." },
         { label: "Relational", meaning: "You value cooperation over dominance." },
+        { label: "Steady", meaning: "You help people and systems settle into balance." },
       ],
     },
 
     recommendations: {
-      lifestyle: ["Keep routines gentle and consistent.", "Choose stability over drama."],
-      places: ["Calm, beautiful neighborhoods.", "Spaces with respectful social rhythm."],
-      music: ["Warm, melodic, emotionally balanced music."],
-      activities: ["Yoga, walking, swimming.", "Creative flow activities."],
+      lifestyle: [
+        "Keep routines gentle and consistent.",
+        "Choose stability over drama.",
+        "Set boundaries early so harmony includes you too.",
+      ],
+      places: [
+        "Calm, beautiful neighborhoods (parks, waterfronts, walkable areas).",
+        "Spaces with respectful social rhythm (not chaotic nightlife).",
+        "Cozy community hubs you can return to.",
+      ],
+      music: [
+        "Warm, melodic, emotionally balanced music.",
+        "Chill R&B, melodic house, soft soul.",
+        "Anything smooth (not rage content energy).",
+      ],
+      activities: [
+        "Yoga, walking, swimming (reset your baseline).",
+        "Cooking, photography, design (beauty + flow).",
+        "Small gatherings with low drama and consistency.",
+      ],
     },
 
-    strengths: ["Emotional intelligence", "Conflict reduction", "Relationship awareness"],
+    strengths: ["Emotional intelligence", "Conflict reduction", "Relationship awareness", "Stability-building"],
 
-    watchouts: ["Avoiding necessary confrontation", "Over-accommodating others"],
+    watchouts: [
+      "Avoiding necessary confrontation",
+      "Over-accommodating others",
+      "Quiet resentment from delayed needs",
+      "Staying too long in unbalanced environments",
+    ],
 
-    tryThisWeek: ["Say no once without explaining.", "Do one thing purely for calm.", "Set one clear boundary."],
-
-    headline: "The Art of Balance",
-    subheadline: "Stability through harmony.",
-    essence:
-      "You stabilize systems by sensing imbalance early and softening friction before it escalates.",
-
-    sections: [{ title: "How You Move", content: ["You sense emotional undercurrents.", "You prioritize cooperation."] }],
-
-    reflectionPrompts: ["Where are you maintaining balance at your expense?", "What boundary would restore harmony?"],
+    tryThisWeek: [
+      "Say no once without over-explaining.",
+      "Choose one boundary and communicate it early.",
+      "Do one calm reset (walk, music, tidy) before sleep.",
+    ],
   },
 };
 
 /* =========================
-   HELPERS
+   HELPERS (USED AROUND THE APP)
 ========================= */
 
 export const CODE_SLUGS = Object.keys(CODE_PAGES) as CodeSlug[];
