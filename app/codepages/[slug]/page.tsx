@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { CODE_PAGES, type CodeSlug, type CodePage } from "@/lib/codePages";
+import { CODE_DISPLAY_MAP } from "@/lib/codeDisplayMap";
 import CodePageClient from "./CodePageClient";
 
 type Params = Promise<{ slug: string }>;
@@ -24,14 +25,17 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug: rawSlug } = await params;
   const slug = normalizeSlug(rawSlug);
 
-  if (!isCodeSlug(slug)) return { title: "Code Page • Avirage" };
+  if (!isCodeSlug(slug)) return { title: "Code Page • Ethos" };
 
   const page = CODE_PAGES[slug];
+  const display = CODE_DISPLAY_MAP[page.codeName as keyof typeof CODE_DISPLAY_MAP];
+
   return {
-    title: `${page.codeName} • Avirage`,
+    title: `${display?.label ?? page.codeName} • Ethos`,
     description:
-      page.snapshot ||
-      `Explore the ${page.codeName} archetypal tradition lens and what it means for your lifestyle.`,
+      display?.description ??
+      page.snapshot ??
+      `Explore this archetypal lens and what it means for your lifestyle.`,
   };
 }
 
@@ -43,10 +47,15 @@ export default async function CodePageRoute({ params }: { params: Params }) {
 
   const page: CodePage = CODE_PAGES[slug];
 
+  // 🔑 Map internal code name → archetype display
+  type CodeKey = keyof typeof CODE_DISPLAY_MAP;
+  const display = CODE_DISPLAY_MAP[page.codeName as CodeKey];
+
   return (
     <main className="min-h-screen bg-black text-white">
       <div className="mx-auto w-[min(1100px,92vw)] py-10">
-        <div className="mb-5 flex items-center justify-between gap-3">
+        {/* Top bar */}
+        <div className="mb-6 flex items-center justify-between gap-3">
           <Link
             href="/"
             className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white/85 hover:bg-white/[0.06]"
@@ -55,18 +64,23 @@ export default async function CodePageRoute({ params }: { params: Params }) {
           </Link>
 
           <div className="flex flex-wrap justify-end gap-2">
-            <span className="rounded-full border border-white/12 bg-white/[0.05] px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.16em]">
-              {page.codeName}
+            {/* Mythical archetype (PRIMARY) */}
+            <span className="rounded-full border border-white/15 bg-white/[0.08] px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.18em]">
+              {display?.label ?? page.codeName}
             </span>
-            <span className="rounded-full border border-white/12 bg-white/[0.03] px-3 py-2 text-[12px] font-semibold text-white/80">
+
+            {/* Cultural reference (QUIET / SECONDARY) */}
+            <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-[11px] font-semibold text-white/60">
               {page.fullName}
             </span>
           </div>
         </div>
 
+        {/* Client content */}
         <CodePageClient slug={slug} page={page} />
 
-        <div className="mt-7 text-center">
+        {/* Footer */}
+        <div className="mt-8 text-center">
           <Link
             href="/"
             className="inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.05] px-4 py-3 text-sm font-extrabold hover:bg-white/[0.08]"
