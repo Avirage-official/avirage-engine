@@ -114,8 +114,8 @@ export async function POST(request: NextRequest) {
 }
 
 function getCodeDescription(codeName: string): string {
-  const code = getCulturalCode(codeName.toLowerCase());
-  return code?.archetype_essence || code?.description || "Cultural code";
+  const code = getCulturalCode(codeName);  // Already lowercase from codeMatcher
+  return code?.description || "Cultural code description";
 }
 /**
  * Extract key traits from result
