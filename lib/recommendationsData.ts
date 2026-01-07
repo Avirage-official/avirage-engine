@@ -6,6 +6,8 @@
  * - Recommendations are *environment + behavior fit*, not ancestry or identity claims.
  * - This layer must NOT affect scoring. It is output-only.
  * - Tone: grounded, casual, non-therapeutic, not moralizing.
+ * 
+ * CRITICAL: Keys must be lowercase to match codeMatcher.ts output
  */
 
 export interface CategoryRecommendation {
@@ -26,7 +28,7 @@ export interface CategoryRecommendation {
     reasoning: string;
   };
 
-  /** Quick self-check so users don’t force-fit */
+  /** Quick self-check so users don't force-fit */
   validation: {
     resonates: string[];
     doesntResonate: string[];
@@ -56,16 +58,16 @@ export interface CodeRecommendations {
 }
 
 /**
- * Engine keys MUST match your CodeMatcher codeName values (e.g., "Shokunin")
+ * Engine keys MUST match codeMatcher codeName values (lowercase)
  */
 export const RECOMMENDATIONS: Record<string, CodeRecommendations> = {
   /* ==========================================
      SHOKUNIN — CRAFT / MASTERY / PRECISION
   ========================================== */
-  Shokunin: {
+  shokunin: {
     locations: {
-      why: `You don’t need a “cool city.” You need a place where **standards exist** and people actually notice detail.
-If your environment rewards speed over quality, you’ll feel constantly rushed and never satisfied.
+      why: `You don't need a "cool city." You need a place where **standards exist** and people actually notice detail.
+If your environment rewards speed over quality, you'll feel constantly rushed and never satisfied.
 
 **Look for:** craft neighborhoods, design cities, calm order, functional beauty, quiet competence.`,
       greenLight: [
@@ -77,67 +79,58 @@ If your environment rewards speed over quality, you’ll feel constantly rushed 
             "Neighborhoods with calm rhythm (walkable, not chaotic)",
           ],
           reasoning:
-            "Your nervous system relaxes when quality is normal. You’ll naturally do your best work.",
+            "Your nervous system relaxes when quality is normal. You'll naturally do your best work.",
         },
         {
-          title: "Micro-location matters",
+          title: "Examples",
           items: [
-            "Near a studio / maker space / calm cafe you can “claim”",
-            "Access to tools, materials, and quiet routines",
-            "Walkability to reduce friction (less energy wasted)",
+            "Kyoto, Portland, Copenhagen, certain Berlin neighborhoods",
+            "Melbourne design districts, Barcelona's artisan quarters",
+            "Small college towns with maker scenes",
           ],
-          reasoning:
-            "You thrive when the day flows cleanly: fewer interruptions, fewer random stressors.",
+          reasoning: "Quality culture is in the air—you don't have to justify yourself.",
         },
       ],
       redLight: {
         title: "Avoid",
         items: [
-          "Hustle-heavy startup districts where speed is worshipped",
-          "Noisy areas where you can’t focus (party streets, constant traffic)",
-          "Places where everything is disposable (cheap build quality everywhere)",
+          "Pure hustle/status cities where speed is everything",
+          "Loud, overstimulating environments with constant chaos",
+          "Places that mock attention to detail as 'overthinking'",
         ],
         reasoning:
-          "You’ll end up fighting your environment daily. That becomes burnout, even if the city is ‘successful.’",
+          "You'll burn out or go numb. Either way, you lose your edge.",
       },
       validation: {
-        resonates: [
-          "You feel physical relief in tidy, well-designed spaces",
-          "You notice build quality, materials, and small details instantly",
-          "You’d pick a smaller, calmer place if it means better focus",
-        ],
-        doesntResonate: [
-          "You prefer chaos + fast switching all the time",
-          "You get bored without constant novelty",
-        ],
+        resonates: ["You relax when your environment respects quality"],
+        doesntResonate: ["You feel alive only in chaotic, low-quality spaces"],
       },
       affiliates: [],
     },
 
     work: {
-      why: `You’re not “slow.” You’re **accurate**.
-Your best environments protect deep focus and reward refinement, not just output volume.`,
+      why: `You do your best work in environments that value **depth over speed**.
+You become lethal when you're allowed to refine.`,
       greenLight: [
         {
-          title: "Work that fits your operating system",
+          title: "Work that fits",
           items: [
-            "Roles with clear standards (quality metrics, review culture)",
-            "Deep work blocks (async teams, fewer meetings)",
-            "Craft-based careers (design, engineering, editing, architecture, product)",
-            "Mentorship / apprenticeship paths (learn → master → teach)",
+            "Deep technical roles (engineering, design, research)",
+            "Craftsmanship-based work (trades, artisan production, creative work)",
+            "Roles with clear quality standards and feedback loops",
           ],
           reasoning:
-            "Your advantage is iteration. You become lethal when you’re allowed to refine.",
+            "You become lethal when you're allowed to refine.",
         },
         {
           title: "Team culture signals",
           items: [
-            "People respect details (not ‘good enough’ culture)",
+            "People respect details (not 'good enough' culture)",
             "Feedback is specific (not vague praise)",
             "Time is protected for quality (not constant last-minute fires)",
           ],
           reasoning:
-            "You don’t need ‘nice’ teams. You need teams that respect the work.",
+            "You don't need 'nice' teams. You need teams that respect the work.",
         },
       ],
       redLight: {
@@ -145,15 +138,15 @@ Your best environments protect deep focus and reward refinement, not just output
         items: [
           "Constant urgent deadlines that force shortcuts",
           "Work that punishes depth (too many meetings, context switching)",
-          "Teams that call refinement ‘perfectionism’ in a negative way",
+          "Teams that call refinement 'perfectionism' in a negative way",
         ],
         reasoning:
-          "You’ll either numb yourself and get sloppy, or overwork to keep standards alone.",
+          "You'll either numb yourself and get sloppy, or overwork to keep standards alone.",
       },
       validation: {
         resonates: [
           "You feel proud when the small details are right",
-          "You hate shipping work you wouldn’t sign your name to",
+          "You hate shipping work you wouldn't sign your name to",
         ],
         doesntResonate: [
           "You love speed-first chaos and ship-by-Friday energy",
@@ -163,7 +156,7 @@ Your best environments protect deep focus and reward refinement, not just output
     },
 
     community: {
-      why: `Your community isn’t about quantity. It’s about **shared standards**.
+      why: `Your community isn't about quantity. It's about **shared standards**.
 You bond through doing, building, learning, and mutual respect.`,
       greenLight: [
         {
@@ -174,17 +167,17 @@ You bond through doing, building, learning, and mutual respect.`,
             "Small groups that meet consistently (not huge social churn)",
           ],
           reasoning:
-            "You don’t need constant social energy—just real people who get your brain.",
+            "You don't need constant social energy—just real people who get your brain.",
         },
       ],
       redLight: {
         title: "Avoid",
         items: [
           "Status-only communities with shallow conversation",
-          "Crowds that mock care/detail as ‘try-hard’",
+          "Crowds that mock care/detail as 'try-hard'",
         ],
         reasoning:
-          "If your values are mocked, you’ll either withdraw or become bitter.",
+          "If your values are mocked, you'll either withdraw or become bitter.",
       },
       validation: {
         resonates: ["You respect people who take their craft seriously"],
@@ -204,13 +197,13 @@ You bond through doing, building, learning, and mutual respect.`,
             "Restorative craft: journaling, tea/coffee ritual, instrument practice",
           ],
           reasoning:
-            "You’re happiest when your effort turns into mastery you can feel.",
+            "You're happiest when your effort turns into mastery you can feel.",
         },
       ],
       redLight: {
         title: "Avoid",
         items: ["Pure chaos activities with no skill curve or progression"],
-        reasoning: "You’ll get bored or feel like you’re wasting time.",
+        reasoning: "You'll get bored or feel like you're wasting time.",
       },
       validation: {
         resonates: ["You love getting better at a thing over time"],
@@ -230,7 +223,7 @@ You bond through doing, building, learning, and mutual respect.`,
             "Slow deliberate practice",
           ],
           reasoning:
-            "You don’t want random tips. You want systems, standards, and reps.",
+            "You don't want random tips. You want systems, standards, and reps.",
         },
       ],
       redLight: {
@@ -246,7 +239,7 @@ You bond through doing, building, learning, and mutual respect.`,
     },
 
     media: {
-      why: `You’re pulled to media with craft, structure, and quiet intensity.`,
+      why: `You're pulled to media with craft, structure, and quiet intensity.`,
       greenLight: [
         {
           title: "Media that lands",
@@ -255,7 +248,7 @@ You bond through doing, building, learning, and mutual respect.`,
             "Slow cinema / deliberate storytelling",
             "YouTube channels with technique breakdowns",
           ],
-          reasoning: "You relax when the creator respects the audience’s intelligence.",
+          reasoning: "You relax when the creator respects the audience's intelligence.",
         },
       ],
       redLight: {
@@ -286,11 +279,11 @@ You bond through doing, building, learning, and mutual respect.`,
       redLight: {
         title: "Avoid",
         items: ["Clutter traps", "Noisy shared spaces with zero boundaries"],
-        reasoning: "You’ll slowly lose your ability to focus.",
+        reasoning: "You'll slowly lose your ability to focus.",
       },
       validation: {
         resonates: ["A clean space makes you feel sharper"],
-        doesntResonate: ["You don’t care about space at all"],
+        doesntResonate: ["You don't care about space at all"],
       },
       affiliates: [],
     },
@@ -302,13 +295,13 @@ You bond through doing, building, learning, and mutual respect.`,
           title: "Ritual ideas",
           items: ["Morning prep ritual", "End-of-day reset", "Weekly craft block"],
           reasoning:
-            "Consistency protects you. When you’re stable, your work becomes insane.",
+            "Consistency protects you. When you're stable, your work becomes insane.",
         },
       ],
       redLight: {
         title: "Avoid",
-        items: ["Overcomplicated routines you can’t sustain"],
-        reasoning: "If it’s fragile, it won’t last.",
+        items: ["Overcomplicated routines you can't sustain"],
+        reasoning: "If it's fragile, it won't last.",
       },
       validation: {
         resonates: ["You love repeatable routines"],
@@ -329,7 +322,7 @@ You bond through doing, building, learning, and mutual respect.`,
       redLight: {
         title: "Avoid",
         items: ["Random workouts with no progression or feedback"],
-        reasoning: "You’ll feel like you’re spinning wheels.",
+        reasoning: "You'll feel like you're spinning wheels.",
       },
       validation: {
         resonates: ["You care about form"],
@@ -339,7 +332,7 @@ You bond through doing, building, learning, and mutual respect.`,
     },
 
     wellness: {
-      why: `Your wellness improves when your environment is clean and your mind isn’t constantly interrupted.`,
+      why: `Your wellness improves when your environment is clean and your mind isn't constantly interrupted.`,
       greenLight: [
         {
           title: "High ROI habits",
@@ -350,7 +343,7 @@ You bond through doing, building, learning, and mutual respect.`,
       redLight: {
         title: "Avoid",
         items: ["Overcommitment", "Always-on notifications", "Constant social obligations"],
-        reasoning: "It shreds your focus—the thing you’re built for.",
+        reasoning: "It shreds your focus—the thing you're built for.",
       },
       validation: {
         resonates: ["You feel best when your day is clean and intentional"],
@@ -374,7 +367,7 @@ You bond through doing, building, learning, and mutual respect.`,
         reasoning: "They feel noisy and unserious.",
       },
       validation: {
-        resonates: ["You’d rather buy once and keep it"],
+        resonates: ["You'd rather buy once and keep it"],
         doesntResonate: ["You love constant trendy replacements"],
       },
       affiliates: [],
@@ -405,7 +398,7 @@ You bond through doing, building, learning, and mutual respect.`,
   /* ==========================================
      RENARA — HARMONY / BALANCE / SOFT POWER
   ========================================== */
-  Renara: {
+  renara: {
     locations: {
       why: `You thrive in environments that feel **balanced**: aesthetically calm, socially respectful, not overly aggressive.
 Too much chaos makes you tense. Too much rigidity makes you feel trapped.`,
@@ -424,12 +417,12 @@ Too much chaos makes you tense. Too much rigidity makes you feel trapped.`,
       redLight: {
         title: "Avoid",
         items: [
-          "Aggressive ‘every man for himself’ environments",
+          "Aggressive 'every man for himself' environments",
           "Constant conflict zones (socially or physically)",
           "Very harsh, noisy, overstimulating neighborhoods",
         ],
         reasoning:
-          "You’ll spend energy regulating the environment instead of living your life.",
+          "You'll spend energy regulating the environment instead of living your life.",
       },
       validation: {
         resonates: ["You feel best in calm, beautiful places"],
@@ -440,7 +433,7 @@ Too much chaos makes you tense. Too much rigidity makes you feel trapped.`,
 
     work: {
       why: `You do your best work where people value **cooperation, taste, and stability**.
-You’re strong at smoothing systems, coordinating people, and creating flow.`,
+You're strong at smoothing systems, coordinating people, and creating flow.`,
       greenLight: [
         {
           title: "Work that fits",
@@ -451,13 +444,13 @@ You’re strong at smoothing systems, coordinating people, and creating flow.`,
             "Teams that have respectful conflict rules",
           ],
           reasoning:
-            "You’re a harmonizer—when your environment respects that, you become a multiplier.",
+            "You're a harmonizer—when your environment respects that, you become a multiplier.",
         },
       ],
       redLight: {
         title: "Avoid",
         items: ["High-conflict politics-heavy teams", "Constant confrontation roles"],
-        reasoning: "It forces you into armor that isn’t your natural strength.",
+        reasoning: "It forces you into armor that isn't your natural strength.",
       },
       validation: {
         resonates: ["You naturally reduce tension and create order"],
@@ -548,7 +541,7 @@ You’re strong at smoothing systems, coordinating people, and creating flow.`,
         reasoning: "It destabilizes your mood without you noticing.",
       },
       validation: {
-        resonates: ["You’re sensitive to tone in content"],
+        resonates: ["You're sensitive to tone in content"],
         doesntResonate: ["You feel nothing from content tone"],
       },
       affiliates: [],
@@ -566,11 +559,11 @@ You’re strong at smoothing systems, coordinating people, and creating flow.`,
       redLight: {
         title: "Avoid",
         items: ["Harsh lighting", "Messy chaos", "Constant noise"],
-        reasoning: "You’ll spend energy restoring balance every day.",
+        reasoning: "You'll spend energy restoring balance every day.",
       },
       validation: {
         resonates: ["A calm home makes you feel like yourself"],
-        doesntResonate: ["You don’t care about environment at all"],
+        doesntResonate: ["You don't care about environment at all"],
       },
       affiliates: [],
     },
@@ -586,8 +579,8 @@ You’re strong at smoothing systems, coordinating people, and creating flow.`,
       ],
       redLight: {
         title: "Avoid",
-        items: ["Intense routines you can’t sustain"],
-        reasoning: "If it feels like a performance, it won’t last.",
+        items: ["Intense routines you can't sustain"],
+        reasoning: "If it feels like a performance, it won't last.",
       },
       validation: {
         resonates: ["You love gentle routines"],
@@ -629,7 +622,7 @@ You’re strong at smoothing systems, coordinating people, and creating flow.`,
       redLight: {
         title: "Avoid",
         items: ["People-pleasing with no boundaries", "Staying in conflict too long"],
-        reasoning: "You’ll lose yourself trying to balance everyone else.",
+        reasoning: "You'll lose yourself trying to balance everyone else.",
       },
       validation: {
         resonates: ["You feel best with stability + kindness"],
