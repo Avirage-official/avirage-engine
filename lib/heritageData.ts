@@ -2,6 +2,8 @@
  * HERITAGE DATA
  * Narrative + archival reference only.
  * NOT used in scoring or personality assignment.
+ * 
+ * CRITICAL: Keys must be lowercase to match codeMatcher.ts output
  */
 
 export interface HeritageSection {
@@ -37,8 +39,8 @@ export interface HeritageData {
 ====================================================== */
 
 export const HERITAGE_DATA: Record<string, HeritageData> = {
-  Shokunin: {
-    codeName: "Shokunin",
+  shokunin: {
+    codeName: "shokunin",
     level1: "Japanese Craft Tradition",
     chapters: [
       {
@@ -53,7 +55,7 @@ export const HERITAGE_DATA: Record<string, HeritageData> = {
               heading: "Work as a Moral Act",
               paragraphs: [
                 "In traditional Japanese society, craftsmanship was seen as an ethical responsibility.",
-                "Each action carried weight, because it reflected one’s character."
+                "Each action carried weight, because it reflected one's character."
               ],
               highlights: [
                 "Mastery over speed",
@@ -86,8 +88,8 @@ export const HERITAGE_DATA: Record<string, HeritageData> = {
     ]
   },
 
-  Renara: {
-    codeName: "Renara",
+  renara: {
+    codeName: "renara",
     level1: "Javanese Harmony Culture",
     chapters: [
       {
