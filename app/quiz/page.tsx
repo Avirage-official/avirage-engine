@@ -1,651 +1,653 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  AnimatePresence,
   motion,
   useMotionTemplate,
   useMotionValue,
   useScroll,
   useSpring,
   useTransform,
+  useInView,
 } from "framer-motion";
 
 /**
- * Premium Landing Page (Ethos)
- * File: /app/page.tsx
- * Notes:
- * - No glass effects.
- * - Strong interactive hero + scroll choreography.
- * - CTAs: /quiz and /codes
+ * AVIRAGE LANDING PAGE (2025 REDESIGN)
+ * 
+ * Features:
+ * - Bento grid layouts
+ * - Magnetic cursor effects
+ * - Scroll-triggered animations
+ * - Gradient mesh backgrounds
+ * - 3D card tilts
+ * - Kinetic typography
+ * - Floating organic shapes
  */
 
-function clamp(n: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, n));
-}
+// Sample code data (replace with actual data later)
+const FEATURED_CODES = [
+  { 
+    slug: "shokunin", 
+    name: "Shokunin", 
+    title: "The Craftsperson",
+    desc: "Precision • Mastery • Excellence",
+    color: "from-blue-500 to-cyan-500",
+    icon: "🎯"
+  },
+  { 
+    slug: "khoisan", 
+    name: "Khoisan", 
+    title: "The Earthlistener",
+    desc: "Presence • Attunement • Flow",
+    color: "from-amber-500 to-orange-500",
+    icon: "🌍"
+  },
+  { 
+    slug: "yatevar", 
+    name: "Yatevar", 
+    title: "The Philosopher-Warrior",
+    desc: "Order • Duty • Wisdom",
+    color: "from-purple-500 to-pink-500",
+    icon: "⚡"
+  },
+  { 
+    slug: "namsea", 
+    name: "Namsea", 
+    title: "The Flow Master",
+    desc: "Grace • Adaptability • Ease",
+    color: "from-teal-500 to-emerald-500",
+    icon: "💧"
+  },
+  { 
+    slug: "alethir", 
+    name: "Alethir", 
+    title: "The Truth Seeker",
+    desc: "Inquiry • Reason • Pursuit",
+    color: "from-indigo-500 to-blue-500",
+    icon: "👁️"
+  },
+  { 
+    slug: "enzuka", 
+    name: "Enzuka", 
+    title: "The Collective Warrior",
+    desc: "Strength • Honor • Unity",
+    color: "from-red-500 to-rose-500",
+    icon: "🛡️"
+  },
+];
 
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduced(!!mq.matches);
-    update();
-    mq.addEventListener?.("change", update);
-    return () => mq.removeEventListener?.("change", update);
-  }, []);
-  return reduced;
-}
+// Magnetic button component
+function MagneticButton({ 
+  children, 
+  href, 
+  variant = "primary" 
+}: { 
+  children: React.ReactNode; 
+  href: string;
+  variant?: "primary" | "secondary";
+}) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
-function usePointerGlow() {
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const inView = useMotionValue(0);
+  const handleMouse = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    setPosition({ x: x * 0.3, y: y * 0.3 });
+  };
 
-  const smx = useSpring(mx, { stiffness: 220, damping: 28 });
-  const smy = useSpring(my, { stiffness: 220, damping: 28 });
-  const alpha = useSpring(inView, { stiffness: 180, damping: 24 });
+  const handleLeave = () => {
+    setPosition({ x: 0, y: 0 });
+  };
 
-  const glow = useMotionTemplate`radial-gradient(650px 450px at ${smx}px ${smy}px, rgba(56,189,248,${alpha}), rgba(255,255,255,0) 55%)`;
-  const glow2 = useMotionTemplate`radial-gradient(520px 420px at ${smx}px ${smy}px, rgba(244,114,182,${alpha}), rgba(255,255,255,0) 62%)`;
+  const baseClasses = variant === "primary"
+    ? "bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white shadow-lg shadow-purple-500/50"
+    : "border-2 border-white/20 bg-white/5 backdrop-blur-xl text-white hover:bg-white/10";
 
-  return { mx, my, inView, glow, glow2 };
-}
-
-function EthosMark() {
   return (
-    <div className="flex items-center gap-3">
-      <div className="relative h-10 w-10 rounded-2xl bg-slate-950">
-        <div className="absolute inset-[2px] rounded-[14px] bg-white" />
-        <div className="absolute inset-0 grid place-items-center">
-          <div className="h-4 w-4 rotate-45 rounded-[5px] bg-slate-950" />
-        </div>
-      </div>
-      <div>
-        <div className="text-[11px] font-semibold tracking-[0.22em] text-slate-500">ETHOS</div>
-        <div className="text-sm font-black tracking-tight text-slate-900">Cultural Code Mapping</div>
-      </div>
-    </div>
+    <Link
+      ref={ref}
+      href={href}
+      onMouseMove={handleMouse}
+      onMouseLeave={handleLeave}
+      className={`
+        relative px-8 py-4 rounded-2xl font-bold text-sm
+        transition-all duration-200 ease-out
+        hover:scale-105 active:scale-95
+        ${baseClasses}
+      `}
+      style={{
+        transform: `translate(${position.x}px, ${position.y}px)`,
+      }}
+    >
+      <span className="relative z-10">{children}</span>
+      {variant === "primary" && (
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 blur-xl opacity-50" />
+      )}
+    </Link>
   );
 }
 
-function Pill({
-  children,
-  tone = "neutral",
-}: {
-  children: React.ReactNode;
-  tone?: "neutral" | "sky" | "rose" | "amber" | "slate";
-}) {
-  const cls =
-    tone === "sky"
-      ? "border-sky-200 bg-sky-50 text-sky-700"
-      : tone === "rose"
-      ? "border-rose-200 bg-rose-50 text-rose-700"
-      : tone === "amber"
-      ? "border-amber-200 bg-amber-50 text-amber-700"
-      : tone === "slate"
-      ? "border-slate-200 bg-slate-50 text-slate-700"
-      : "border-slate-200 bg-white text-slate-700";
+// 3D Tilt Card Component
+function TiltCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+
+  const handleMouse = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    setRotateX((y - centerY) / 10);
+    setRotateY((centerX - x) / 10);
+  };
+
+  const handleLeave = () => {
+    setRotateX(0);
+    setRotateY(0);
+  };
 
   return (
-    <span
-      className={[
-        "inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold tracking-wide",
-        cls,
-      ].join(" ")}
+    <div
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={handleLeave}
+      className={`transition-transform duration-200 ease-out ${className}`}
+      style={{
+        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+      }}
     >
       {children}
-    </span>
-  );
-}
-
-function SectionTitle({
-  eyebrow,
-  title,
-  subtitle,
-}: {
-  eyebrow: string;
-  title: string;
-  subtitle: string;
-}) {
-  return (
-    <div className="max-w-3xl">
-      <div className="text-[11px] font-semibold tracking-[0.22em] text-slate-500">{eyebrow}</div>
-      <div className="mt-2 text-3xl sm:text-4xl font-black tracking-tight text-slate-950">{title}</div>
-      <div className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">{subtitle}</div>
     </div>
   );
 }
 
-function GradientRail() {
-  return (
-    <div className="relative h-full w-full">
-      <div className="absolute inset-0 rounded-3xl border border-slate-200 bg-white" />
-      <div className="absolute inset-0 rounded-3xl [background:radial-gradient(circle_at_20%_25%,rgba(56,189,248,0.18),transparent_42%),radial-gradient(circle_at_80%_20%,rgba(244,114,182,0.16),transparent_44%),radial-gradient(circle_at_55%_90%,rgba(253,230,138,0.18),transparent_48%)]" />
-      <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(to_right,rgba(15,23,42,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.06)_1px,transparent_1px)] bg-[size:72px_72px] opacity-[0.35]" />
-    </div>
-  );
-}
-
-function SignalCard({
-  k,
-  title,
-  desc,
-  tag,
-}: {
-  k: string;
-  title: string;
-  desc: string;
-  tag: string;
-}) {
+// Floating shape component
+function FloatingShape({ delay = 0 }: { delay?: number }) {
   return (
     <motion.div
-      layout
-      className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_16px_48px_rgba(2,6,23,0.06)]"
-      whileHover={{ y: -4 }}
-      transition={{ type: "spring", stiffness: 280, damping: 22 }}
-    >
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <div className="text-sm font-black tracking-tight text-slate-950">{title}</div>
-          <div className="mt-2 text-sm text-slate-600 leading-relaxed">{desc}</div>
-        </div>
-        <div className="shrink-0 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-700">
-          {k}
-        </div>
-      </div>
-
-      <div className="mt-4 flex items-center justify-between">
-        <span className="text-[11px] font-semibold tracking-wide text-slate-500">{tag}</span>
-        <div className="h-8 w-8 rounded-2xl border border-slate-200 bg-white grid place-items-center text-slate-900 group-hover:bg-slate-50">
-          <span className="text-sm">↗</span>
-        </div>
-      </div>
-    </motion.div>
+      className="absolute rounded-full blur-3xl opacity-30"
+      animate={{
+        x: [0, 100, 0],
+        y: [0, -100, 0],
+        scale: [1, 1.2, 1],
+      }}
+      transition={{
+        duration: 20,
+        repeat: Infinity,
+        delay,
+        ease: "easeInOut",
+      }}
+      style={{
+        background: "radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)",
+        width: "600px",
+        height: "600px",
+      }}
+    />
   );
 }
 
 export default function HomePage() {
-  const reduced = usePrefersReducedMotion();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: containerRef });
 
-  // Scroll choreography
-  const rootRef = useRef<HTMLDivElement | null>(null);
-  const { scrollYProgress } = useScroll({ target: rootRef, offset: ["start start", "end end"] });
+  // Parallax values
+  const heroY = useTransform(scrollYProgress, [0, 0.3], [0, 200]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  const bentoY = useTransform(scrollYProgress, [0.2, 0.5], [100, 0]);
+  const bentoOpacity = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
 
-  const heroShift = useTransform(scrollYProgress, [0, 0.25], [0, -40]);
-  const heroFade = useTransform(scrollYProgress, [0, 0.2], [1, 0.6]);
-  const orbScale = useTransform(scrollYProgress, [0, 0.35], [1, 0.9]);
+  // Gradient mesh animation
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const smoothMouseX = useSpring(mouseX, { stiffness: 50, damping: 20 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 });
 
-  // Pointer-reactive glow (no glass)
-  const { mx, my, inView, glow, glow2 } = usePointerGlow();
-
-  const [activeMode, setActiveMode] = useState<"calm" | "bold" | "deep">("calm");
-
-  const signals = useMemo(() => {
-    if (activeMode === "bold") {
-      return [
-        {
-          k: "01",
-          title: "Move fast, stay precise",
-          desc: "You can be high-energy without being chaotic. We map your natural cadence.",
-          tag: "Momentum",
-        },
-        {
-          k: "02",
-          title: "Social presence, not performance",
-          desc: "How you show up when you’re not trying to impress anyone.",
-          tag: "Signal",
-        },
-        {
-          k: "03",
-          title: "Risk appetite & recovery",
-          desc: "What you leap into — and what you need to reset after.",
-          tag: "Edge",
-        },
-      ];
-    }
-    if (activeMode === "deep") {
-      return [
-        {
-          k: "01",
-          title: "Depth without heaviness",
-          desc: "Some people feel everything — and still move forward cleanly.",
-          tag: "Inner world",
-        },
-        {
-          k: "02",
-          title: "Your pattern under pressure",
-          desc: "We don’t judge. We identify the curve you naturally follow.",
-          tag: "Resilience",
-        },
-        {
-          k: "03",
-          title: "The environment you need",
-          desc: "Places and rhythms that unlock you — not drain you.",
-          tag: "Alignment",
-        },
-      ];
-    }
-    return [
-      {
-        k: "01",
-        title: "Calm isn’t slow",
-        desc: "It’s signal clarity. The way you choose, commit, and refine.",
-        tag: "Clarity",
-      },
-      {
-        k: "02",
-        title: "Instinct is data",
-        desc: "Your first answer is usually the truth. We keep it lightweight and sharp.",
-        tag: "Calibration",
-      },
-      {
-        k: "03",
-        title: "Identity without labels",
-        desc: "Not therapy talk. Not stereotypes. Just how you move through life.",
-        tag: "Modern mapping",
-      },
-    ];
-  }, [activeMode]);
+  const gradientMesh = useMotionTemplate`
+    radial-gradient(800px circle at ${smoothMouseX}px ${smoothMouseY}px, 
+      rgba(168, 85, 247, 0.15), 
+      transparent 40%
+    ),
+    radial-gradient(600px circle at ${smoothMouseX}px ${smoothMouseY}px, 
+      rgba(236, 72, 153, 0.10), 
+      transparent 40%
+    )
+  `;
 
   return (
-    <main ref={rootRef} className="min-h-screen bg-white text-slate-950">
-      {/* Background system */}
-      <div className="fixed inset-0 -z-10">
-        {/* base */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-white" />
-        {/* subtle grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.05)_1px,transparent_1px)] bg-[size:84px_84px] opacity-[0.28]" />
-        {/* soft orbs */}
-        <motion.div
-          style={{ scale: orbScale }}
-          className="absolute -top-40 left-1/2 h-[620px] w-[920px] -translate-x-1/2 rounded-full blur-3xl opacity-80
-                     [background:radial-gradient(circle_at_35%_35%,rgba(56,189,248,0.22),transparent_55%),radial-gradient(circle_at_70%_30%,rgba(244,114,182,0.18),transparent_58%),radial-gradient(circle_at_55%_75%,rgba(253,230,138,0.20),transparent_60%)]"
-        />
+    <div 
+      ref={containerRef}
+      className="min-h-screen bg-black text-white overflow-hidden"
+      onMouseMove={(e) => {
+        mouseX.set(e.clientX);
+        mouseY.set(e.clientY);
+      }}
+    >
+      {/* Animated gradient mesh background */}
+      <motion.div 
+        className="fixed inset-0 -z-10"
+        style={{ background: gradientMesh }}
+      />
+
+      {/* Noise texture overlay */}
+      <div className="fixed inset-0 -z-10 opacity-[0.015]">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+        }} />
       </div>
 
-      {/* Top Nav */}
-      <div className="sticky top-0 z-40 border-b border-slate-200 bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
-        <div className="mx-auto max-w-6xl px-5 py-4 flex items-center justify-between">
-          <EthosMark />
+      {/* Floating shapes */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <FloatingShape delay={0} />
+        <div className="absolute top-1/4 right-1/4">
+          <FloatingShape delay={5} />
+        </div>
+        <div className="absolute bottom-1/3 left-1/3">
+          <FloatingShape delay={10} />
+        </div>
+      </div>
 
-          <div className="hidden sm:flex items-center gap-2">
-            <Link
-              href="/codes"
-              className="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
-            >
+      {/* Sticky Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-xl bg-black/50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="text-2xl font-black tracking-tight">
+            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+              AVIRAGE
+            </span>
+          </Link>
+
+          <div className="flex items-center gap-6">
+            <Link href="/codes" className="text-sm font-semibold text-white/70 hover:text-white transition-colors">
               Codes
             </Link>
-            <Link
-              href="/quiz"
-              className="rounded-xl bg-slate-950 px-4 py-2 text-sm font-extrabold text-white hover:bg-slate-900"
-            >
-              Start calibration
+            <Link href="/about" className="text-sm font-semibold text-white/70 hover:text-white transition-colors">
+              About
             </Link>
-          </div>
-
-          <div className="sm:hidden">
-            <Link
+            <Link 
               href="/quiz"
-              className="rounded-xl bg-slate-950 px-4 py-2 text-sm font-extrabold text-white hover:bg-slate-900"
+              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-bold text-sm hover:shadow-lg hover:shadow-purple-500/50 transition-all"
             >
-              Start
+              Start Quiz
             </Link>
           </div>
         </div>
-      </div>
+      </nav>
 
-      {/* HERO */}
-      <section
-        onPointerMove={(e) => {
-          const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
-          mx.set(e.clientX - r.left);
-          my.set(e.clientY - r.top);
-        }}
-        onPointerEnter={() => inView.set(0.22)}
-        onPointerLeave={() => inView.set(0)}
-        className="relative"
+      {/* HERO SECTION */}
+      <motion.section 
+        style={{ y: heroY, opacity: heroOpacity }}
+        className="relative min-h-screen flex items-center justify-center px-6 pt-32"
       >
-        <div className="mx-auto max-w-6xl px-5 pt-12 sm:pt-16 pb-10">
-          <motion.div style={{ y: heroShift, opacity: heroFade }} className="relative">
-            {/* pointer glow layers */}
-            {!reduced && (
-              <>
-                <motion.div className="pointer-events-none absolute inset-0 -z-10" style={{ backgroundImage: glow }} />
-                <motion.div className="pointer-events-none absolute inset-0 -z-10" style={{ backgroundImage: glow2 }} />
-              </>
-            )}
+        <div className="max-w-6xl mx-auto text-center">
+          {/* Animated badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl mb-8"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
+            </span>
+            <span className="text-sm font-semibold text-white/90">20 Archetypal Identities • AI-Powered Mapping</span>
+          </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-              {/* Left copy */}
-              <div className="lg:col-span-7">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Pill tone="sky">Mythic archetypes</Pill>
-                  <Pill tone="slate">No stereotypes</Pill>
-                  <Pill tone="amber">Fast calibration</Pill>
-                </div>
+          {/* Main headline with staggered animation */}
+          <motion.h1
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-[0.95] mb-8"
+          >
+            <motion.span 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="block"
+            >
+              Discover Your
+            </motion.span>
+            <motion.span 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="block bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent"
+            >
+              Cultural Code
+            </motion.span>
+          </motion.h1>
 
-                <h1 className="mt-5 text-4xl sm:text-6xl font-black tracking-tight text-slate-950 leading-[1.02]">
-                  A mirror for how you move.
-                  <span className="block text-slate-500">Not a personality test.</span>
-                </h1>
+          {/* Subheadline */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="text-xl sm:text-2xl text-white/70 max-w-3xl mx-auto mb-12 leading-relaxed"
+          >
+            A mythic lens for how you see the world. Not a personality test—
+            <span className="text-white font-semibold"> a mirror for your instincts.</span>
+          </motion.p>
 
-                <p className="mt-5 text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl">
-                  Ethos maps your behavioral pattern into a symbolic archetype — designed to feel global, modern,
-                  and emotionally sticky. Fast answers. High signal. No cringe labels.
-                </p>
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <MagneticButton href="/quiz" variant="primary">
+              Start Calibration →
+            </MagneticButton>
+            <MagneticButton href="/codes" variant="secondary">
+              Explore 20 Codes
+            </MagneticButton>
+          </motion.div>
 
-                <div className="mt-7 flex flex-col sm:flex-row gap-3">
-                  <Link
-                    href="/quiz"
-                    className="h-12 rounded-2xl bg-slate-950 px-6 text-sm font-extrabold text-white grid place-items-center hover:bg-slate-900"
-                  >
-                    Start calibration
-                  </Link>
-                  <Link
-                    href="/codes"
-                    className="h-12 rounded-2xl border border-slate-200 bg-white px-6 text-sm font-extrabold text-slate-950 grid place-items-center hover:bg-slate-50"
-                  >
-                    Explore codes
-                  </Link>
-                </div>
-
-                <div className="mt-7 flex flex-wrap items-center gap-3 text-xs text-slate-500">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-950" />
-                    ~2 minutes
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-950" />
-                    instinct-based
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-950" />
-                    mythic naming layer
-                  </span>
-                </div>
-              </div>
-
-              {/* Right interactive panel */}
-              <div className="lg:col-span-5">
-                <div className="rounded-3xl border border-slate-200 bg-white shadow-[0_22px_70px_rgba(2,6,23,0.10)] overflow-hidden">
-                  <div className="p-5 border-b border-slate-200">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <div className="text-[11px] font-semibold tracking-[0.22em] text-slate-500">
-                          LIVE SIGNAL PANEL
-                        </div>
-                        <div className="mt-1 text-sm font-black text-slate-950">Choose a mode</div>
-                      </div>
-                      <div className="inline-flex rounded-2xl border border-slate-200 bg-white p-1">
-                        {(["calm", "bold", "deep"] as const).map((m) => (
-                          <button
-                            key={m}
-                            onClick={() => setActiveMode(m)}
-                            className={[
-                              "px-3 py-2 text-xs font-extrabold rounded-xl transition",
-                              activeMode === m ? "bg-slate-950 text-white" : "text-slate-700 hover:bg-slate-100",
-                            ].join(" ")}
-                          >
-                            {m.toUpperCase()}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-5">
-                    <AnimatePresence mode="popLayout">
-                      <motion.div
-                        key={activeMode}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.22, ease: "easeOut" }}
-                        className="grid grid-cols-1 gap-3"
-                      >
-                        {signals.map((s) => (
-                          <SignalCard key={s.k} {...s} />
-                        ))}
-                      </motion.div>
-                    </AnimatePresence>
-
-                    <div className="mt-5 rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                      <div className="text-xs font-semibold text-slate-600">What you get</div>
-                      <div className="mt-2 text-sm font-black text-slate-950">
-                        Primary + Secondary + Tertiary archetype
-                      </div>
-                      <div className="mt-1 text-sm text-slate-600">
-                        Plus a short explanation of why your pattern landed there.
-                      </div>
-                    </div>
-
-                    <div className="mt-5 flex gap-3">
-                      <Link
-                        href="/quiz"
-                        className="flex-1 h-11 rounded-2xl bg-slate-950 text-white text-sm font-extrabold grid place-items-center hover:bg-slate-900"
-                      >
-                        Calibrate now
-                      </Link>
-                      <Link
-                        href="/codes"
-                        className="flex-1 h-11 rounded-2xl border border-slate-200 bg-white text-slate-950 text-sm font-extrabold grid place-items-center hover:bg-slate-50"
-                      >
-                        Browse
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 text-xs text-slate-500">
-                  Designed to be global-safe: symbolic archetypes, not cultural ownership.
-                </div>
-              </div>
+          {/* Stats row */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.1 }}
+            className="flex flex-wrap items-center justify-center gap-8 mt-16 text-sm text-white/50"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-1 rounded-full bg-violet-500" />
+              <span>~2 minutes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-1 rounded-full bg-fuchsia-500" />
+              <span>20 archetypal codes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-1 rounded-full bg-pink-500" />
+              <span>Mythic naming system</span>
             </div>
           </motion.div>
         </div>
-      </section>
 
-      {/* SECTION: HOW IT WORKS */}
-      <section className="mx-auto max-w-6xl px-5 py-14">
-        <SectionTitle
-          eyebrow="HOW IT WORKS"
-          title="A system — not a vibe quiz."
-          subtitle="Ethos reads your answers as behavioral signals and maps them into an archetype. The naming layer is mythic to stay brandable and culturally safe."
-        />
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 1.3 }}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2"
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            className="flex flex-col items-center gap-2"
+          >
+            <span className="text-xs text-white/40 font-semibold tracking-wider uppercase">Scroll</span>
+            <svg className="w-6 h-6 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </motion.div>
+        </motion.div>
+      </motion.section>
 
-        <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          <div className="lg:col-span-7 rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_16px_48px_rgba(2,6,23,0.06)]">
-            <div className="text-sm font-black text-slate-950">The calibration loop</div>
-            <div className="mt-2 text-sm text-slate-600 leading-relaxed">
-              Three-choice prompts reduce overthinking. We prioritize instinct, then triangulate into a stable archetype
-              profile. You get clarity and direction — without personality-test cringe.
-            </div>
+      {/* BENTO GRID - Featured Codes */}
+      <motion.section 
+        style={{ y: bentoY, opacity: bentoOpacity }}
+        className="relative py-32 px-6"
+      >
+        <div className="max-w-7xl mx-auto">
+          {/* Section header */}
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="inline-block px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl mb-6"
+            >
+              <span className="text-sm font-bold text-white/90">20 ARCHETYPAL CODES</span>
+            </motion.div>
 
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {[
-                { n: "01", t: "Answer by instinct", d: "Fast taps, minimal noise." },
-                { n: "02", t: "Pattern triangulation", d: "Signals combine into a map." },
-                { n: "03", t: "Archetype reveal", d: "A name you can actually own." },
-              ].map((x) => (
-                <div key={x.n} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="text-[11px] font-extrabold tracking-[0.18em] text-slate-500">{x.n}</div>
-                  <div className="mt-2 text-sm font-black text-slate-950">{x.t}</div>
-                  <div className="mt-1 text-sm text-slate-600">{x.d}</div>
-                </div>
-              ))}
-            </div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-5xl sm:text-6xl font-black tracking-tight mb-6"
+            >
+              Choose Your{" "}
+              <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+                Archetype
+              </span>
+            </motion.h2>
 
-            <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-5">
-              <div className="text-xs font-semibold text-slate-600">Ethos promise</div>
-              <div className="mt-2 text-sm font-black text-slate-950">
-                Identity without stereotypes — clarity without labels.
-              </div>
-              <div className="mt-1 text-sm text-slate-600">
-                Your code is a lens — not a box. You can retake anytime.
-              </div>
-            </div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-xl text-white/60 max-w-2xl mx-auto"
+            >
+              Each code represents a distinct lens—grounded in cultural patterns, expressed through mythic archetypes.
+            </motion.p>
           </div>
 
-          <div className="lg:col-span-5 rounded-3xl overflow-hidden">
-            <GradientRail />
-            <div className="relative p-6">
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_16px_48px_rgba(2,6,23,0.06)]">
-                <div className="text-[11px] font-semibold tracking-[0.22em] text-slate-500">PREVIEW</div>
-                <div className="mt-2 text-2xl font-black tracking-tight text-slate-950">
-                  Mythic archetype names
-                </div>
-                <div className="mt-2 text-sm text-slate-600 leading-relaxed">
-                  Instead of culture-as-identity, we use symbolic entities. You keep depth without appropriation risk.
-                </div>
+          {/* Bento Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {FEATURED_CODES.map((code, i) => (
+              <motion.div
+                key={code.slug}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+              >
+                <TiltCard>
+                  <Link
+                    href={`/codepages/${code.slug}`}
+                    className="group block relative p-8 rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl hover:border-white/20 transition-all duration-300 overflow-hidden"
+                  >
+                    {/* Gradient overlay on hover */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${code.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
 
-                <div className="mt-5 space-y-3">
-                  {[
-                    { a: "Kitsune", b: "Precision • mastery • quiet excellence" },
-                    { a: "Leviathan", b: "Depth • intensity • inner gravity" },
-                    { a: "Phoenix", b: "Reinvention • momentum • transformation" },
-                  ].map((x) => (
-                    <div key={x.a} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                      <div className="text-sm font-black text-slate-950">{x.a}</div>
-                      <div className="mt-1 text-sm text-slate-600">{x.b}</div>
+                    {/* Icon */}
+                    <div className="text-5xl mb-4">{code.icon}</div>
+
+                    {/* Title */}
+                    <h3 className="text-2xl font-black mb-2 group-hover:text-white/90 transition-colors">
+                      {code.name}
+                    </h3>
+
+                    {/* Subtitle */}
+                    <p className="text-sm text-white/50 mb-4 font-semibold">{code.title}</p>
+
+                    {/* Description */}
+                    <p className="text-white/70 text-sm leading-relaxed mb-6">
+                      {code.desc}
+                    </p>
+
+                    {/* Arrow */}
+                    <div className="flex items-center gap-2 text-sm font-bold text-white/50 group-hover:text-white/80 group-hover:gap-3 transition-all">
+                      <span>Explore</span>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
                     </div>
-                  ))}
+                  </Link>
+                </TiltCard>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* View all button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="text-center mt-12"
+          >
+            <Link 
+              href="/codes"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl border-2 border-white/20 bg-white/5 backdrop-blur-xl text-white font-bold hover:bg-white/10 hover:border-white/30 transition-all"
+            >
+              <span>View All 20 Codes</span>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* HOW IT WORKS - Scroll Story */}
+      <section className="relative py-32 px-6">
+        <div className="max-w-5xl mx-auto">
+          {/* Section header */}
+          <div className="text-center mb-20">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-block px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl mb-6"
+            >
+              <span className="text-sm font-bold text-white/90">THE PROCESS</span>
+            </motion.div>
+
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-5xl sm:text-6xl font-black tracking-tight mb-6"
+            >
+              How It Works
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-xl text-white/60"
+            >
+              A triangulation system that maps behavior into archetypes
+            </motion.p>
+          </div>
+
+          {/* Steps */}
+          <div className="space-y-32">
+            {[
+              {
+                num: "01",
+                title: "Answer by Instinct",
+                desc: "Quick, three-choice prompts designed to bypass overthinking. Your first answer is usually the truth.",
+                icon: "⚡"
+              },
+              {
+                num: "02",
+                title: "Pattern Detection",
+                desc: "Our triangulation engine cross-references multiple frameworks—Big Five, MBTI, Enneagram, Astrology—to find behavioral convergence.",
+                icon: "🔮"
+              },
+              {
+                num: "03",
+                title: "Archetype Reveal",
+                desc: "You receive your top 3 cultural codes with mythic names that feel personal, not clinical.",
+                icon: "✨"
+              }
+            ].map((step, i) => (
+              <motion.div
+                key={step.num}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="grid md:grid-cols-2 gap-12 items-center"
+              >
+                <div className={`${i % 2 === 1 ? 'md:order-2' : ''}`}>
+                  <div className="inline-block px-4 py-2 rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl mb-6">
+                    <span className="text-sm font-black text-white/50">{step.num}</span>
+                  </div>
+                  <h3 className="text-4xl font-black mb-4">{step.title}</h3>
+                  <p className="text-lg text-white/60 leading-relaxed">{step.desc}</p>
                 </div>
 
-                <div className="mt-5 flex gap-3">
-                  <Link
-                    href="/quiz"
-                    className="flex-1 h-11 rounded-2xl bg-slate-950 text-white text-sm font-extrabold grid place-items-center hover:bg-slate-900"
-                  >
-                    Try it
-                  </Link>
-                  <Link
-                    href="/codes"
-                    className="flex-1 h-11 rounded-2xl border border-slate-200 bg-white text-slate-950 text-sm font-extrabold grid place-items-center hover:bg-slate-50"
-                  >
-                    All codes
-                  </Link>
+                <div className={`${i % 2 === 1 ? 'md:order-1' : ''}`}>
+                  <TiltCard>
+                    <div className="aspect-square rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl flex items-center justify-center text-8xl">
+                      {step.icon}
+                    </div>
+                  </TiltCard>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* SECTION: EXPERIENCE */}
-      <section className="mx-auto max-w-6xl px-5 pb-16">
-        <SectionTitle
-          eyebrow="EXPERIENCE"
-          title="Designed like a future product."
-          subtitle="Not a blog. Not a template. Ethos feels like a system you can step into — clean, confident, and addictive."
-        />
-
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-12 gap-6">
+      {/* FINAL CTA */}
+      <section className="relative py-32 px-6">
+        <div className="max-w-4xl mx-auto text-center">
           <motion.div
-            className="md:col-span-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_16px_48px_rgba(2,6,23,0.06)]"
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative p-16 rounded-[3rem] border border-white/10 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl overflow-hidden"
           >
-            <div className="text-sm font-black text-slate-950">Hook loop</div>
-            <div className="mt-2 text-sm text-slate-600 leading-relaxed">
-              The experience is intentionally tactile: quick prompts → reveal → deeper exploration. Users don’t bounce
-              because it feels like momentum, not homework.
-            </div>
+            {/* Animated gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-fuchsia-600/20 to-pink-600/20 animate-pulse" />
 
-            <div className="mt-6 space-y-3">
-              {[
-                { t: "Fast inputs", d: "Instinct-based flow to keep signal clean." },
-                { t: "A reveal worth sharing", d: "Names that feel like identity, not labels." },
-                { t: "Depth on demand", d: "Click into code pages when curiosity hits." },
-              ].map((x) => (
-                <div key={x.t} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="text-sm font-black text-slate-950">{x.t}</div>
-                  <div className="mt-1 text-sm text-slate-600">{x.d}</div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+            <div className="relative z-10">
+              <h2 className="text-5xl sm:text-6xl font-black tracking-tight mb-6">
+                Ready to begin?
+              </h2>
 
-          <motion.div
-            className="md:col-span-7 rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_16px_48px_rgba(2,6,23,0.06)]"
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: 0.35, ease: "easeOut", delay: 0.05 }}
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <div className="text-sm font-black text-slate-950">Micro-interactions</div>
-                <div className="mt-1 text-sm text-slate-600">
-                  Smooth, responsive, and “designed” — without gimmicks.
-                </div>
-              </div>
-              <Pill tone="slate">Premium UI system</Pill>
-            </div>
+              <p className="text-xl text-white/70 mb-10 max-w-2xl mx-auto">
+                Discover your cultural code in under 2 minutes. 
+                <br className="hidden sm:block" />
+                No login required to start.
+              </p>
 
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                { k: "A", t: "Cursor-reactive hero", d: "Subtle energy tracking your movement." },
-                { k: "B", t: "Scroll choreography", d: "Sections reveal with intent, not spam animations." },
-                { k: "C", t: "Signal panel", d: "Interactive modes to preview depth." },
-                { k: "D", t: "Clean contrast", d: "Modern white space with sharp hierarchy." },
-              ].map((x) => (
-                <div key={x.k} className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="text-sm font-black text-slate-950">{x.t}</div>
-                    <div className="rounded-2xl border border-slate-200 bg-white px-3 py-1 text-[11px] font-extrabold text-slate-700">
-                      {x.k}
-                    </div>
-                  </div>
-                  <div className="mt-2 text-sm text-slate-600">{x.d}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/quiz"
-                className="h-12 flex-1 rounded-2xl bg-slate-950 px-6 text-sm font-extrabold text-white grid place-items-center hover:bg-slate-900"
-              >
-                Start calibration
-              </Link>
-              <Link
-                href="/codes"
-                className="h-12 flex-1 rounded-2xl border border-slate-200 bg-white px-6 text-sm font-extrabold text-slate-950 grid place-items-center hover:bg-slate-50"
-              >
-                Explore codes
-              </Link>
+              <MagneticButton href="/quiz" variant="primary">
+                Start Your Calibration →
+              </MagneticButton>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-slate-200">
-        <div className="mx-auto max-w-6xl px-5 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <EthosMark />
-          <div className="text-xs text-slate-500 max-w-xl">
-            Built for clarity — not labels. Ethos is a mapping system designed to feel modern, global, and emotionally
-            true.
-          </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/quiz"
-              className="rounded-xl bg-slate-950 px-4 py-2 text-sm font-extrabold text-white hover:bg-slate-900"
-            >
-              Start
+      <footer className="relative border-t border-white/10 py-12 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <Link href="/" className="text-2xl font-black tracking-tight">
+              <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+                AVIRAGE
+              </span>
             </Link>
-            <Link
-              href="/codes"
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-950 hover:bg-slate-50"
-            >
+            <p className="text-sm text-white/40 mt-2">Cultural code mapping system</p>
+          </div>
+
+          <div className="flex items-center gap-8">
+            <Link href="/codes" className="text-sm text-white/60 hover:text-white transition-colors">
               Codes
+            </Link>
+            <Link href="/about" className="text-sm text-white/60 hover:text-white transition-colors">
+              About
+            </Link>
+            <Link href="/faq" className="text-sm text-white/60 hover:text-white transition-colors">
+              FAQ
             </Link>
           </div>
         </div>
+
+        <div className="max-w-7xl mx-auto mt-8 pt-8 border-t border-white/10 text-center text-sm text-white/40">
+          © 2025 Avirage. All rights reserved.
+        </div>
       </footer>
-    </main>
+    </div>
   );
 }
