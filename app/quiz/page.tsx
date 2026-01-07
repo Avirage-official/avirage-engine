@@ -142,21 +142,15 @@ export default function QuizPage() {
   /* ============================
      DISPLAY MAP (SAFE FALLBACK)
   ============================ */
+type CodeKey = keyof typeof CODE_DISPLAY_MAP;
 
-  const primaryDisplay =
-    result && CODE_DISPLAY_MAP[result.primary.code_name]
-      ? CODE_DISPLAY_MAP[result.primary.code_name]
-      : null;
+const primaryKey = result?.primary.code_name as CodeKey | undefined;
+const secondaryKey = result?.secondary.code_name as CodeKey | undefined;
+const tertiaryKey = result?.tertiary.code_name as CodeKey | undefined;
 
-  const secondaryDisplay =
-    result && CODE_DISPLAY_MAP[result.secondary.code_name]
-      ? CODE_DISPLAY_MAP[result.secondary.code_name]
-      : null;
-
-  const tertiaryDisplay =
-    result && CODE_DISPLAY_MAP[result.tertiary.code_name]
-      ? CODE_DISPLAY_MAP[result.tertiary.code_name]
-      : null;
+const primaryDisplay = primaryKey ? CODE_DISPLAY_MAP[primaryKey] : null;
+const secondaryDisplay = secondaryKey ? CODE_DISPLAY_MAP[secondaryKey] : null;
+const tertiaryDisplay = tertiaryKey ? CODE_DISPLAY_MAP[tertiaryKey] : null;
 
   /* ============================
      UI
