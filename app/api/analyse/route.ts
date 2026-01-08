@@ -19,10 +19,26 @@ export async function POST(request: NextRequest) {
   try {
     // Parse request body
     const body = await request.json();
-    const { name, birthDate, quizAnswers } = body;
+    
+    // Support both parameter formats for backwards compatibility
+    const { 
+      name, 
+      userName, 
+      birthDate, 
+      quizAnswers, 
+      answers,
+      gender,
+      city,
+      ethnicity 
+    } = body;
+    
+    // Use userName if name is not provided (quiz page sends userName)
+    const userNameValue = name || userName;
+    // Use answers if quizAnswers is not provided (quiz page sends answers)
+    const quizAnswersValue = quizAnswers || answers;
 
     // Validate inputs
-    if (!name || typeof name !== "string") {
+    if (!userNameValue || typeof userNameValue !== "string") {
       return NextResponse.json(
         { error: "Name is required" },
         { status: 400 }
@@ -36,7 +52,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!quizAnswers || typeof quizAnswers !== "object") {
+    if (!quizAnswersValue || typeof quizAnswersValue !== "object") {
       return NextResponse.json(
         { error: "Quiz answers are required" },
         { status: 400 }
@@ -53,7 +69,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate quiz completeness
-    const validation = validateQuizAnswers(quizAnswers as QuizAnswers);
+    const validation = validateQuizAnswers(quizAnswersValue as QuizAnswers);
     if (!validation.isComplete) {
       return NextResponse.json(
         {
@@ -67,9 +83,9 @@ export async function POST(request: NextRequest) {
 
     // Run triangulation
     const result = runTriangulation({
-      quizAnswers: quizAnswers as QuizAnswers,
+      quizAnswers: quizAnswersValue as QuizAnswers,
       birthDate: birthDateObj,
-      userName: name,
+      userName: userNameValue,
     });
 
     // Format response for frontend
