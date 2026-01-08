@@ -1078,7 +1078,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   tjukari: {
     codeName: "tjukari",
-    fullName: "Aboriginal Australian (SonglineKeeper)",
+    fullName: "Dreampath Navigator",
     snapshot:
       "You carry deep time consciousness — understanding that land remembers through us, navigating via Songlines and Dreamtime.",
 
