@@ -60,7 +60,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   khoisan: {
     codeName: "khoisan",
-    fullName: "San/Khoisan (Earthlistener)",
+    fullName: "Earthlistener",
     snapshot:
       "You're hyper-attuned to your environment — noticing patterns, reading energy, and moving with present-moment intelligence.",
 
@@ -131,7 +131,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   kayori: {
     codeName: "kayori",
-    fullName: "Yoruba (Fireweaver)",
+    fullName: "Fireweaver",
     snapshot:
       "You're expressive and deeply connected to collective rhythm — your energy flows through ritual, creativity, and shared meaning.",
 
@@ -202,7 +202,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   sahen: {
     codeName: "sahen",
-    fullName: "Tuareg (HorizonWalker)",
+    fullName: "HorizonWalker",
     snapshot:
       "You're introspective and self-sufficient — comfortable with solitude, vast horizons, and internal strength.",
 
@@ -273,7 +273,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   enzuka: {
     codeName: "enzuka",
-    fullName: "Maasai + Zulu Fusion (Shieldbearer)",
+    fullName: "Shieldbearer",
     snapshot:
       "You lead through protective strength — creating order, safety, and collective honor through courageous action.",
 
@@ -344,7 +344,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   siyuane: {
     codeName: "siyuane",
-    fullName: "Ethiopian + Han Chinese Fusion (Kitsune)",
+    fullName: "Kitsune",
     snapshot:
       "You're disciplined and tradition-minded — valuing long continuity, hierarchical order, and patient mastery.",
 
@@ -415,7 +415,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   jaejin: {
     codeName: "jaejin",
-    fullName: "Korean (Harmonist)",
+    fullName: "Harmonist",
     snapshot:
       "You're intensely loyal and emotionally compressed — balancing respect for order with deep internal feeling (han).",
 
@@ -486,7 +486,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   namsea: {
     codeName: "namsea",
-    fullName: "Vietnamese + Thai Fusion (Flowbinder)",
+    fullName: "Flowbinder",
     snapshot:
       "You're fluid and adaptable — moving with ease, avoiding conflict, and finding balance through water-like intelligence.",
 
@@ -557,7 +557,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   shokunin: {
     codeName: "shokunin",
-    fullName: "Japanese (BladeSmith)",
+    fullName: "BladeSmith",
     snapshot:
       "You're at your best when you can go deep, move with intention, and produce work that feels clean, precise, and worth your name.",
 
@@ -645,7 +645,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   khoruun: {
     codeName: "khoruun",
-    fullName: "Mongolian (SkyRider)",
+    fullName: "SkyRider",
     snapshot:
       "You're driven by freedom and movement — thriving in open spaces, decentralized power, and nomadic intelligence.",
 
@@ -716,7 +716,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   lhumir: {
     codeName: "lhumir",
-    fullName: "Tibetan (StillMind)",
+    fullName: "StillMind",
     snapshot:
       "You're contemplative and inwardly calm — finding clarity through stillness, meditation, and compassion discipline.",
 
@@ -787,7 +787,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   yatevar: {
     codeName: "yatevar",
-    fullName: "Indian Vedic + Nahua Fusion (CycleKeeper)",
+    fullName: "CycleKeeper",
     snapshot:
       "You're philosophically deep and ritual-oriented — understanding cosmic order through duty, cycles, and layered meaning.",
 
@@ -858,7 +858,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   renara: {
     codeName: "renara",
-    fullName: "Javanese (Harmony Weaver)",
+    fullName: "Harmony Weaver",
     snapshot:
       "You create stability by softening friction — you're the person who makes environments feel calmer, smoother, and more livable.",
 
@@ -936,7 +936,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   karayni: {
     codeName: "karayni",
-    fullName: "Balinese + Quechua Fusion (AncestorRoot)",
+    fullName: "AncestorRoot",
     snapshot:
       "You're rooted in reciprocity and sacred balance — understanding life as relationship between humans, spirits, and land.",
 
@@ -1007,7 +1007,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   wohaka: {
     codeName: "wohaka",
-    fullName: "Maori + Lakota Fusion (SonglineKeeper)",
+    fullName: "SonglineKeeper",
     snapshot:
       "You understand existence as relationship — all beings as kin, warrior courage integrated with spiritual depth.",
 
@@ -1149,7 +1149,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   kinmora: {
     codeName: "kinmora",
-    fullName: "Maya (TimeArchitect)",
+    fullName: "TimeArchitect",
     snapshot:
       "You're a master of cycles and precision — understanding mathematical cosmology, astronomical precision, and cyclical time.",
 
@@ -1220,7 +1220,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   siljoa: {
     codeName: "siljoa",
-    fullName: "Inuit + Sami Fusion (FrostSentinel)",
+    fullName: "FrostSentinel",
     snapshot:
       "You live in dialogue with climate and place — treating environment as thinking partner, with Arctic survival intelligence.",
 
@@ -1291,7 +1291,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   skenari: {
     codeName: "skenari",
-    fullName: "Haudenosaunee (FutureGuardian)",
+    fullName: "FutureGuardian",
     snapshot:
       "You think seven generations ahead — holding responsibility to the unborn, practicing consensus governance and future ethics.",
 
@@ -1362,7 +1362,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   ashkara: {
     codeName: "ashkara",
-    fullName: "Persian/Zoroastrian (TruthForger)",
+    fullName: "TruthForger",
     snapshot:
       "You enact truth through ethical choice — believing truth is not just believed but embodied through moral action and fire symbolism.",
 
@@ -1433,7 +1433,7 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   // ========================================
   alethir: {
     codeName: "alethir",
-    fullName: "Ancient Greek (Seeker)",
+    fullName: "Seeker",
     snapshot:
       "You pursue truth through inquiry and dialogue — believing reality emerges through reasoning, debate, and logos-centered thinking.",
 
