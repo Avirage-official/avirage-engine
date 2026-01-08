@@ -212,64 +212,124 @@ export default function QuizPage() {
     setSelectedOption(null);
   }
 
-  async function submit(finalAnswers: Record<string, number>) {
-    setStep("loading");
-    setError(null);
+ async function submit(finalAnswers: Record<string, number>) {
+  console.log("=== QUIZ SUBMISSION STARTING ===");
+  console.log("Total answers:", Object.keys(finalAnswers).length);
+  
+  setStep("loading");
+  setError(null);
+
+  try {
+    const payload = {
+      userName: name.trim(),
+      gender: gender === "other" ? genderOther.trim() : gender,
+      birthDate: resolvedBirthDate,
+      city: city.trim(),
+      ethnicity: ethnicity.trim(),
+      answers: finalAnswers,
+    };
+
+    console.log("Sending to API...");
+
+    const res = await fetch("/api/analyse", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    console.log("API Response status:", res.status);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("API Error:", errorText);
+      
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        throw new Error(errorText || `Server error: ${res.status}`);
+      }
+      
+      throw new Error(errorData.error || "Analysis failed");
+    }
+
+    const data = (await res.json()) as AnalysisResult;
+    console.log("=== SUCCESS ===");
+    console.log("Primary code:", data.primary?.code_name);
+    
+    setResult(data);
+    setStep("result");
 
     try {
-      const payload = {
-        userName: name.trim(),
-        gender: gender === "other" ? genderOther.trim() : gender,
-        birthDate: resolvedBirthDate,
-        city: city.trim(),
-        ethnicity: ethnicity.trim(),
-        answers: finalAnswers,
-      };
-
-      const res = await fetch("/api/analyse", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const t = await res.text();
-        throw new Error(t || "Analyse failed");
-      }
-
-      const data = (await res.json()) as AnalysisResult;
-      setResult(data);
-      setStep("result");
-
-      try {
-        sessionStorage.setItem("ethos:lastResult", JSON.stringify(data));
-      } catch {
-        // ignore
-      }
-    } catch (e: any) {
-      setError(e?.message || "Something went wrong.");
-      setStep("quiz");
+      sessionStorage.setItem("ethos:lastResult", JSON.stringify(data));
+    } catch {
+      console.warn("Could not save to sessionStorage");
     }
+  } catch (e: any) {
+    console.error("=== FAILED ===");
+    console.error("Error:", e);
+    setError(e?.message || "Something went wrong. Please try again.");
+    setStep("quiz");
+  }
+}
+```
+
+---
+
+## ✅ That's It!
+
+Just replace those 2 functions in your quiz page file. Save, refresh your browser, and try the quiz again!
+
+Open browser console (F12) and you'll see logs like:
+```
+Question 35/35 answered
+🎯 Last question - submitting!
+=== QUIZ SUBMISSION STARTING ===
+Total answers: 35
+API Response status: 200
+=== SUCCESS ===
+Primary code: Shokunin
+
+function answer(optionIndex: number) {
+  // Prevent double-clicks
+  if (selectedOption !== null) {
+    console.warn("Double-click prevented");
+    return;
+  }
+  
+  setSelectedOption(optionIndex);
+
+  // Safety check
+  if (!QUIZ_QUESTIONS[currentQuestionIndex]) {
+    console.error("Invalid question index:", currentQuestionIndex);
+    setError("Something went wrong. Please refresh and try again.");
+    return;
   }
 
-  function answer(optionIndex: number) {
-    setSelectedOption(optionIndex);
+  const q = QUIZ_QUESTIONS[currentQuestionIndex];
+  const next = { ...answers, [q.id]: optionIndex };
+  setAnswers(next);
 
-    const q = QUIZ_QUESTIONS[currentQuestionIndex];
-    const next = { ...answers, [q.id]: optionIndex };
-    setAnswers(next);
+  // ✅ KEY FIX: Check if this is the last question BEFORE setTimeout
+  const isLastQuestion = currentQuestionIndex >= total - 1;
+  
+  console.log(`Question ${currentQuestionIndex + 1}/${total} answered`, {
+    questionId: q.id,
+    isLastQuestion,
+    totalAnswers: Object.keys(next).length
+  });
 
-    window.setTimeout(() => {
-      setSelectedOption(null);
-
-      if (currentQuestionIndex < total - 1) {
-        setCurrentQuestionIndex((i) => i + 1);
-      } else {
-        submit(next);
-      }
-    }, 200);
-  }
-
+  window.setTimeout(() => {
+    setSelectedOption(null);
+    
+    if (isLastQuestion) {
+      console.log("🎯 Last question - submitting!");
+      submit(next);
+    } else {
+      setCurrentQuestionIndex((i) => i + 1);
+    }
+  }, 200);
+}
   function resetAll() {
     setStep("info");
     setCurrentQuestionIndex(0);
