@@ -1,711 +1,645 @@
 "use client";
 
 import Link from "next/link";
-import { CSSProperties } from "react";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import { CODE_PAGES } from "@/lib/codePages";
 
-/* ============================
-   ETHOS • DISCOVERY LANDING (no “quiz” language)
-   - Mature, calm, non-demanding
-============================ */
+/**
+ * ETHOS LANDING PAGE (2025 REDESIGN)
+ * 
+ * Features:
+ * - Bento grid layouts
+ * - Magnetic cursor effects
+ * - Scroll-triggered animations
+ * - Gradient mesh backgrounds
+ * - 3D card tilts
+ * - Kinetic typography
+ * - Floating organic shapes
+ */
 
-const THEME = {
-  bg: "linear-gradient(180deg, #0a0d12 0%, #111720 100%)",
-  panel: "rgba(255,255,255,0.04)",
-  panelStrong: "rgba(255,255,255,0.06)",
-  border: "rgba(255,255,255,0.14)",
-  softBorder: "rgba(255,255,255,0.08)",
-  textPrimary: "#e6e9ee",
-  textSecondary: "#9aa3ad",
-  textMuted: "rgba(154,163,173,0.75)",
-  accent: "#c9a96a",
+// Icon mapping for featured codes
+const CODE_ICONS: Record<string, string> = {
+  shokunin: "🎯",
+  khoisan: "🌍",
+  yatevar: "⚡",
+  namsea: "💧",
+  alethir: "👁️",
+  enzuka: "🛡️",
+  kayori: "🎭",
+  sahen: "🏜️",
 };
 
-const DISPLAY_FONT = "'Cinzel', serif";
-const BODY_FONT = "'Inter', system-ui, sans-serif";
+// Gradient mapping for featured codes
+const CODE_GRADIENTS: Record<string, string> = {
+  shokunin: "from-blue-500 to-cyan-500",
+  khoisan: "from-amber-500 to-orange-500",
+  yatevar: "from-purple-500 to-pink-500",
+  namsea: "from-teal-500 to-emerald-500",
+  alethir: "from-indigo-500 to-blue-500",
+  enzuka: "from-red-500 to-rose-500",
+  kayori: "from-fuchsia-500 to-purple-500",
+  sahen: "from-orange-500 to-red-500",
+};
 
-export default function LandingPage() {
-  return (
-    <main style={mainStyle}>
-      {/* Navigation */}
-      <nav style={navStyle}>
-        <div style={navContainer}>
-          <Link href="/" style={logoStyle}>
-            ETHOS
-          </Link>
+// Get 6 featured codes from actual data
+const FEATURED_CODE_SLUGS = ["shokunin", "khoisan", "yatevar", "namsea", "alethir", "enzuka"];
 
-          <div style={navLinks}>
-            <Link href="/about" style={navLink}>
-              About
-            </Link>
-            <Link href="/codes" style={navLink}>
-              Code Library
-            </Link>
-            <Link href="/faq" style={navLink}>
-              FAQ
-            </Link>
+const FEATURED_CODES = FEATURED_CODE_SLUGS.map(slug => {
+  const slugLower = slug.toLowerCase();
+  const codeKey = Object.keys(CODE_PAGES).find(k => k.toLowerCase() === slugLower);
+  if (!codeKey) return null;
+  
+  const codeData = CODE_PAGES[codeKey];
+  return {
+    slug: slugLower,
+    name: codeData.codeName,
+    title: codeData.fullName,
+    desc: codeData.lens.title,
+    snapshot: codeData.snapshot,
+    color: CODE_GRADIENTS[slugLower] || "from-gray-500 to-gray-600",
+    icon: CODE_ICONS[slugLower] || "✨"
+  };
+}).filter((code): code is NonNullable<typeof code> => code !== null);
 
-            <SignedIn>
-              <Link href="/dashboard" style={navLink}>
-                Dashboard
-              </Link>
-            </SignedIn>
-
-            <SignedOut>
-              <SignInButton mode="modal">
-                <button style={signInBtn}>Sign In</button>
-              </SignInButton>
-            </SignedOut>
-
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section style={heroSection}>
-        <div style={heroContent}>
-          {/* Kicker */}
-          <div style={heroKicker}>Cultural Lens Archive</div>
-
-          {/* Main Headline */}
-          <h1 style={h1}>
-            Find the lens
-            <br />
-            <span style={accentText}>you naturally live through</span>
-          </h1>
-
-          {/* Subheading */}
-          <p style={subheading}>
-            ETHOS maps the cultural lens through which you tend to perceive, decide, and move through the world.
-            <br />
-            Not a personality test — a calm, grounded discovery experience built around patterns and archetypes.
-          </p>
-
-          {/* CTAs */}
-          <div style={ctaRow}>
-            <Link href="/quiz" style={primaryBtn}>
-              Start Lens Session
-            </Link>
-            <button onClick={() => scrollToSection("explainer")} style={secondaryBtn}>
-              How it works
-            </button>
-          </div>
-
-          {/* Trust Badge */}
-          <div style={trustBadge}>
-            <span style={trustIcon}>✓</span>
-            <span style={trustText}>
-              Multi-framework triangulation • Culturally grounded • Non-deterministic
-            </span>
-          </div>
-
-          {/* Soft reassurance */}
-          <div style={softReassurance}>
-            No pressure. You can stop anytime. Takes ~8–10 minutes.
-          </div>
-        </div>
-      </section>
-
-      {/* Explainer Section */}
-      <section id="explainer" style={explainerSection}>
-        <div style={container}>
-          <h2 style={h2}>How ETHOS Works</h2>
-          <p style={sectionDesc}>
-            A structured interpretive system that identifies archetypal cultural traditions
-            through cross-framework behavioral pattern analysis — designed to feel human, not clinical.
-          </p>
-
-          <div style={threeColGrid}>
-            {/* What */}
-            <div style={featureCard}>
-              <div style={featureIcon}>1</div>
-              <h3 style={featureTitle}>What you get</h3>
-              <p style={featureText}>
-                Your Cultural Code — an archetypal lens that reflects how you naturally process,
-                choose, and relate to the world.
-              </p>
-            </div>
-
-            {/* How */}
-            <div style={featureCard}>
-              <div style={featureIcon}>2</div>
-              <h3 style={featureTitle}>How it’s found</h3>
-              <p style={featureText}>
-                A guided set of prompts → triangulation across frameworks →
-                behavioral pattern map → a ranked Cultural Code match.
-              </p>
-            </div>
-
-            {/* Why */}
-            <div style={featureCard}>
-              <div style={featureIcon}>3</div>
-              <h3 style={featureTitle}>Why it matters</h3>
-              <p style={featureText}>
-                Lifestyle alignment, creative direction, relationship clarity, community fit —
-                and a practical way to understand your internal “operating lens”.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Sample Codes Preview */}
-      <section style={codesPreviewSection}>
-        <div style={container}>
-          <h2 style={h2}>Example Cultural Codes</h2>
-          <p style={sectionDesc}>20 archetypal traditions grounded in historical cultures</p>
-
-          <div style={fourColGrid}>
-            <CodePreviewCard
-              name="Shokunin"
-              origin="Japanese"
-              description="Craft mastery lens: precision, harmony, quality as care"
-              slug="shokunin"
-            />
-            <CodePreviewCard
-              name="Alethir"
-              origin="Ancient Greek"
-              description="Inquiry lens: truth through reasoning, debate, and exploration"
-              slug="alethir"
-            />
-            <CodePreviewCard
-              name="Namsea"
-              origin="Vietnamese + Thai"
-              description="Flow lens: adaptability, ease, conflict avoidance mastery"
-              slug="namsea"
-            />
-            <CodePreviewCard
-              name="Enzuka"
-              origin="Maasai + Zulu"
-              description="Collective honor lens: strength through people, warrior discipline"
-              slug="enzuka"
-            />
-          </div>
-
-          <div style={centerAlign}>
-            <Link href="/codes" style={secondaryBtnLarge}>
-              Browse All 20 Codes
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section style={finalCtaSection}>
-        <div style={finalCtaCard}>
-          <h2 style={finalCtaTitle}>Ready to discover your lens?</h2>
-          <p style={finalCtaText}>
-            A short guided session — calm, private, and free to begin.
-          </p>
-          <Link href="/quiz" style={primaryBtnLarge}>
-            Begin Discovery
-          </Link>
-          <div style={finalCtaSub}>
-            No login required to start.
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer style={footerStyle}>
-        <div style={footerContainer}>
-          <div style={footerBrand}>
-            <div style={footerLogo}>ETHOS</div>
-            <p style={footerTagline}>Cultural lens identification system</p>
-          </div>
-
-          <div style={footerLinks}>
-            <div style={footerCol}>
-              <div style={footerColTitle}>Learn</div>
-              <Link href="/about" style={footerLink}>
-                About
-              </Link>
-              <Link href="/codes" style={footerLink}>
-                Code Library
-              </Link>
-              <Link href="/faq" style={footerLink}>
-                FAQ
-              </Link>
-            </div>
-
-            <div style={footerCol}>
-              <div style={footerColTitle}>Start</div>
-              <Link href="/quiz" style={footerLink}>
-                Lens Session
-              </Link>
-              <Link href="/quiz" style={footerLink}>
-                Sign In
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div style={footerBottom}>
-          <p style={footerCopyright}>© 2026 ETHOS. All rights reserved.</p>
-        </div>
-      </footer>
-    </main>
-  );
-}
-
-/* ============================
-   HELPER COMPONENTS
-============================ */
-
-function CodePreviewCard({
-  name,
-  origin,
-  description,
-  slug,
-}: {
-  name: string;
-  origin: string;
-  description: string;
-  slug: string;
+// Magnetic button component
+function MagneticButton({ 
+  children, 
+  href, 
+  variant = "primary" 
+}: { 
+  children: React.ReactNode; 
+  href: string;
+  variant?: "primary" | "secondary";
 }) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    setPosition({ x: x * 0.3, y: y * 0.3 });
+  };
+
+  const handleLeave = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const baseClasses = variant === "primary"
+    ? "bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white shadow-lg shadow-purple-500/50"
+    : "border-2 border-white/20 bg-white/5 backdrop-blur-xl text-white hover:bg-white/10";
+
   return (
-    <Link href={`/codepages/${slug}`} style={codeCard}>
-      <div style={codeCardHeader}>
-        <div style={codeCardName}>{name}</div>
-        <div style={codeCardOrigin}>{origin}</div>
-      </div>
-      <p style={codeCardDesc}>{description}</p>
-      <div style={codeCardArrow}>→</div>
+    <Link
+      ref={ref}
+      href={href}
+      onMouseMove={handleMouse}
+      onMouseLeave={handleLeave}
+      className={`
+        relative px-8 py-4 rounded-2xl font-bold text-sm
+        transition-all duration-200 ease-out
+        hover:scale-105 active:scale-95
+        ${baseClasses}
+      `}
+      style={{
+        transform: `translate(${position.x}px, ${position.y}px)`,
+      }}
+    >
+      <span className="relative z-10">{children}</span>
+      {variant === "primary" && (
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 blur-xl opacity-50" />
+      )}
     </Link>
   );
 }
 
-function scrollToSection(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+// 3D Tilt Card Component
+function TiltCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+
+  const handleMouse = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    setRotateX((y - centerY) / 10);
+    setRotateY((centerX - x) / 10);
+  };
+
+  const handleLeave = () => {
+    setRotateX(0);
+    setRotateY(0);
+  };
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={handleLeave}
+      className={`transition-transform duration-200 ease-out ${className}`}
+      style={{
+        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
-/* ============================
-   STYLES
-============================ */
+// Floating shape component
+function FloatingShape({ delay = 0 }: { delay?: number }) {
+  return (
+    <motion.div
+      className="absolute rounded-full blur-3xl opacity-30"
+      animate={{
+        x: [0, 100, 0],
+        y: [0, -100, 0],
+        scale: [1, 1.2, 1],
+      }}
+      transition={{
+        duration: 20,
+        repeat: Infinity,
+        delay,
+        ease: "easeInOut",
+      }}
+      style={{
+        background: "radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)",
+        width: "600px",
+        height: "600px",
+      }}
+    />
+  );
+}
 
-const mainStyle: CSSProperties = {
-  minHeight: "100vh",
-  fontFamily: BODY_FONT,
-  background: THEME.bg,
-  color: THEME.textPrimary,
-};
+export default function HomePage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: containerRef });
 
-// Navigation
-const navStyle: CSSProperties = {
-  position: "sticky",
-  top: 0,
-  zIndex: 100,
-  background: "rgba(10,13,18,0.92)",
-  backdropFilter: "blur(12px)",
-  borderBottom: `1px solid ${THEME.softBorder}`,
-};
+  // Parallax values
+  const heroY = useTransform(scrollYProgress, [0, 0.3], [0, 200]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  const bentoY = useTransform(scrollYProgress, [0.2, 0.5], [100, 0]);
+  const bentoOpacity = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
 
-const navContainer: CSSProperties = {
-  maxWidth: 1200,
-  margin: "0 auto",
-  padding: "16px 24px",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-};
+  // Gradient mesh animation
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const smoothMouseX = useSpring(mouseX, { stiffness: 50, damping: 20 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 });
 
-const logoStyle: CSSProperties = {
-  fontFamily: DISPLAY_FONT,
-  fontSize: 24,
-  fontWeight: 900,
-  color: THEME.accent,
-  textDecoration: "none",
-};
+  const gradientMesh = useMotionTemplate`
+    radial-gradient(800px circle at ${smoothMouseX}px ${smoothMouseY}px, 
+      rgba(168, 85, 247, 0.15), 
+      transparent 40%
+    ),
+    radial-gradient(600px circle at ${smoothMouseX}px ${smoothMouseY}px, 
+      rgba(236, 72, 153, 0.10), 
+      transparent 40%
+    )
+  `;
 
-const navLinks: CSSProperties = {
-  display: "flex",
-  gap: 32,
-  alignItems: "center",
-};
+  return (
+    <div 
+      ref={containerRef}
+      className="min-h-screen bg-black text-white overflow-hidden"
+      onMouseMove={(e) => {
+        mouseX.set(e.clientX);
+        mouseY.set(e.clientY);
+      }}
+    >
+      {/* Animated gradient mesh background */}
+      <motion.div 
+        className="fixed inset-0 -z-10"
+        style={{ background: gradientMesh }}
+      />
 
-const navLink: CSSProperties = {
-  color: THEME.textSecondary,
-  textDecoration: "none",
-  fontSize: 14,
-  fontWeight: 600,
-  letterSpacing: "0.02em",
-  transition: "color 0.2s",
-};
+      {/* Noise texture overlay */}
+      <div className="fixed inset-0 -z-10 opacity-[0.015]">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+        }} />
+      </div>
 
-const signInBtn: CSSProperties = {
-  padding: "8px 20px",
-  borderRadius: 12,
-  border: `1px solid ${THEME.softBorder}`,
-  background: THEME.panel,
-  color: THEME.textPrimary,
-  textDecoration: "none",
-  fontSize: 13,
-  fontWeight: 700,
-  letterSpacing: "0.04em",
-};
+      {/* Floating shapes */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <FloatingShape delay={0} />
+        <div className="absolute top-1/4 right-1/4">
+          <FloatingShape delay={5} />
+        </div>
+        <div className="absolute bottom-1/3 left-1/3">
+          <FloatingShape delay={10} />
+        </div>
+      </div>
 
-// Hero
-const heroSection: CSSProperties = {
-  padding: "120px 24px 92px",
-  textAlign: "center",
-};
+      {/* Sticky Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-xl bg-black/50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="text-2xl font-black tracking-tight">
+            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+              ETHOS
+            </span>
+          </Link>
 
-const heroContent: CSSProperties = {
-  maxWidth: 860,
-  margin: "0 auto",
-};
+          <div className="flex items-center gap-6">
+            <Link href="/codes" className="text-sm font-semibold text-white/70 hover:text-white transition-colors">
+              Codes
+            </Link>
+            <Link href="/about" className="text-sm font-semibold text-white/70 hover:text-white transition-colors">
+              About
+            </Link>
+            <Link 
+              href="/quiz"
+              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-bold text-sm hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+            >
+              Begin Session
+            </Link>
+          </div>
+        </div>
+      </nav>
 
-const heroKicker: CSSProperties = {
-  fontSize: 12,
-  letterSpacing: "0.20em",
-  textTransform: "uppercase",
-  color: THEME.accent,
-  fontWeight: 900,
-  marginBottom: 22,
-};
+      {/* HERO SECTION */}
+      <motion.section 
+        style={{ y: heroY, opacity: heroOpacity }}
+        className="relative min-h-screen flex items-center justify-center px-6 pt-32"
+      >
+        <div className="max-w-6xl mx-auto text-center">
+          {/* Animated badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl mb-8"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
+            </span>
+            <span className="text-sm font-semibold text-white/90">20 Archetypal Identities • Ethos Mapping</span>
+          </motion.div>
 
-const h1: CSSProperties = {
-  fontFamily: DISPLAY_FONT,
-  fontSize: 60,
-  fontWeight: 900,
-  lineHeight: 1.08,
-  margin: "0 0 22px",
-  color: THEME.textPrimary,
-};
+          {/* Main headline with staggered animation */}
+          <motion.h1
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-[0.95] mb-8"
+          >
+            <motion.span 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="block"
+            >
+              Discover Your
+            </motion.span>
+            <motion.span 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="block bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent"
+            >
+              Identity Code
+            </motion.span>
+          </motion.h1>
 
-const accentText: CSSProperties = {
-  background: "linear-gradient(135deg, #c9a96a 0%, #d4b87a 100%)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  backgroundClip: "text",
-};
+          {/* Subheadline */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="text-xl sm:text-2xl text-white/70 max-w-3xl mx-auto mb-12 leading-relaxed"
+          >
+            A mythic lens for how you see the world. Not a personality test—
+            <span className="text-white font-semibold"> a mirror for your instincts.</span>
+          </motion.p>
 
-const subheading: CSSProperties = {
-  fontSize: 18,
-  lineHeight: 1.7,
-  color: THEME.textSecondary,
-  maxWidth: 720,
-  margin: "0 auto 34px",
-};
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <MagneticButton href="/quiz" variant="primary">
+              Begin Discovery →
+            </MagneticButton>
+            <MagneticButton href="/codes" variant="secondary">
+              Explore 20 Codes
+            </MagneticButton>
+          </motion.div>
 
-const ctaRow: CSSProperties = {
-  display: "flex",
-  gap: 16,
-  justifyContent: "center",
-  marginBottom: 18,
-};
+          {/* Stats row */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.1 }}
+            className="flex flex-wrap items-center justify-center gap-8 mt-16 text-sm text-white/50"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-1 rounded-full bg-violet-500" />
+              <span>~2 minutes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-1 rounded-full bg-fuchsia-500" />
+              <span>20 archetypal codes</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-1 rounded-full bg-pink-500" />
+              <span>Mythic naming system</span>
+            </div>
+          </motion.div>
+        </div>
 
-const primaryBtn: CSSProperties = {
-  padding: "16px 32px",
-  borderRadius: 14,
-  border: `1px solid rgba(201,169,106,0.45)`,
-  background: "rgba(201,169,106,0.12)",
-  color: THEME.textPrimary,
-  fontWeight: 900,
-  fontSize: 14,
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
-  cursor: "pointer",
-  textDecoration: "none",
-  display: "inline-block",
-};
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 1.3 }}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2"
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            className="flex flex-col items-center gap-2"
+          >
+            <span className="text-xs text-white/40 font-semibold tracking-wider uppercase">Scroll</span>
+            <svg className="w-6 h-6 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </motion.div>
+        </motion.div>
+      </motion.section>
 
-const secondaryBtn: CSSProperties = {
-  padding: "16px 32px",
-  borderRadius: 14,
-  border: `1px solid ${THEME.softBorder}`,
-  background: "transparent",
-  color: THEME.textSecondary,
-  fontWeight: 700,
-  fontSize: 14,
-  letterSpacing: "0.04em",
-  cursor: "pointer",
-};
+      {/* BENTO GRID - Featured Codes */}
+      <motion.section 
+        style={{ y: bentoY, opacity: bentoOpacity }}
+        className="relative py-32 px-6"
+      >
+        <div className="max-w-7xl mx-auto">
+          {/* Section header */}
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="inline-block px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl mb-6"
+            >
+              <span className="text-sm font-bold text-white/90">20 ARCHETYPAL CODES</span>
+            </motion.div>
 
-const trustBadge: CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 8,
-  padding: "10px 16px",
-  borderRadius: 12,
-  border: `1px solid ${THEME.softBorder}`,
-  background: THEME.panel,
-};
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-5xl sm:text-6xl font-black tracking-tight mb-6"
+            >
+              Choose Your{" "}
+              <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+                Archetype
+              </span>
+            </motion.h2>
 
-const trustIcon: CSSProperties = {
-  fontSize: 14,
-  color: THEME.accent,
-};
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-xl text-white/60 max-w-2xl mx-auto"
+            >
+              Each code represents a distinct lens—grounded in behavioral patterns, expressed through mythic archetypes.
+            </motion.p>
+          </div>
 
-const trustText: CSSProperties = {
-  fontSize: 12,
-  color: THEME.textMuted,
-  fontWeight: 600,
-};
+          {/* Bento Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {FEATURED_CODES.map((code, i) => (
+              <motion.div
+                key={code.slug}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+              >
+                <TiltCard>
+                  <Link
+                    href={`/codepages/${code.slug}`}
+                    className="group block relative p-8 rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl hover:border-white/20 transition-all duration-300 overflow-hidden"
+                  >
+                    {/* Gradient overlay on hover */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${code.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
 
-const softReassurance: CSSProperties = {
-  marginTop: 14,
-  fontSize: 12,
-  color: "rgba(154,163,173,0.85)",
-  fontWeight: 600,
-  letterSpacing: "0.02em",
-};
+                    {/* Icon */}
+                    <div className="text-5xl mb-4">{code.icon}</div>
 
-// Sections
-const explainerSection: CSSProperties = {
-  padding: "80px 24px",
-  background: "rgba(255,255,255,0.02)",
-};
+                    {/* Title */}
+                    <h3 className="text-2xl font-black mb-2 group-hover:text-white/90 transition-colors">
+                      {code.title}
+                    </h3>
 
-const container: CSSProperties = {
-  maxWidth: 1200,
-  margin: "0 auto",
-};
+                    {/* Subtitle */}
+                    <p className="text-sm text-white/50 mb-4 font-semibold">{code.desc}</p>
 
-const h2: CSSProperties = {
-  fontFamily: DISPLAY_FONT,
-  fontSize: 40,
-  fontWeight: 900,
-  textAlign: "center",
-  marginBottom: 16,
-};
+                    {/* Description */}
+                    <p className="text-white/70 text-sm leading-relaxed mb-6">
+                      {code.snapshot}
+                    </p>
 
-const sectionDesc: CSSProperties = {
-  fontSize: 16,
-  color: THEME.textSecondary,
-  textAlign: "center",
-  maxWidth: 720,
-  margin: "0 auto 60px",
-  lineHeight: 1.7,
-};
+                    {/* Arrow */}
+                    <div className="flex items-center gap-2 text-sm font-bold text-white/50 group-hover:text-white/80 group-hover:gap-3 transition-all">
+                      <span>Explore</span>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </div>
+                  </Link>
+                </TiltCard>
+              </motion.div>
+            ))}
+          </div>
 
-const threeColGrid: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-  gap: 24,
-};
+          {/* View all button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="text-center mt-12"
+          >
+            <Link 
+              href="/codes"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl border-2 border-white/20 bg-white/5 backdrop-blur-xl text-white font-bold hover:bg-white/10 hover:border-white/30 transition-all"
+            >
+              <span>View All 20 Codes</span>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </motion.div>
+        </div>
+      </motion.section>
 
-const featureCard: CSSProperties = {
-  padding: 32,
-  borderRadius: 16,
-  border: `1px solid ${THEME.softBorder}`,
-  background: THEME.panel,
-};
+      {/* HOW IT WORKS - Scroll Story */}
+      <section className="relative py-32 px-6">
+        <div className="max-w-5xl mx-auto">
+          {/* Section header */}
+          <div className="text-center mb-20">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-block px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl mb-6"
+            >
+              <span className="text-sm font-bold text-white/90">THE PROCESS</span>
+            </motion.div>
 
-const featureIcon: CSSProperties = {
-  width: 48,
-  height: 48,
-  borderRadius: 12,
-  border: `1px solid rgba(201,169,106,0.30)`,
-  background: "rgba(201,169,106,0.08)",
-  color: THEME.accent,
-  fontWeight: 900,
-  fontSize: 20,
-  display: "grid",
-  placeItems: "center",
-  marginBottom: 16,
-};
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-5xl sm:text-6xl font-black tracking-tight mb-6"
+            >
+              How It Works
+            </motion.h2>
 
-const featureTitle: CSSProperties = {
-  fontSize: 18,
-  fontWeight: 900,
-  marginBottom: 12,
-  color: THEME.textPrimary,
-};
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-xl text-white/60"
+            >
+              A triangulation system that maps behavior into archetypes
+            </motion.p>
+          </div>
 
-const featureText: CSSProperties = {
-  fontSize: 14,
-  lineHeight: 1.7,
-  color: THEME.textSecondary,
-  margin: 0,
-};
+          {/* Steps */}
+          <div className="space-y-32">
+            {[
+              {
+                num: "01",
+                title: "Answer by Instinct",
+                desc: "Quick, three-choice prompts designed to bypass overthinking. Your first answer is usually the truth.",
+                icon: "⚡"
+              },
+              {
+                num: "02",
+                title: "Pattern Detection",
+                desc: "Our triangulation engine cross-references multiple frameworks—Big Five, MBTI, Enneagram, Astrology—to find behavioral convergence.",
+                icon: "🔮"
+              },
+              {
+                num: "03",
+                title: "Archetype Reveal",
+                desc: "You receive your top 3 identity codes with mythic names that feel personal, not clinical.",
+                icon: "✨"
+              }
+            ].map((step, i) => (
+              <motion.div
+                key={step.num}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="grid md:grid-cols-2 gap-12 items-center"
+              >
+                <div className={`${i % 2 === 1 ? 'md:order-2' : ''}`}>
+                  <div className="inline-block px-4 py-2 rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl mb-6">
+                    <span className="text-sm font-black text-white/50">{step.num}</span>
+                  </div>
+                  <h3 className="text-4xl font-black mb-4">{step.title}</h3>
+                  <p className="text-lg text-white/60 leading-relaxed">{step.desc}</p>
+                </div>
 
-// Code Preview
-const codesPreviewSection: CSSProperties = {
-  padding: "80px 24px",
-};
+                <div className={`${i % 2 === 1 ? 'md:order-1' : ''}`}>
+                  <TiltCard>
+                    <div className="aspect-square rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl flex items-center justify-center text-8xl">
+                      {step.icon}
+                    </div>
+                  </TiltCard>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-const fourColGrid: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-  gap: 20,
-  marginBottom: 40,
-};
+      {/* FINAL CTA */}
+      <section className="relative py-32 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative p-16 rounded-[3rem] border border-white/10 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl overflow-hidden"
+          >
+            {/* Animated gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-fuchsia-600/20 to-pink-600/20 animate-pulse" />
 
-const codeCard: CSSProperties = {
-  padding: 24,
-  borderRadius: 16,
-  border: `1px solid ${THEME.softBorder}`,
-  background: THEME.panel,
-  textDecoration: "none",
-  display: "flex",
-  flexDirection: "column",
-  transition: "all 0.2s",
-  cursor: "pointer",
-};
+            <div className="relative z-10">
+              <h2 className="text-5xl sm:text-6xl font-black tracking-tight mb-6">
+                Ready to begin?
+              </h2>
 
-const codeCardHeader: CSSProperties = {
-  marginBottom: 12,
-};
+              <p className="text-xl text-white/70 mb-10 max-w-2xl mx-auto">
+                Discover your identity code in under 2 minutes. 
+                <br className="hidden sm:block" />
+                No login required to start.
+              </p>
 
-const codeCardName: CSSProperties = {
-  fontSize: 18,
-  fontWeight: 900,
-  color: THEME.accent,
-  marginBottom: 4,
-};
+              <MagneticButton href="/quiz" variant="primary">
+                Begin Your Discovery →
+              </MagneticButton>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
-const codeCardOrigin: CSSProperties = {
-  fontSize: 12,
-  color: THEME.textMuted,
-  fontWeight: 600,
-  letterSpacing: "0.04em",
-};
+      {/* FOOTER */}
+      <footer className="relative border-t border-white/10 py-12 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <Link href="/" className="text-2xl font-black tracking-tight">
+              <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+                ETHOS
+              </span>
+            </Link>
+            <p className="text-sm text-white/40 mt-2">Identity code mapping system</p>
+          </div>
 
-const codeCardDesc: CSSProperties = {
-  fontSize: 13,
-  lineHeight: 1.6,
-  color: THEME.textSecondary,
-  margin: "0 0 16px",
-  flex: 1,
-};
+          <div className="flex items-center gap-8">
+            <Link href="/codes" className="text-sm text-white/60 hover:text-white transition-colors">
+              Codes
+            </Link>
+            <Link href="/about" className="text-sm text-white/60 hover:text-white transition-colors">
+              About
+            </Link>
+            <Link href="/faq" className="text-sm text-white/60 hover:text-white transition-colors">
+              FAQ
+            </Link>
+          </div>
+        </div>
 
-const codeCardArrow: CSSProperties = {
-  fontSize: 20,
-  color: THEME.accent,
-  opacity: 0.5,
-};
-
-const centerAlign: CSSProperties = {
-  textAlign: "center",
-};
-
-const secondaryBtnLarge: CSSProperties = {
-  padding: "14px 28px",
-  borderRadius: 14,
-  border: `1px solid ${THEME.border}`,
-  background: THEME.panelStrong,
-  color: THEME.textPrimary,
-  fontWeight: 800,
-  fontSize: 14,
-  letterSpacing: "0.04em",
-  textDecoration: "none",
-  display: "inline-block",
-  cursor: "pointer",
-};
-
-// Final CTA
-const finalCtaSection: CSSProperties = {
-  padding: "80px 24px",
-};
-
-const finalCtaCard: CSSProperties = {
-  maxWidth: 720,
-  margin: "0 auto",
-  padding: 60,
-  borderRadius: 20,
-  border: `1px solid ${THEME.border}`,
-  background: "rgba(255,255,255,0.02)",
-  textAlign: "center",
-};
-
-const finalCtaTitle: CSSProperties = {
-  fontFamily: DISPLAY_FONT,
-  fontSize: 36,
-  fontWeight: 900,
-  marginBottom: 14,
-};
-
-const finalCtaText: CSSProperties = {
-  fontSize: 16,
-  color: THEME.textSecondary,
-  marginBottom: 26,
-};
-
-const primaryBtnLarge: CSSProperties = {
-  ...primaryBtn,
-  padding: "18px 40px",
-  fontSize: 15,
-};
-
-const finalCtaSub: CSSProperties = {
-  marginTop: 14,
-  fontSize: 12,
-  color: "rgba(154,163,173,0.80)",
-  fontWeight: 600,
-};
-
-// Footer
-const footerStyle: CSSProperties = {
-  borderTop: `1px solid ${THEME.softBorder}`,
-  padding: "60px 24px 32px",
-  background: "rgba(0,0,0,0.2)",
-};
-
-const footerContainer: CSSProperties = {
-  maxWidth: 1200,
-  margin: "0 auto 40px",
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: 60,
-};
-
-const footerBrand: CSSProperties = {};
-
-const footerLogo: CSSProperties = {
-  fontFamily: DISPLAY_FONT,
-  fontSize: 24,
-  fontWeight: 900,
-  color: THEME.accent,
-  marginBottom: 8,
-};
-
-const footerTagline: CSSProperties = {
-  fontSize: 13,
-  color: THEME.textMuted,
-  margin: 0,
-};
-
-const footerLinks: CSSProperties = {
-  display: "flex",
-  gap: 80,
-  justifyContent: "flex-end",
-};
-
-const footerCol: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 12,
-};
-
-const footerColTitle: CSSProperties = {
-  fontSize: 12,
-  fontWeight: 900,
-  letterSpacing: "0.10em",
-  textTransform: "uppercase",
-  color: THEME.textPrimary,
-  marginBottom: 4,
-};
-
-const footerLink: CSSProperties = {
-  fontSize: 14,
-  color: THEME.textSecondary,
-  textDecoration: "none",
-};
-
-const footerBottom: CSSProperties = {
-  maxWidth: 1200,
-  margin: "0 auto",
-  paddingTop: 24,
-  borderTop: `1px solid ${THEME.softBorder}`,
-  textAlign: "center",
-};
-
-const footerCopyright: CSSProperties = {
-  fontSize: 13,
-  color: THEME.textMuted,
-  margin: 0,
-};
+        <div className="max-w-7xl mx-auto mt-8 pt-8 border-t border-white/10 text-center text-sm text-white/40">
+          © 2025 Ethos. All rights reserved.
+        </div>
+      </footer>
+    </div>
+  );
+}
