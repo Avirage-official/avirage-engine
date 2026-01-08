@@ -272,24 +272,6 @@ export default function QuizPage() {
     setStep("quiz");
   }
 }
-```
-
----
-
-## ✅ That's It!
-
-Just replace those 2 functions in your quiz page file. Save, refresh your browser, and try the quiz again!
-
-Open browser console (F12) and you'll see logs like:
-```
-Question 35/35 answered
-🎯 Last question - submitting!
-=== QUIZ SUBMISSION STARTING ===
-Total answers: 35
-API Response status: 200
-=== SUCCESS ===
-Primary code: Shokunin
-
 function answer(optionIndex: number) {
   // Prevent double-clicks
   if (selectedOption !== null) {
