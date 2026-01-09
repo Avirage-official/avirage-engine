@@ -140,7 +140,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   },
   {
     codeId: 12,
-    codeName: "renara",
+    codeName: "Tahiri",
     fullName: "Harmony Weaver",
     corePatterns: [8, 12, 14, 22, 24],
     supportingPatterns: [10, 21, 20, 7],
