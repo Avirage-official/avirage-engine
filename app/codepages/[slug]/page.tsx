@@ -17,6 +17,30 @@ function isCodeSlug(value: string): value is CodeSlug {
   return value in CODE_PAGES;
 }
 
+function normalizeKey(input: string) {
+  return String(input || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+}
+
+function buildEmblemCandidates(codeName: string, label?: string, icon?: string, slug?: string) {
+  const keys = [
+    icon ? normalizeKey(icon) : "",
+    label ? normalizeKey(label) : "",
+    codeName ? normalizeKey(codeName) : "",
+    slug ? normalizeKey(slug) : "",
+  ].filter(Boolean);
+
+  const exts = ["jpg", "jpeg", "png", "webp"];
+  const out: string[] = [];
+  for (const k of keys) {
+    for (const ext of exts) out.push(`/emblems/${k}.${ext}`);
+  }
+  return Array.from(new Set(out));
+}
+
 export function generateStaticParams(): Array<{ slug: CodeSlug }> {
   return (Object.keys(CODE_PAGES) as CodeSlug[]).map((slug) => ({ slug }));
 }
@@ -51,6 +75,14 @@ export default async function CodePageRoute({ params }: { params: Params }) {
   type CodeKey = keyof typeof CODE_DISPLAY_MAP;
   const display = CODE_DISPLAY_MAP[page.codeName as CodeKey];
 
+  // Image candidates (small, resilient to naming mismatches)
+  const emblemCandidates = buildEmblemCandidates(
+    page.codeName,
+    display?.label,
+    (display as any)?.icon,
+    slug
+  );
+
   return (
     <main className="min-h-screen bg-black text-white">
       <div className="mx-auto w-[min(1100px,92vw)] py-10">
@@ -63,7 +95,17 @@ export default async function CodePageRoute({ params }: { params: Params }) {
             ← Back to results
           </Link>
 
-          <div className="flex flex-wrap justify-end gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {/* Small emblem (NOT huge) */}
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-black/30 px-2 py-2">
+              <img
+                src={emblemCandidates[0] ?? ""}
+                alt={`${display?.label ?? page.codeName} emblem`}
+                className="h-7 w-7 rounded-full object-cover opacity-90"
+                draggable={false}
+              />
+            </span>
+
             {/* Mythical archetype (PRIMARY) */}
             <span className="rounded-full border border-white/15 bg-white/[0.08] px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.18em]">
               {display?.label ?? page.codeName}
