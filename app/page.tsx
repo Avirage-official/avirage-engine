@@ -13,16 +13,14 @@ import {
 import { CODE_PAGES } from "@/lib/codePages";
 
 /**
- * ETHOS LANDING PAGE (2025 REDESIGN)
+ * ETHOS LANDING PAGE (2025 REDESIGN - OPTIMIZED)
  * 
- * Features:
- * - Bento grid layouts
- * - Magnetic cursor effects
- * - Scroll-triggered animations
- * - Gradient mesh backgrounds
- * - 3D card tilts
- * - Kinetic typography
- * - Floating organic shapes
+ * Performance optimizations:
+ * - Throttled mouse tracking (50ms)
+ * - Reduced blur intensity
+ * - Removed noise texture
+ * - Added will-change hints
+ * - Optimized floating shapes
  */
 
 // Icon mapping for featured codes
@@ -96,7 +94,7 @@ function MagneticButton({
 
   const baseClasses = variant === "primary"
     ? "bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white shadow-lg shadow-purple-500/50"
-    : "border-2 border-white/20 bg-white/5 backdrop-blur-xl text-white hover:bg-white/10";
+    : "border-2 border-white/20 bg-white/5 backdrop-blur-sm text-white hover:bg-white/10";
 
   return (
     <Link
@@ -108,6 +106,7 @@ function MagneticButton({
         relative px-8 py-4 rounded-2xl font-bold text-sm
         transition-all duration-200 ease-out
         hover:scale-105 active:scale-95
+        will-change-transform
         ${baseClasses}
       `}
       style={{
@@ -149,7 +148,7 @@ function TiltCard({ children, className = "" }: { children: React.ReactNode; cla
       ref={ref}
       onMouseMove={handleMouse}
       onMouseLeave={handleLeave}
-      className={`transition-transform duration-200 ease-out ${className}`}
+      className={`transition-transform duration-200 ease-out will-change-transform ${className}`}
       style={{
         transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
       }}
@@ -159,11 +158,11 @@ function TiltCard({ children, className = "" }: { children: React.ReactNode; cla
   );
 }
 
-// Floating shape component
+// Floating shape component (OPTIMIZED)
 function FloatingShape({ delay = 0 }: { delay?: number }) {
   return (
     <motion.div
-      className="absolute rounded-full blur-3xl opacity-30"
+      className="absolute rounded-full blur-xl opacity-30 will-change-transform"
       animate={{
         x: [0, 100, 0],
         y: [0, -100, 0],
@@ -194,7 +193,7 @@ export default function HomePage() {
   const bentoY = useTransform(scrollYProgress, [0.2, 0.5], [100, 0]);
   const bentoOpacity = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
 
-  // Gradient mesh animation
+  // Gradient mesh animation (THROTTLED)
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const smoothMouseX = useSpring(mouseX, { stiffness: 50, damping: 20 });
@@ -211,29 +210,32 @@ export default function HomePage() {
     )
   `;
 
+  // Throttled mouse tracking
+  const throttleTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!throttleTimerRef.current) {
+      throttleTimerRef.current = setTimeout(() => {
+        mouseX.set(e.clientX);
+        mouseY.set(e.clientY);
+        throttleTimerRef.current = null;
+      }, 50); // Update every 50ms instead of every frame
+    }
+  };
+
   return (
     <div 
       ref={containerRef}
       className="min-h-screen bg-black text-white overflow-hidden"
-      onMouseMove={(e) => {
-        mouseX.set(e.clientX);
-        mouseY.set(e.clientY);
-      }}
+      onMouseMove={handleMouseMove}
     >
       {/* Animated gradient mesh background */}
       <motion.div 
-        className="fixed inset-0 -z-10"
+        className="fixed inset-0 -z-10 will-change-auto"
         style={{ background: gradientMesh }}
       />
 
-      {/* Noise texture overlay */}
-      <div className="fixed inset-0 -z-10 opacity-[0.015]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-        }} />
-      </div>
-
-      {/* Floating shapes */}
+      {/* Floating shapes (OPTIMIZED) */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <FloatingShape delay={0} />
         <div className="absolute top-1/4 right-1/4">
@@ -245,7 +247,7 @@ export default function HomePage() {
       </div>
 
       {/* Sticky Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-xl bg-black/50">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 backdrop-blur-sm bg-black/50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-2xl font-black tracking-tight">
             <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
@@ -273,7 +275,7 @@ export default function HomePage() {
       {/* HERO SECTION */}
       <motion.section 
         style={{ y: heroY, opacity: heroOpacity }}
-        className="relative min-h-screen flex items-center justify-center px-6 pt-32"
+        className="relative min-h-screen flex items-center justify-center px-6 pt-32 will-change-transform"
       >
         <div className="max-w-6xl mx-auto text-center">
           {/* Animated badge */}
@@ -281,7 +283,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm mb-8"
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
@@ -386,7 +388,7 @@ export default function HomePage() {
       {/* BENTO GRID - Featured Codes */}
       <motion.section 
         style={{ y: bentoY, opacity: bentoOpacity }}
-        className="relative py-32 px-6"
+        className="relative py-32 px-6 will-change-transform"
       >
         <div className="max-w-7xl mx-auto">
           {/* Section header */}
@@ -396,7 +398,7 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="inline-block px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl mb-6"
+              className="inline-block px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm mb-6"
             >
               <span className="text-sm font-bold text-white/90">20 ARCHETYPAL CODES</span>
             </motion.div>
@@ -438,7 +440,7 @@ export default function HomePage() {
                 <TiltCard>
                   <Link
                     href={`/codepages/${code.slug}`}
-                    className="group block relative p-8 rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl hover:border-white/20 transition-all duration-300 overflow-hidden"
+                    className="group block relative p-8 rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm hover:border-white/20 transition-all duration-300 overflow-hidden"
                   >
                     {/* Gradient overlay on hover */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${code.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
@@ -482,7 +484,7 @@ export default function HomePage() {
           >
             <Link 
               href="/codes"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl border-2 border-white/20 bg-white/5 backdrop-blur-xl text-white font-bold hover:bg-white/10 hover:border-white/30 transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl border-2 border-white/20 bg-white/5 backdrop-blur-sm text-white font-bold hover:bg-white/10 hover:border-white/30 transition-all"
             >
               <span>View All 20 Codes</span>
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -502,7 +504,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="inline-block px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-xl mb-6"
+              className="inline-block px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm mb-6"
             >
               <span className="text-sm font-bold text-white/90">THE PROCESS</span>
             </motion.div>
@@ -559,7 +561,7 @@ export default function HomePage() {
                 className="grid md:grid-cols-2 gap-12 items-center"
               >
                 <div className={`${i % 2 === 1 ? 'md:order-2' : ''}`}>
-                  <div className="inline-block px-4 py-2 rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl mb-6">
+                  <div className="inline-block px-4 py-2 rounded-2xl border border-white/20 bg-white/5 backdrop-blur-sm mb-6">
                     <span className="text-sm font-black text-white/50">{step.num}</span>
                   </div>
                   <h3 className="text-4xl font-black mb-4">{step.title}</h3>
@@ -568,7 +570,7 @@ export default function HomePage() {
 
                 <div className={`${i % 2 === 1 ? 'md:order-1' : ''}`}>
                   <TiltCard>
-                    <div className="aspect-square rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl flex items-center justify-center text-8xl">
+                    <div className="aspect-square rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm flex items-center justify-center text-8xl">
                       {step.icon}
                     </div>
                   </TiltCard>
@@ -587,7 +589,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative p-16 rounded-[3rem] border border-white/10 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl overflow-hidden"
+            className="relative p-16 rounded-[3rem] border border-white/10 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm overflow-hidden"
           >
             {/* Animated gradient background */}
             <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-fuchsia-600/20 to-pink-600/20 animate-pulse" />
