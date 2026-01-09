@@ -62,16 +62,14 @@ function normalizedSlug(input: unknown): string {
 /** Build emblem src from code_name via CODE_DISPLAY_MAP.icon */
 function emblemSrcFromCodeName(codeName: unknown): string | null {
   if (typeof codeName !== "string") return null;
-  const key = normalizedSlug(codeName);
-  if (!key) return null;
 
+  const key = codeName.trim().toLowerCase(); // matches CODE_DISPLAY_MAP keys
   const display = getCodeDisplay(key);
-  const icon = display?.icon ? normalizedSlug(display.icon) : "";
 
-  if (!icon) return null;
+  if (!display?.emblem) return null;
 
-  // Directory you said: /public/emblems
-  return `/emblems/${icon}.jpg`;
+  // emblem already contains the exact filename
+  return `/emblems/${display.emblem}`;
 }
 
 /* ============================
