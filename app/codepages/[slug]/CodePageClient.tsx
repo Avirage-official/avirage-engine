@@ -3,8 +3,46 @@
 import React, { useMemo, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import type { CodePage } from "@/lib/codePages";
+import { CODE_DISPLAY_MAP } from "@/lib/codeDisplayMap";
 
 type NodeKey = "lens" | "traits" | "thrive" | "practical";
+
+function normalizeKey(input: string) {
+  return String(input || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+}
+
+function EmblemImage({
+  candidates,
+  alt,
+  className = "",
+}: {
+  candidates: string[];
+  alt: string;
+  className?: string;
+}) {
+  const [idx, setIdx] = useState(0);
+
+  const src = candidates[idx] ?? "";
+
+  if (!src) return null;
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      draggable={false}
+      loading="lazy"
+      onError={() => {
+        setIdx((i) => (i + 1 < candidates.length ? i + 1 : i));
+      }}
+      className={className}
+    />
+  );
+}
 
 export default function CodePageClient({
   slug,
@@ -41,6 +79,28 @@ export default function CodePageClient({
       rafRef.current = null;
     });
   };
+
+  // ========= Archetype (mystical) display + emblem =========
+  type CodeKey = keyof typeof CODE_DISPLAY_MAP;
+  const display = CODE_DISPLAY_MAP[page.codeName as CodeKey];
+
+  const emblemCandidates = useMemo(() => {
+    // Try: icon key first (preferred), then internal code keys as fallbacks.
+    const keys = [
+      display?.icon ? normalizeKey(display.icon) : "",
+      display?.label ? normalizeKey(display.label) : "",
+      page.codeName ? normalizeKey(page.codeName) : "",
+      slug ? normalizeKey(slug) : "",
+    ].filter(Boolean);
+
+    // Build candidates with common extensions (keeps it resilient to file naming)
+    const exts = ["jpg", "jpeg", "png", "webp"];
+    const out: string[] = [];
+    for (const k of keys) {
+      for (const ext of exts) out.push(`/emblems/${k}.${ext}`);
+    }
+    return Array.from(new Set(out));
+  }, [display?.icon, display?.label, page.codeName, slug]);
 
   // ========= Content model (same data, better structure) =========
   const model = useMemo(() => {
@@ -113,7 +173,7 @@ export default function CodePageClient({
     });
 
     // Only show hint if you're “near enough” (so it doesn’t feel twitchy)
-    const threshold = (r.width * r.width) * 0.06;
+    const threshold = r.width * r.width * 0.06;
     setHint(bestD < threshold ? best : null);
   };
 
@@ -161,36 +221,64 @@ export default function CodePageClient({
         className="relative"
       >
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
+          <div className="min-w-[260px]">
             <div className="text-[11px] font-extrabold uppercase tracking-[0.26em] text-white/60">
-              Avirage Code • {slug}
+              Ethos Archetype • {slug}
             </div>
+
             <div className="mt-2 text-4xl font-black tracking-[-0.02em] sm:text-5xl">
-              {page.codeName}
+              {display?.label ?? page.codeName}
             </div>
+
+            {/* Keep cultural name quiet/secondary */}
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-white/12 bg-white/[0.03] px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/70">
+                {page.fullName}
+              </span>
+              {display?.essence ? (
+                <span className="rounded-full border border-white/10 bg-black/30 px-3 py-2 text-[11px] font-semibold text-white/60">
+                  {display.essence}
+                </span>
+              ) : null}
+            </div>
+
             <p className="mt-3 max-w-3xl text-sm leading-7 text-white/80">
-              {page.snapshot}
+              {display?.description ?? page.snapshot}
             </p>
           </div>
 
-          {/* Minimal “origin” chip — informational, not dominant */}
-          <div className="w-full max-w-md rounded-2xl border border-white/12 bg-black/30 p-4 sm:w-auto">
-            <div className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/60">
-              Origin signal
+          {/* Emblem + origin chip (image added, not huge) */}
+          <div className="flex w-full max-w-md items-start gap-3 sm:w-auto">
+            <div className="shrink-0 rounded-2xl border border-white/12 bg-black/30 p-2">
+              <div className="relative grid place-items-center">
+                <EmblemImage
+                  candidates={emblemCandidates}
+                  alt={`${display?.label ?? page.codeName} emblem`}
+                  className="h-16 w-16 rounded-xl object-cover opacity-90"
+                />
+                {/* subtle frame */}
+                <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-white/10" />
+              </div>
             </div>
-            <div className="mt-2 flex items-baseline justify-between gap-3">
-              <div className="text-sm text-white/70">Level 1</div>
-              <div className="text-sm font-extrabold">{page.origin.level1}</div>
-            </div>
-            <div className="mt-3 space-y-2">
-              {page.origin.lineage.slice(0, 3).map((x, i) => (
-                <div
-                  key={i}
-                  className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs leading-5 text-white/75"
-                >
-                  {x}
-                </div>
-              ))}
+
+            <div className="flex-1 rounded-2xl border border-white/12 bg-black/30 p-4">
+              <div className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/60">
+                Origin signal
+              </div>
+              <div className="mt-2 flex items-baseline justify-between gap-3">
+                <div className="text-sm text-white/70">Level 1</div>
+                <div className="text-sm font-extrabold">{page.origin.level1}</div>
+              </div>
+              <div className="mt-3 space-y-2">
+                {page.origin.lineage.slice(0, 3).map((x, i) => (
+                  <div
+                    key={i}
+                    className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs leading-5 text-white/75"
+                  >
+                    {x}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -211,10 +299,18 @@ export default function CodePageClient({
             </div>
 
             <div className="hidden sm:flex items-center gap-2">
-              <Chip active={activeKey === "lens"} onClick={() => setActive("lens")}>Lens</Chip>
-              <Chip active={activeKey === "traits"} onClick={() => setActive("traits")}>Traits</Chip>
-              <Chip active={activeKey === "thrive"} onClick={() => setActive("thrive")}>Thrive</Chip>
-              <Chip active={activeKey === "practical"} onClick={() => setActive("practical")}>Practical</Chip>
+              <Chip active={activeKey === "lens"} onClick={() => setActive("lens")}>
+                Lens
+              </Chip>
+              <Chip active={activeKey === "traits"} onClick={() => setActive("traits")}>
+                Traits
+              </Chip>
+              <Chip active={activeKey === "thrive"} onClick={() => setActive("thrive")}>
+                Thrive
+              </Chip>
+              <Chip active={activeKey === "practical"} onClick={() => setActive("practical")}>
+                Practical
+              </Chip>
             </div>
           </div>
 
@@ -303,21 +399,25 @@ export default function CodePageClient({
 
             {/* Mobile-friendly controls (visible under chips) */}
             <div className="mt-3 grid grid-cols-2 gap-2 sm:hidden">
-              <Chip active={activeKey === "lens"} onClick={() => setActive("lens")}>Lens</Chip>
-              <Chip active={activeKey === "traits"} onClick={() => setActive("traits")}>Traits</Chip>
-              <Chip active={activeKey === "thrive"} onClick={() => setActive("thrive")}>Thrive</Chip>
-              <Chip active={activeKey === "practical"} onClick={() => setActive("practical")}>Practical</Chip>
+              <Chip active={activeKey === "lens"} onClick={() => setActive("lens")}>
+                Lens
+              </Chip>
+              <Chip active={activeKey === "traits"} onClick={() => setActive("traits")}>
+                Traits
+              </Chip>
+              <Chip active={activeKey === "thrive"} onClick={() => setActive("thrive")}>
+                Thrive
+              </Chip>
+              <Chip active={activeKey === "practical"} onClick={() => setActive("practical")}>
+                Practical
+              </Chip>
             </div>
           </div>
         </div>
 
         {/* RIGHT: The Panel (clean, educational, not flashy) */}
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-          <Panel
-            active={activeKey}
-            model={model}
-            page={page}
-          />
+          <Panel active={activeKey} model={model} page={page} />
         </div>
       </div>
 
@@ -380,8 +480,7 @@ function Node({
   onEnter: () => void;
   onLeave: () => void;
 }) {
-  const base =
-    "absolute rounded-2xl border text-left transition will-change-transform";
+  const base = "absolute rounded-2xl border text-left transition will-change-transform";
   const spot =
     pos === "tl"
       ? "left-[10%] top-[12%]"
@@ -401,21 +500,15 @@ function Node({
         base,
         spot,
         "w-[38%] max-w-[220px] p-3",
-        isActive
-          ? "border-white/24 bg-white/[0.08]"
-          : "border-white/10 bg-white/[0.03] hover:bg-white/[0.06]",
+        isActive ? "border-white/24 bg-white/[0.08]" : "border-white/10 bg-white/[0.03] hover:bg-white/[0.06]",
       ].join(" ")}
       animate={{ scale: isActive ? 1.02 : 1 }}
       transition={{ duration: 0.18 }}
       whileTap={{ scale: 0.98 }}
     >
-      <div className="text-[11px] font-extrabold uppercase tracking-[0.20em] text-white/70">
-        {label}
-      </div>
+      <div className="text-[11px] font-extrabold uppercase tracking-[0.20em] text-white/70">{label}</div>
       <div className="mt-1 text-sm font-black text-white/90">{sub}</div>
-      <div className="mt-1 text-xs leading-5 text-white/65">
-        Open → short, scannable insight
-      </div>
+      <div className="mt-1 text-xs leading-5 text-white/65">Open → short, scannable insight</div>
     </motion.button>
   );
 }
@@ -486,10 +579,7 @@ function Panel({
         {active === "traits" ? (
           <div className="grid gap-3 sm:grid-cols-2">
             {model.traits.cards.map((c: any, i: number) => (
-              <div
-                key={i}
-                className="rounded-2xl border border-white/10 bg-black/25 p-3"
-              >
+              <div key={i} className="rounded-2xl border border-white/10 bg-black/25 p-3">
                 <div className="text-sm font-extrabold">{c.label}</div>
                 <div className="mt-1 text-sm leading-6 text-white/75">{c.meaning}</div>
               </div>
