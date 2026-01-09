@@ -9,6 +9,10 @@ import CodePageClient from "./CodePageClient";
 
 type Params = Promise<{ slug: string }>;
 
+/* ============================
+   HELPERS
+============================ */
+
 function normalizeSlug(input: string): string {
   return decodeURIComponent(input).trim().toLowerCase();
 }
@@ -17,39 +21,29 @@ function isCodeSlug(value: string): value is CodeSlug {
   return value in CODE_PAGES;
 }
 
-function normalizeKey(input: string) {
-  return String(input || "")
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-]/g, "");
-}
-
-function buildEmblemCandidates(codeName: string, label?: string, icon?: string, slug?: string) {
-  const keys = [
-    icon ? normalizeKey(icon) : "",
-    label ? normalizeKey(label) : "",
-    codeName ? normalizeKey(codeName) : "",
-    slug ? normalizeKey(slug) : "",
-  ].filter(Boolean);
-
-  const exts = ["jpg", "jpeg", "png", "webp"];
-  const out: string[] = [];
-  for (const k of keys) {
-    for (const ext of exts) out.push(`/emblems/${k}.${ext}`);
-  }
-  return Array.from(new Set(out));
-}
+/* ============================
+   STATIC PARAMS
+============================ */
 
 export function generateStaticParams(): Array<{ slug: CodeSlug }> {
   return (Object.keys(CODE_PAGES) as CodeSlug[]).map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+/* ============================
+   METADATA
+============================ */
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
   const { slug: rawSlug } = await params;
   const slug = normalizeSlug(rawSlug);
 
-  if (!isCodeSlug(slug)) return { title: "Code Page • Ethos" };
+  if (!isCodeSlug(slug)) {
+    return { title: "Code Page • Ethos" };
+  }
 
   const page = CODE_PAGES[slug];
   const display = CODE_DISPLAY_MAP[page.codeName as keyof typeof CODE_DISPLAY_MAP];
@@ -59,11 +53,19 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     description:
       display?.description ??
       page.snapshot ??
-      `Explore this archetypal lens and what it means for your lifestyle.`,
+      "Explore this archetypal lens and how it shapes your world.",
   };
 }
 
-export default async function CodePageRoute({ params }: { params: Params }) {
+/* ============================
+   PAGE
+============================ */
+
+export default async function CodePageRoute({
+  params,
+}: {
+  params: Params;
+}) {
   const { slug: rawSlug } = await params;
   const slug = normalizeSlug(rawSlug);
 
@@ -71,17 +73,13 @@ export default async function CodePageRoute({ params }: { params: Params }) {
 
   const page: CodePage = CODE_PAGES[slug];
 
-  // 🔑 Map internal code name → archetype display
   type CodeKey = keyof typeof CODE_DISPLAY_MAP;
   const display = CODE_DISPLAY_MAP[page.codeName as CodeKey];
 
-  // Image candidates (small, resilient to naming mismatches)
-  const emblemCandidates = buildEmblemCandidates(
-    page.codeName,
-    display?.label,
-    (display as any)?.icon,
-    slug
-  );
+  // ✅ FINAL: single source of truth for emblem
+  const emblemSrc = display?.emblem
+    ? `/emblems/${display.emblem}`
+    : null;
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -96,22 +94,27 @@ export default async function CodePageRoute({ params }: { params: Params }) {
           </Link>
 
           <div className="flex flex-wrap items-center justify-end gap-2">
-            {/* Small emblem (NOT huge) */}
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-black/30 px-2 py-2">
-              <img
-                src={emblemCandidates[0] ?? ""}
-                alt={`${display?.label ?? page.codeName} emblem`}
-                className="h-7 w-7 rounded-full object-cover opacity-90"
-                draggable={false}
-              />
-            </span>
+            {/* Small emblem */}
+            {emblemSrc && (
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-black/30 px-2 py-2">
+                <img
+                  src={emblemSrc}
+                  alt={`${display?.label ?? page.codeName} emblem`}
+                  className="h-7 w-7 rounded-full object-cover opacity-90"
+                  draggable={false}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              </span>
+            )}
 
             {/* Mythical archetype (PRIMARY) */}
             <span className="rounded-full border border-white/15 bg-white/[0.08] px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.18em]">
               {display?.label ?? page.codeName}
             </span>
 
-            {/* Cultural reference (QUIET / SECONDARY) */}
+            {/* Cultural reference (SECONDARY) */}
             <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-[11px] font-semibold text-white/60">
               {page.fullName}
             </span>
