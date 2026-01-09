@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import type { CodePage } from "@/lib/codePages";
 import { CODE_DISPLAY_MAP } from "@/lib/codeDisplayMap";
@@ -29,6 +29,12 @@ function buildEmblemCandidates(codeName: string, label?: string, icon?: string, 
   return Array.from(new Set(out));
 }
 
+function spotifySearchUrl(query: string) {
+  const q = String(query || "").trim();
+  if (!q) return "";
+  return `https://open.spotify.com/search/${encodeURIComponent(q)}`;
+}
+
 function EmblemImage({
   candidates,
   alt,
@@ -43,21 +49,20 @@ function EmblemImage({
   if (!src) return null;
 
   return (
-    <img
-      src={src}
-      alt={alt}
-      draggable={false}
-      loading="lazy"
-      className={className}
-      // NOTE: no onError (pre-render safe). Manual fallback via click.
+    <button
+      type="button"
       onClick={() => setIdx((i) => (i + 1 < candidates.length ? i + 1 : i))}
+      className="relative block"
       title="Click to try next emblem"
-    />
+    >
+      <img src={src} alt={alt} draggable={false} loading="lazy" className={className} />
+      <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-white/10" />
+    </button>
   );
 }
 
 export default function CodePageClient({ slug, page }: { slug: string; page: CodePage }) {
-  // ========= Cursor glow =========
+  // ========= Cursor glow (smooth) =========
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 140, damping: 24, mass: 0.7 });
@@ -85,7 +90,7 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
     });
   };
 
-  // ========= Archetype display + emblem candidates =========
+  // ========= Display + emblem =========
   type CodeKey = keyof typeof CODE_DISPLAY_MAP;
   const display = CODE_DISPLAY_MAP[page.codeName as CodeKey];
 
@@ -111,7 +116,7 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
       quads: [
         { title: "Lifestyle", items: page.recommendations.lifestyle },
         { title: "Places", items: page.recommendations.places },
-        { title: "Music", items: page.recommendations.music },
+        { title: "Music genres", items: page.recommendations.music },
         { title: "Activities", items: page.recommendations.activities },
       ],
     };
@@ -120,7 +125,7 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
       tri: [
         { title: "Strengths", items: page.strengths },
         { title: "Watchouts", items: page.watchouts },
-        { title: "Try this week", items: page.tryThisWeek },
+        { title: "This week", items: page.tryThisWeek },
       ],
     };
 
@@ -167,25 +172,35 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
 
   const clearHint = () => setHint(null);
 
+  // ========= Anchor support (for server “Quick entry”) =========
+  useEffect(() => {
+    // if someone lands on #traits etc, open it automatically
+    const hash = typeof window !== "undefined" ? window.location.hash.replace("#", "") : "";
+    if (hash === "lens" || hash === "traits" || hash === "thrive" || hash === "practical") {
+      setActive(hash as NodeKey);
+    }
+  }, []);
+
   return (
     <div
       onPointerMove={onMove}
-      className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] p-5 shadow-[0_30px_120px_rgba(0,0,0,0.65)] backdrop-blur-xl"
+      className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] p-5 shadow-[0_30px_120px_rgba(0,0,0,0.65)] backdrop-blur-xl sm:p-6"
     >
-      {/* Background */}
+      {/* Background layers */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 opacity-[0.14] [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:52px_52px]" />
 
         <motion.div
           className="absolute -inset-24 opacity-35 blur-2xl"
-          animate={{ rotate: 360, scale: [1, 1.05, 1] }}
+          animate={{ rotate: 360, scale: [1, 1.06, 1] }}
           transition={{ duration: 26, repeat: Infinity, ease: "linear" }}
           style={{
             background:
-              "radial-gradient(700px 420px at 25% 25%, rgba(99,102,241,0.18), transparent 60%), radial-gradient(760px 460px at 80% 72%, rgba(236,72,153,0.14), transparent 60%), radial-gradient(640px 420px at 55% 18%, rgba(34,211,238,0.12), transparent 60%)",
+              "radial-gradient(700px 420px at 25% 25%, rgba(120,255,214,0.16), transparent 60%), radial-gradient(760px 460px at 80% 72%, rgba(180,120,255,0.14), transparent 60%), radial-gradient(640px 420px at 55% 18%, rgba(255,190,120,0.10), transparent 60%)",
           }}
         />
 
+        {/* cursor glow */}
         <motion.div
           className="absolute inset-0"
           style={{
@@ -240,7 +255,9 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
                   alt={`${display?.label ?? page.codeName} emblem`}
                   className="h-16 w-16 rounded-xl object-cover opacity-90"
                 />
-                <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-white/10" />
+              </div>
+              <div className="mt-2 text-center text-[10px] font-semibold text-white/45">
+                emblem • click to cycle
               </div>
             </div>
 
@@ -253,7 +270,7 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
                 <div className="text-sm font-extrabold">{page.origin.level1}</div>
               </div>
               <div className="mt-3 space-y-2">
-                {page.origin.lineage.slice(0, 3).map((x, i) => (
+                {page.origin.lineage.slice(0, 4).map((x, i) => (
                   <div
                     key={i}
                     className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs leading-5 text-white/75"
@@ -272,7 +289,7 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
       {/* Main grid */}
       <div className="relative mt-6 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
         {/* LEFT: Nexus */}
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+        <div id="nexus" className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-white/55">Nexus</div>
@@ -294,19 +311,25 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
               onPointerLeave={clearHint}
               className="relative aspect-square w-full overflow-hidden rounded-2xl border border-white/10 bg-black/25"
             >
+              {/* Geometry */}
               <div className="pointer-events-none absolute inset-0">
                 <div className="absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-3xl border border-white/12" />
-                <div className="absolute left-1/2 top-1/2 h-[38%] w-[38%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10" />
+                <motion.div
+                  className="absolute left-1/2 top-1/2 h-[38%] w-[38%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10"
+                  animate={{ scale: [1, 1.02, 1], opacity: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+                />
                 <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-white/10 to-transparent" />
                 <div className="absolute top-1/2 left-0 h-px w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
               </div>
 
+              {/* Core */}
               <motion.button
                 type="button"
                 onClick={() => setActive("lens")}
                 onMouseEnter={() => setHovered("lens")}
                 onMouseLeave={() => setHovered(null)}
-                className="absolute left-1/2 top-1/2 grid h-24 w-24 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/12 bg-white/[0.04] text-center"
+                className="absolute left-1/2 top-1/2 grid h-24 w-24 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/12 bg-white/[0.04] text-center shadow-[0_20px_60px_rgba(0,0,0,0.55)]"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -314,11 +337,45 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
                 <div className="text-sm font-black">{page.lens.title}</div>
               </motion.button>
 
-              <Node label="Lens" sub="How you see" pos="tl" isActive={(hint ?? activeKey) === "lens"} onClick={() => setActive("lens")} onEnter={() => setHovered("lens")} onLeave={() => setHovered(null)} />
-              <Node label="Traits" sub="How you show" pos="tr" isActive={(hint ?? activeKey) === "traits"} onClick={() => setActive("traits")} onEnter={() => setHovered("traits")} onLeave={() => setHovered(null)} />
-              <Node label="Thrive" sub="Where you win" pos="bl" isActive={(hint ?? activeKey) === "thrive"} onClick={() => setActive("thrive")} onEnter={() => setHovered("thrive")} onLeave={() => setHovered(null)} />
-              <Node label="Practical" sub="What to do" pos="br" isActive={(hint ?? activeKey) === "practical"} onClick={() => setActive("practical")} onEnter={() => setHovered("practical")} onLeave={() => setHovered(null)} />
+              {/* Nodes */}
+              <Node
+                label="Lens"
+                sub="How you see"
+                pos="tl"
+                isActive={(hint ?? activeKey) === "lens"}
+                onClick={() => setActive("lens")}
+                onEnter={() => setHovered("lens")}
+                onLeave={() => setHovered(null)}
+              />
+              <Node
+                label="Traits"
+                sub="How you show"
+                pos="tr"
+                isActive={(hint ?? activeKey) === "traits"}
+                onClick={() => setActive("traits")}
+                onEnter={() => setHovered("traits")}
+                onLeave={() => setHovered(null)}
+              />
+              <Node
+                label="Thrive"
+                sub="Where you win"
+                pos="bl"
+                isActive={(hint ?? activeKey) === "thrive"}
+                onClick={() => setActive("thrive")}
+                onEnter={() => setHovered("thrive")}
+                onLeave={() => setHovered(null)}
+              />
+              <Node
+                label="Practical"
+                sub="What to do"
+                pos="br"
+                isActive={(hint ?? activeKey) === "practical"}
+                onClick={() => setActive("practical")}
+                onEnter={() => setHovered("practical")}
+                onLeave={() => setHovered(null)}
+              />
 
+              {/* Hint */}
               <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex items-center justify-between gap-3">
                 <div className="rounded-full border border-white/10 bg-black/30 px-3 py-2 text-[11px] font-extrabold text-white/65">
                   Move to a node • click to open
@@ -338,6 +395,12 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
 
         {/* RIGHT: Panel */}
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          {/* anchor targets always exist */}
+          <div className="sr-only" id="lens" />
+          <div className="sr-only" id="traits" />
+          <div className="sr-only" id="thrive" />
+          <div className="sr-only" id="practical" />
+
           <Panel active={activeKey} model={model} page={page} />
         </div>
       </div>
@@ -346,7 +409,9 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
         <div className="relative mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
           <div className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-white/55">Notes</div>
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-white/80">
-            {page.notes.map((n, i) => <li key={i}>{n}</li>)}
+            {page.notes.map((n, i) => (
+              <li key={i}>{n}</li>
+            ))}
           </ul>
         </div>
       ) : null}
@@ -354,20 +419,29 @@ export default function CodePageClient({ slug, page }: { slug: string; page: Cod
   );
 }
 
-function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+function Chip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onClick}
+      whileTap={{ scale: 0.98 }}
       className={[
         "rounded-full border px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.18em] transition",
         active
-          ? "border-white/22 bg-white/[0.08] text-white"
+          ? "border-white/22 bg-white/[0.10] text-white shadow-[0_10px_40px_rgba(0,0,0,0.35)]"
           : "border-white/12 bg-white/[0.03] text-white/70 hover:bg-white/[0.06]",
       ].join(" ")}
     >
       {children}
-    </button>
+    </motion.button>
   );
 }
 
@@ -408,15 +482,17 @@ function Node({
         base,
         spot,
         "w-[38%] max-w-[220px] p-3",
-        isActive ? "border-white/24 bg-white/[0.08]" : "border-white/10 bg-white/[0.03] hover:bg-white/[0.06]",
+        isActive
+          ? "border-white/24 bg-white/[0.10] shadow-[0_18px_70px_rgba(0,0,0,0.55)]"
+          : "border-white/10 bg-white/[0.03] hover:bg-white/[0.06]",
       ].join(" ")}
-      animate={{ scale: isActive ? 1.02 : 1 }}
+      animate={{ scale: isActive ? 1.03 : 1 }}
       transition={{ duration: 0.18 }}
       whileTap={{ scale: 0.98 }}
     >
       <div className="text-[11px] font-extrabold uppercase tracking-[0.20em] text-white/70">{label}</div>
       <div className="mt-1 text-sm font-black text-white/90">{sub}</div>
-      <div className="mt-1 text-xs leading-5 text-white/65">Open → short, scannable insight</div>
+      <div className="mt-1 text-xs leading-5 text-white/65">Open → deeper, code-specific detail</div>
     </motion.button>
   );
 }
@@ -430,6 +506,8 @@ function Panel({
   model: any;
   page: CodePage;
 }) {
+  const week = Array.isArray(page.tryThisWeek) ? page.tryThisWeek : [];
+
   return (
     <motion.div
       key={active}
@@ -449,7 +527,7 @@ function Panel({
               ? model.traits.headline
               : active === "thrive"
               ? "Where you thrive"
-              : "Actionable focus"}
+              : "Real-world alignment"}
           </div>
         </div>
 
@@ -462,8 +540,11 @@ function Panel({
         {active === "lens" ? (
           <>
             <p className="text-sm leading-7 text-white/80">{model.lens.desc}</p>
+
             <div className="rounded-2xl border border-white/10 bg-black/25 p-3">
-              <div className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/55">In plain English</div>
+              <div className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/55">
+                In plain English
+              </div>
               <ul className="mt-2 space-y-2 text-sm leading-6 text-white/80">
                 {model.lens.bullets.map((b: string, i: number) => (
                   <li key={i} className="flex gap-2">
@@ -473,6 +554,15 @@ function Panel({
                 ))}
               </ul>
             </div>
+
+            {page.snapshot ? (
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+                <div className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/55">
+                  Core snapshot
+                </div>
+                <div className="mt-2 text-sm leading-7 text-white/80">{page.snapshot}</div>
+              </div>
+            ) : null}
           </>
         ) : null}
 
@@ -492,43 +582,101 @@ function Panel({
             {model.thrive.quads.map((q: any, i: number) => (
               <div key={i} className="rounded-2xl border border-white/10 bg-black/25 p-3">
                 <div className="text-sm font-extrabold">{q.title}</div>
-                <ul className="mt-2 space-y-2 text-sm leading-6 text-white/75">
-                  {q.items.map((x: string, j: number) => (
-                    <li key={j} className="flex gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/40" />
-                      <span>{x}</span>
-                    </li>
-                  ))}
-                </ul>
+
+                {q.title.toLowerCase().includes("music") ? (
+                  <>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {q.items.map((genre: string, j: number) => {
+                        const href = spotifySearchUrl(genre);
+                        return (
+                          <a
+                            key={j}
+                            href={href || "#"}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.03] px-3 py-2 text-[12px] font-semibold text-white/75 hover:bg-white/[0.06]"
+                            title="Open in Spotify search"
+                          >
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-300/70" />
+                            {genre}
+                            <span className="text-white/35">↗</span>
+                          </a>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-3 text-xs leading-6 text-white/45">
+                      Tip: open a genre, then explore “Artists” + “Playlists” for your vibe.
+                    </div>
+                  </>
+                ) : (
+                  <ul className="mt-2 space-y-2 text-sm leading-6 text-white/75">
+                    {q.items.map((x: string, j: number) => (
+                      <li key={j} className="flex gap-2">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/40" />
+                        <span>{x}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ))}
           </div>
         ) : null}
 
         {active === "practical" ? (
-          <div className="grid gap-3 md:grid-cols-3">
-            {model.practical.tri.map((t: any, i: number) => (
-              <div key={i} className="rounded-2xl border border-white/10 bg-black/25 p-3">
-                <div className="text-sm font-extrabold">{t.title}</div>
-                <ul className="mt-2 space-y-2 text-sm leading-6 text-white/75">
-                  {t.items.map((x: string, j: number) => (
-                    <li key={j} className="flex gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/40" />
-                      <span>{x}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        ) : null}
+          <>
+            <div className="grid gap-3 md:grid-cols-3">
+              {model.practical.tri.map((t: any, i: number) => (
+                <div key={i} className="rounded-2xl border border-white/10 bg-black/25 p-3">
+                  <div className="text-sm font-extrabold">{t.title}</div>
+                  <ul className="mt-2 space-y-2 text-sm leading-6 text-white/75">
+                    {t.items.map((x: string, j: number) => (
+                      <li key={j} className="flex gap-2">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/40" />
+                        <span>{x}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-          <div className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/55">One move (this week)</div>
-          <div className="mt-2 text-sm leading-6 text-white/80">
-            {page.tryThisWeek?.[0] ?? "Pick one small action and ship it."}
-          </div>
-        </div>
+            {/* Better “this week” (not generic, uses all items) */}
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/55">
+                  Weekly alignment sequence
+                </div>
+                <div className="rounded-full border border-white/12 bg-black/25 px-3 py-2 text-[11px] font-extrabold text-white/70">
+                  3-step
+                </div>
+              </div>
+
+              {week.length ? (
+                <div className="mt-3 grid gap-2">
+                  {week.slice(0, 5).map((x, i) => (
+                    <div
+                      key={i}
+                      className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 px-3 py-3"
+                    >
+                      <div className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-white/12 bg-white/[0.04] text-xs font-black text-white/80">
+                        {i + 1}
+                      </div>
+                      <div className="text-sm leading-7 text-white/80">{x}</div>
+                    </div>
+                  ))}
+                  <div className="text-xs leading-6 text-white/45">
+                    Do the smallest version first. Your code responds to consistency, not intensity.
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-3 text-sm leading-7 text-white/70">
+                  Pick one small action and ship it. (Add code-specific steps in <code className="text-white/85">codePages.ts</code>.)
+                </div>
+              )}
+            </div>
+          </>
+        ) : null}
       </div>
     </motion.div>
   );
