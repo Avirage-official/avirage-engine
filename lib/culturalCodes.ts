@@ -64,7 +64,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 1,
     code_name: "khoisan",
-    full_name: "San/Khoisan",
+    full_name: "Earthlistener",
     type: "standalone",
     archetype_name: "Earthlistener",
     archetype_essence: "Presence • attunement • environmental intelligence",
@@ -99,7 +99,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 2,
     code_name: "kayori",
-    full_name: "Yoruba",
+    full_name: "Fireweaver",
     type: "standalone",
     archetype_name: "Fireweaver",
     archetype_essence: "Expression • emotional transmission • collective rhythm",
@@ -132,7 +132,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 3,
     code_name: "sahen",
-    full_name: "Tuareg",
+    full_name: "HorizonWalker",
     type: "standalone",
     archetype_name: "HorizonWalker",
     archetype_essence: "Endurance • solitude • internal strength",
@@ -168,7 +168,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 4,
     code_name: "enzuka",
-    full_name: "Maasai + Zulu Fusion",
+    full_name: "Shieldbearer",
     type: "fusion",
     archetype_name: "Shieldbearer",
     archetype_essence: "Protective leadership • order • responsibility",
@@ -204,7 +204,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 5,
     code_name: "siyuane",
-    full_name: "Ethiopian + Han Chinese Fusion",
+    full_name: "Kitsune",
     type: "fusion",
     archetype_name: "Kitsune",
     archetype_essence: "Precision • mastery • quiet excellence",
@@ -240,7 +240,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 6,
     code_name: "jaejin",
-    full_name: "Korean",
+    full_name: "Harmonist",
     type: "standalone",
     archetype_name: "Harmonist",
     archetype_essence: "Order • respect • social equilibrium",
@@ -273,7 +273,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 7,
     code_name: "namsea",
-    full_name: "Vietnamese + Thai Fusion",
+    full_name: "Flowbinder",
     type: "fusion",
     archetype_name: "Flowbinder",
     archetype_essence: "Adaptation • relational balance • fluid intelligence",
@@ -313,7 +313,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 8,
     code_name: "shokunin",
-    full_name: "Japanese",
+    full_name: "BladeSmith",
     type: "standalone",
     archetype_name: "BladeSmith",
     archetype_essence: "Craft devotion • repetition • exactness",
@@ -351,7 +351,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 9,
     code_name: "khoruun",
-    full_name: "Mongolian",
+    full_name: "SkyRider",
     type: "standalone",
     archetype_name: "SkyRider",
     archetype_essence: "Freedom • resilience • wide-horizon thinking",
@@ -390,7 +390,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 10,
     code_name: "lhumir",
-    full_name: "Tibetan",
+    full_name: "StillMind",
     type: "standalone",
     archetype_name: "StillMind",
     archetype_essence: "Inner clarity • contemplation • disciplined calm",
@@ -430,7 +430,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 11,
     code_name: "yatevar",
-    full_name: "Indian Vedic + Nahua Fusion",
+    full_name: "CycleKeeper",
     type: "fusion",
     archetype_name: "CycleKeeper",
     archetype_essence: "Ritual • layered meaning • cosmic order",
@@ -469,7 +469,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 12,
     code_name: "tahiri",
-    full_name: "Middle Eastern & North African",
+    full_name: "HeartBearer",
     type: "standalone",
     archetype_name: "HeartBearer",
     archetype_essence: "Honor • hospitality • expressive warmth",
@@ -510,7 +510,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 13,
     code_name: "athenos",
-    full_name: "Mediterranean",
+    full_name: "MuseBearer",
     type: "standalone",
     archetype_name: "MuseBearer",
     archetype_essence: "Beauty • passion • expressive vitality",
@@ -550,7 +550,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 14,
     code_name: "udumai",
-    full_name: "South Pacific",
+    full_name: "AncestorRoot",
     type: "standalone",
     archetype_name: "AncestorRoot",
     archetype_essence: "Collective memory • environmental unity",
@@ -589,7 +589,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 15,
     code_name: "tjukari",
-    full_name: "Aboriginal Australian",
+    full_name: "SonglineKeeper",
     type: "standalone",
     archetype_name: "SonglineKeeper",
     archetype_essence: "Deep time • land-memory • continuity",
@@ -628,7 +628,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 16,
     code_name: "kinmora",
-    full_name: "Maya",
+    full_name: "TimeArchitect",
     type: "standalone",
     archetype_name: "TimeArchitect",
     archetype_essence: "Cycles • precision • cosmic structure",
@@ -665,7 +665,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 17,
     code_name: "siljoa",
-    full_name: "Inuit + Sami Fusion",
+    full_name: "FrostSentinel",
     type: "fusion",
     archetype_name: "FrostSentinel",
     archetype_essence: "Climate attunement • resilience • cooperation",
@@ -702,7 +702,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 18,
     code_name: "skenari",
-    full_name: "Haudenosaunee",
+    full_name: "FutureGuardian",
     type: "standalone",
     archetype_name: "FutureGuardian",
     archetype_essence: "Long-horizon ethics • collective responsibility",
@@ -737,7 +737,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 19,
     code_name: "ashkara",
-    full_name: "Persian/Zoroastrian",
+    full_name: "TruthForger",
     type: "standalone",
     archetype_name: "TruthForger",
     archetype_essence: "Ethical action • moral clarity • integrity",
@@ -771,7 +771,7 @@ export const CULTURAL_CODES: CulturalCode[] = [
   {
     id: 20,
     code_name: "alethir",
-    full_name: "Ancient Greek",
+    full_name: "Seeker",
     type: "standalone",
     archetype_name: "Seeker",
     archetype_essence: "Inquiry • reason • pursuit of truth",
