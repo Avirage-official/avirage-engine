@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionTemplate, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import { QUIZ_QUESTIONS } from "@/lib/quizQuestions";
+import { getCodeDisplay } from "@/lib/codeDisplayMap";
 
 /* ============================
    TYPES
@@ -43,6 +44,34 @@ function safeSlugFromCodeName(codeName: unknown): string {
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
   return encodeURIComponent(slug);
+}
+
+/** Normalized slug for image names (long-term stable). */
+function normalizedSlug(input: unknown): string {
+  if (typeof input !== "string") return "";
+  return input
+    .normalize("NFKD")
+    .toLowerCase()
+    .trim()
+    .replace(/['’]/g, "")
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/** Build emblem src from code_name via CODE_DISPLAY_MAP.icon */
+function emblemSrcFromCodeName(codeName: unknown): string | null {
+  if (typeof codeName !== "string") return null;
+  const key = normalizedSlug(codeName);
+  if (!key) return null;
+
+  const display = getCodeDisplay(key);
+  const icon = display?.icon ? normalizedSlug(display.icon) : "";
+
+  if (!icon) return null;
+
+  // Directory you said: /public/emblems
+  return `/emblems/${icon}.jpg`;
 }
 
 /* ============================
@@ -174,6 +203,14 @@ export default function QuizPage() {
     )
   `;
 
+  // Emblem sources (ONLY used in result UI)
+  const primaryEmblem = useMemo(() => emblemSrcFromCodeName(result?.primary?.code_name), [result?.primary?.code_name]);
+  const secondaryEmblem = useMemo(
+    () => emblemSrcFromCodeName(result?.secondary?.code_name),
+    [result?.secondary?.code_name]
+  );
+  const tertiaryEmblem = useMemo(() => emblemSrcFromCodeName(result?.tertiary?.code_name), [result?.tertiary?.code_name]);
+
   /* ============================
      ACTIONS
   ============================ */
@@ -212,106 +249,108 @@ export default function QuizPage() {
     setSelectedOption(null);
   }
 
- async function submit(finalAnswers: Record<string, number>) {
-  console.log("=== QUIZ SUBMISSION STARTING ===");
-  console.log("Total answers:", Object.keys(finalAnswers).length);
-  
-  setStep("loading");
-  setError(null);
+  async function submit(finalAnswers: Record<string, number>) {
+    console.log("=== QUIZ SUBMISSION STARTING ===");
+    console.log("Total answers:", Object.keys(finalAnswers).length);
 
-  try {
-    const payload = {
-      userName: name.trim(),
-      gender: gender === "other" ? genderOther.trim() : gender,
-      birthDate: resolvedBirthDate,
-      city: city.trim(),
-      ethnicity: ethnicity.trim(),
-      answers: finalAnswers,
-    };
-
-    console.log("Sending to API...");
-
-    const res = await fetch("/api/analyse", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    console.log("API Response status:", res.status);
-
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error("API Error:", errorText);
-      
-      let errorData;
-      try {
-        errorData = JSON.parse(errorText);
-      } catch {
-        throw new Error(errorText || `Server error: ${res.status}`);
-      }
-      
-      throw new Error(errorData.error || "Analysis failed");
-    }
-
-    const data = (await res.json()) as AnalysisResult;
-    console.log("=== SUCCESS ===");
-    console.log("Primary code:", data.primary?.code_name);
-    
-    setResult(data);
-    setStep("result");
+    setStep("loading");
+    setError(null);
 
     try {
-      sessionStorage.setItem("ethos:lastResult", JSON.stringify(data));
-    } catch {
-      console.warn("Could not save to sessionStorage");
+      const payload = {
+        userName: name.trim(),
+        gender: gender === "other" ? genderOther.trim() : gender,
+        birthDate: resolvedBirthDate,
+        city: city.trim(),
+        ethnicity: ethnicity.trim(),
+        answers: finalAnswers,
+      };
+
+      console.log("Sending to API...");
+
+      const res = await fetch("/api/analyse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      console.log("API Response status:", res.status);
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("API Error:", errorText);
+
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          throw new Error(errorText || `Server error: ${res.status}`);
+        }
+
+        throw new Error(errorData.error || "Analysis failed");
+      }
+
+      const data = (await res.json()) as AnalysisResult;
+      console.log("=== SUCCESS ===");
+      console.log("Primary code:", data.primary?.code_name);
+
+      setResult(data);
+      setStep("result");
+
+      try {
+        sessionStorage.setItem("ethos:lastResult", JSON.stringify(data));
+      } catch {
+        console.warn("Could not save to sessionStorage");
+      }
+    } catch (e: any) {
+      console.error("=== FAILED ===");
+      console.error("Error:", e);
+      setError(e?.message || "Something went wrong. Please try again.");
+      setStep("quiz");
     }
-  } catch (e: any) {
-    console.error("=== FAILED ===");
-    console.error("Error:", e);
-    setError(e?.message || "Something went wrong. Please try again.");
-    setStep("quiz");
-  }
-}
-function answer(optionIndex: number) {
-  // Prevent double-clicks
-  if (selectedOption !== null) {
-    console.warn("Double-click prevented");
-    return;
-  }
-  
-  setSelectedOption(optionIndex);
-
-  // Safety check
-  if (!QUIZ_QUESTIONS[currentQuestionIndex]) {
-    console.error("Invalid question index:", currentQuestionIndex);
-    setError("Something went wrong. Please refresh and try again.");
-    return;
   }
 
-  const q = QUIZ_QUESTIONS[currentQuestionIndex];
-  const next = { ...answers, [q.id]: optionIndex };
-  setAnswers(next);
-
-  // ✅ KEY FIX: Check if this is the last question BEFORE setTimeout
-  const isLastQuestion = currentQuestionIndex >= total - 1;
-  
-  console.log(`Question ${currentQuestionIndex + 1}/${total} answered`, {
-    questionId: q.id,
-    isLastQuestion,
-    totalAnswers: Object.keys(next).length
-  });
-
-  window.setTimeout(() => {
-    setSelectedOption(null);
-    
-    if (isLastQuestion) {
-      console.log("🎯 Last question - submitting!");
-      submit(next);
-    } else {
-      setCurrentQuestionIndex((i) => i + 1);
+  function answer(optionIndex: number) {
+    // Prevent double-clicks
+    if (selectedOption !== null) {
+      console.warn("Double-click prevented");
+      return;
     }
-  }, 200);
-}
+
+    setSelectedOption(optionIndex);
+
+    // Safety check
+    if (!QUIZ_QUESTIONS[currentQuestionIndex]) {
+      console.error("Invalid question index:", currentQuestionIndex);
+      setError("Something went wrong. Please refresh and try again.");
+      return;
+    }
+
+    const q = QUIZ_QUESTIONS[currentQuestionIndex];
+    const next = { ...answers, [q.id]: optionIndex };
+    setAnswers(next);
+
+    // ✅ KEY FIX: Check if this is the last question BEFORE setTimeout
+    const isLastQuestion = currentQuestionIndex >= total - 1;
+
+    console.log(`Question ${currentQuestionIndex + 1}/${total} answered`, {
+      questionId: q.id,
+      isLastQuestion,
+      totalAnswers: Object.keys(next).length,
+    });
+
+    window.setTimeout(() => {
+      setSelectedOption(null);
+
+      if (isLastQuestion) {
+        console.log("🎯 Last question - submitting!");
+        submit(next);
+      } else {
+        setCurrentQuestionIndex((i) => i + 1);
+      }
+    }, 200);
+  }
+
   function resetAll() {
     setStep("info");
     setCurrentQuestionIndex(0);
@@ -325,7 +364,7 @@ function answer(optionIndex: number) {
   ============================ */
 
   return (
-    <div 
+    <div
       className="min-h-screen bg-black text-white overflow-hidden"
       onMouseMove={(e) => {
         mouseX.set(e.clientX);
@@ -333,16 +372,16 @@ function answer(optionIndex: number) {
       }}
     >
       {/* Animated gradient mesh background */}
-      <motion.div 
-        className="fixed inset-0 -z-10"
-        style={{ background: gradientMesh }}
-      />
+      <motion.div className="fixed inset-0 -z-10" style={{ background: gradientMesh }} />
 
       {/* Noise texture overlay */}
       <div className="fixed inset-0 -z-10 opacity-[0.015]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-        }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          }}
+        />
       </div>
 
       {/* Floating orbs */}
@@ -365,11 +404,7 @@ function answer(optionIndex: number) {
             </span>
           </Link>
 
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-4"
-          >
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-4">
             <div className="hidden sm:block text-sm font-semibold text-white/60">
               {step === "info" && "Identity Mapping"}
               {step === "quiz" && `Question ${currentQuestionIndex + 1}/${total}`}
@@ -427,13 +462,11 @@ function answer(optionIndex: number) {
                       <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-4 bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent">
                         Let's map your vibe
                       </h1>
-                      <p className="text-lg text-white/60">
-                        We use this to triangulate patterns. No stereotypes.
-                      </p>
+                      <p className="text-lg text-white/60">We use this to triangulate patterns. No stereotypes.</p>
                     </motion.div>
 
                     {/* Form Grid */}
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3 }}
@@ -459,15 +492,23 @@ function answer(optionIndex: number) {
                           className="w-full rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-4 py-3.5 text-base text-white outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all appearance-none cursor-pointer"
                           style={{
                             backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a78bfa' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                            backgroundPosition: 'right 0.75rem center',
-                            backgroundRepeat: 'no-repeat',
-                            backgroundSize: '1.5em 1.5em',
+                            backgroundPosition: "right 0.75rem center",
+                            backgroundRepeat: "no-repeat",
+                            backgroundSize: "1.5em 1.5em",
                           }}
                         >
-                          <option value="" className="bg-black">Select...</option>
-                          <option value="male" className="bg-black">Male</option>
-                          <option value="female" className="bg-black">Female</option>
-                          <option value="other" className="bg-black">Other</option>
+                          <option value="" className="bg-black">
+                            Select...
+                          </option>
+                          <option value="male" className="bg-black">
+                            Male
+                          </option>
+                          <option value="female" className="bg-black">
+                            Female
+                          </option>
+                          <option value="other" className="bg-black">
+                            Other
+                          </option>
                         </select>
                       </label>
 
@@ -509,9 +550,9 @@ function answer(optionIndex: number) {
                             className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-3 py-3.5 text-sm text-white outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all appearance-none cursor-pointer"
                             style={{
                               backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a78bfa' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                              backgroundPosition: 'right 0.5rem center',
-                              backgroundRepeat: 'no-repeat',
-                              backgroundSize: '1.25em 1.25em',
+                              backgroundPosition: "right 0.5rem center",
+                              backgroundRepeat: "no-repeat",
+                              backgroundSize: "1.25em 1.25em",
                             }}
                           >
                             {Array.from({ length: maxYear - minYear + 1 }, (_, i) => maxYear - i).map((y) => (
@@ -520,7 +561,7 @@ function answer(optionIndex: number) {
                               </option>
                             ))}
                           </select>
-                          
+
                           {/* Month */}
                           <select
                             value={birthMonth}
@@ -528,9 +569,9 @@ function answer(optionIndex: number) {
                             className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-3 py-3.5 text-sm text-white outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all appearance-none cursor-pointer"
                             style={{
                               backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a78bfa' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                              backgroundPosition: 'right 0.5rem center',
-                              backgroundRepeat: 'no-repeat',
-                              backgroundSize: '1.25em 1.25em',
+                              backgroundPosition: "right 0.5rem center",
+                              backgroundRepeat: "no-repeat",
+                              backgroundSize: "1.25em 1.25em",
                             }}
                           >
                             {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
@@ -539,7 +580,7 @@ function answer(optionIndex: number) {
                               </option>
                             ))}
                           </select>
-                          
+
                           {/* Day */}
                           <select
                             value={birthDay}
@@ -547,9 +588,9 @@ function answer(optionIndex: number) {
                             className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-3 py-3.5 text-sm text-white outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all appearance-none cursor-pointer"
                             style={{
                               backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a78bfa' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
-                              backgroundPosition: 'right 0.5rem center',
-                              backgroundRepeat: 'no-repeat',
-                              backgroundSize: '1.25em 1.25em',
+                              backgroundPosition: "right 0.5rem center",
+                              backgroundRepeat: "no-repeat",
+                              backgroundSize: "1.25em 1.25em",
                             }}
                           >
                             {Array.from({ length: daysInMonth(birthYear, birthMonth) }, (_, i) => i + 1).map((d) => (
@@ -563,23 +604,19 @@ function answer(optionIndex: number) {
 
                       {/* Ethnicity */}
                       <label className="block sm:col-span-2">
-                        <div className="text-xs font-black text-white/60 mb-2 tracking-wider uppercase">
-                          Ethnicity / Background
-                        </div>
+                        <div className="text-xs font-black text-white/60 mb-2 tracking-wider uppercase">Ethnicity / Background</div>
                         <input
                           value={ethnicity}
                           onChange={(e) => setEthnicity(e.target.value)}
                           className="w-full rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-4 py-3.5 text-base text-white placeholder:text-white/30 outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
                           placeholder="Short answer"
                         />
-                        <div className="mt-2 text-xs text-white/40">
-                          We use this for heritage-lens display, not stereotyping.
-                        </div>
+                        <div className="mt-2 text-xs text-white/40">We use this for heritage-lens display, not stereotyping.</div>
                       </label>
                     </motion.div>
 
                     {/* Footer */}
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.4 }}
@@ -595,7 +632,12 @@ function answer(optionIndex: number) {
                       >
                         <span className="relative z-10 flex items-center gap-2">
                           Begin Mapping
-                          <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg
+                            className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                           </svg>
                         </span>
@@ -674,9 +716,10 @@ function answer(optionIndex: number) {
                                 onClick={() => answer(idx)}
                                 className={`
                                   group relative w-full rounded-3xl border p-6 text-left transition-all duration-200
-                                  ${active 
-                                    ? 'border-violet-500 bg-violet-500/10 scale-[0.98]' 
-                                    : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'
+                                  ${
+                                    active
+                                      ? "border-violet-500 bg-violet-500/10 scale-[0.98]"
+                                      : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10"
                                   }
                                 `}
                                 whileHover={{ scale: active ? 0.98 : 1.02 }}
@@ -684,26 +727,23 @@ function answer(optionIndex: number) {
                               >
                                 {/* Glow effect on hover */}
                                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-violet-600/0 via-purple-600/0 to-fuchsia-600/0 group-hover:from-violet-600/10 group-hover:via-purple-600/10 group-hover:to-fuchsia-600/10 transition-all duration-300" />
-                                
+
                                 <div className="relative flex items-start gap-4">
                                   {/* Emoji circle */}
-                                  <div className={`
+                                  <div
+                                    className={`
                                     flex-shrink-0 grid place-items-center w-14 h-14 rounded-2xl text-2xl transition-all duration-200
-                                    ${active 
-                                      ? 'bg-violet-500/20 scale-110' 
-                                      : 'bg-white/5 group-hover:bg-white/10'
-                                    }
-                                  `}>
+                                    ${active ? "bg-violet-500/20 scale-110" : "bg-white/5 group-hover:bg-white/10"}
+                                  `}
+                                  >
                                     {opt.emoji ?? "✨"}
                                   </div>
-                                  
+
                                   <div className="flex-1 min-w-0">
                                     <div className="text-base sm:text-lg font-bold text-white mb-1.5 leading-snug">
                                       {opt.text}
                                     </div>
-                                    <div className="text-xs text-white/40">
-                                      Tap what resonates. No overthinking.
-                                    </div>
+                                    <div className="text-xs text-white/40">Tap what resonates. No overthinking.</div>
                                   </div>
 
                                   {/* Check icon when selected */}
@@ -822,6 +862,28 @@ function answer(optionIndex: number) {
                         <span className="text-xs font-bold text-white/80">YOUR PRIMARY CODE</span>
                       </div>
 
+                      {/* Emblem (small, styled, non-dominant) */}
+                      {primaryEmblem && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.9, y: 8 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          transition={{ delay: 0.22 }}
+                          className="mx-auto mb-6 w-[84px] h-[84px] sm:w-[96px] sm:h-[96px] rounded-3xl border border-white/15 bg-white/[0.03] backdrop-blur-xl shadow-[0_18px_60px_rgba(0,0,0,0.55)] overflow-hidden"
+                        >
+                          <img
+                            src={primaryEmblem}
+                            alt={`${result.primary.code_name} emblem`}
+                            className="w-full h-full object-cover"
+                            loading="eager"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).style.display = "none";
+                            }}
+                          />
+                          {/* subtle sheen */}
+                          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent" />
+                        </motion.div>
+                      )}
+
                       <motion.h1
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -856,9 +918,7 @@ function answer(optionIndex: number) {
                         transition={{ delay: 0.6 }}
                         className="mt-8 inline-flex items-center gap-3 px-6 py-3 rounded-2xl border border-white/20 bg-white/5 backdrop-blur-xl"
                       >
-                        <div className="text-3xl font-black text-violet-400">
-                          {result.primary.matchPercentage}%
-                        </div>
+                        <div className="text-3xl font-black text-violet-400">{result.primary.matchPercentage}%</div>
                         <div className="text-sm text-white/60">match confidence</div>
                       </motion.div>
                     </motion.div>
@@ -873,16 +933,35 @@ function answer(optionIndex: number) {
                   className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
                 >
                   {[
-                    { label: "Secondary Code", data: result.secondary },
-                    { label: "Tertiary Code", data: result.tertiary },
+                    { label: "Secondary Code", data: result.secondary, emblem: secondaryEmblem },
+                    { label: "Tertiary Code", data: result.tertiary, emblem: tertiaryEmblem },
                   ].map((item, i) => (
                     <TiltCard key={item.label}>
                       <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl p-8">
-                        <div className="text-xs font-bold text-white/50 mb-4">{item.label}</div>
+                        <div className="flex items-start justify-between gap-4 mb-4">
+                          <div className="text-xs font-bold text-white/50">{item.label}</div>
+
+                          {/* small emblem in corner */}
+                          {item.emblem && (
+                            <div className="relative w-12 h-12 rounded-2xl border border-white/15 bg-white/[0.03] overflow-hidden flex-shrink-0">
+                              <img
+                                src={item.emblem}
+                                alt={`${item.data.code_name} emblem`}
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                                }}
+                              />
+                              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent" />
+                            </div>
+                          )}
+                        </div>
+
                         <h3 className="text-3xl font-black mb-2 text-white">{item.data.code_name}</h3>
                         <p className="text-sm text-white/60 font-semibold mb-4">{item.data.full_name}</p>
                         <p className="text-sm text-white/50 leading-relaxed">{item.data.description}</p>
-                        
+
                         <div className="mt-6 flex items-center gap-2">
                           <div className="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden">
                             <motion.div
@@ -955,7 +1034,7 @@ function answer(optionIndex: number) {
                               <div className="text-xs font-bold text-violet-400">{t.score}/10</div>
                             </div>
                             <div className="text-xs text-white/50 leading-relaxed">{t.description}</div>
-                            
+
                             <div className="mt-3 h-1 rounded-full bg-white/10 overflow-hidden">
                               <motion.div
                                 initial={{ width: 0 }}
@@ -972,17 +1051,11 @@ function answer(optionIndex: number) {
                 </motion.div>
 
                 {/* Explanation */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.1 }}
-                >
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}>
                   <TiltCard>
                     <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl p-8 mb-8">
                       <div className="text-xs font-bold text-white/50 mb-4">DETAILED ANALYSIS</div>
-                      <p className="text-sm text-white/70 leading-relaxed whitespace-pre-line">
-                        {result.explanation}
-                      </p>
+                      <p className="text-sm text-white/70 leading-relaxed whitespace-pre-line">{result.explanation}</p>
                     </div>
                   </TiltCard>
                 </motion.div>
@@ -1021,15 +1094,8 @@ function answer(optionIndex: number) {
                 </motion.div>
 
                 {/* Footer note */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.4 }}
-                  className="mt-12 text-center"
-                >
-                  <p className="text-xs text-white/30">
-                    Your results are saved in this session • Built for clarity, not labels
-                  </p>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }} className="mt-12 text-center">
+                  <p className="text-xs text-white/30">Your results are saved in this session • Built for clarity, not labels</p>
                 </motion.div>
               </motion.div>
             )}
