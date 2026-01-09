@@ -1,11 +1,11 @@
 /**
  * AVIRAGE TYPE DEFINITIONS
- * Core interfaces and types for the Cultural Code system
+ * Core interfaces and types for the Mythical Code system
  *
  * DESIGN RULES (LOCKED):
  * - Prevent drift (trait keys, code identity, naming)
  * - Maintain full backwards compatibility
- * - Cultural Codes remain the ENGINE backbone
+ * - Mythical Codes remain the ENGINE backbone
  * - Mythic / archetype layer is ADDITIVE, not substitutive
  * - Scoring, matching, and routing MUST NOT change
  */
@@ -14,7 +14,7 @@
 // PRIMITIVES
 // ============================================================================
 
-/** Cultural code categories */
+/** Mythical code categories */
 export type CodeType = "standalone" | "fusion";
 
 /** Sentiment used in text / pattern detection */
@@ -120,15 +120,15 @@ export const TRAIT_NAMES: (keyof TraitScores)[] = [
 ];
 
 // ============================================================================
-// CULTURAL CODE SYSTEM (ENGINE CANONICAL)
+// MYTHICAL CODE SYSTEM (ENGINE CANONICAL)
 // ============================================================================
 
 /**
- * A Cultural Code represents a researched behavioral pattern
+ * A Mythical Code represents a researched behavioral pattern
  * grounded in cultural observation and expressed through trait vectors.
  *
  * IMPORTANT:
- * - Cultural framing is ENGINE-LEVEL grounding, not user identity
+ * - Cultural lineage is ENGINE-LEVEL grounding, not user identity
  * - User identity is layered later via mythic / archetype fields
  */
 export interface CulturalCode extends CodeRef {
@@ -138,7 +138,7 @@ export interface CulturalCode extends CodeRef {
   /** Standalone or fusion classification */
   type: CodeType;
 
-  /** Cultural research origin / grounding */
+  /** Cultural research origin / grounding (backend only) */
   origin: string;
 
   /** Canonical behavioral description */
@@ -147,7 +147,7 @@ export interface CulturalCode extends CodeRef {
   /** Core conceptual anchors used for explanation */
   core_concepts: string[];
 
-  /** Optional additional research references */
+  /** Optional additional research references (backend only) */
   source_cultures?: string[];
 
   /**
@@ -171,7 +171,7 @@ export interface CulturalCode extends CodeRef {
 // ============================================================================
 
 /**
- * Result of matching user traits against a Cultural Code
+ * Result of matching user traits against a Mythical Code
  */
 export interface CodeMatch {
   code: CulturalCode;
