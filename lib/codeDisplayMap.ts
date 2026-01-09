@@ -123,7 +123,7 @@ export const CODE_DISPLAY_MAP = {
     tone: "mystic",
   },
 
-  tahiri: {
+  Tahiri: {
     label: "HeartBearer",
     essence: "Honor • hospitality • expressive warmth",
     description: "You're passionate and expressive, grounded in shared values and generous warmth.",
@@ -132,16 +132,7 @@ export const CODE_DISPLAY_MAP = {
     tone: "warm",
   },
 
-  athenos: {
-    label: "MuseBearer",
-    essence: "Beauty • passion • expressive vitality",
-    description: "You're passionate and social. You deeply appreciate beauty and expression in all forms.",
-    icon: "laurel-flame",
-    emblem: "DREAMPATH NAVIGATOR.jpeg",
-    tone: "electric",
-  },
-
-  udumai: {
+  karayni: {
     label: "AncestorRoot",
     essence: "Collective memory • environmental unity",
     description: "You're deeply interconnected and communal. You carry collective memory and environmental connection.",
@@ -150,12 +141,21 @@ export const CODE_DISPLAY_MAP = {
     tone: "warm",
   },
 
-  tjukari: {
+  wohaka: {
     label: "SonglineKeeper",
     essence: "Deep time • land-memory • continuity",
     description: "You carry deep time consciousness. You navigate through land-memory and ancient continuity.",
     icon: "echo-path",
     emblem: "SONGLINEKEEPER.jpeg",
+    tone: "mystic",
+  },
+
+  tjukari: {
+    label: "Dreampath Navigator",
+    essence: "Deep time • land-memory • continuity",
+    description: "You carry deep time consciousness. You navigate through land-memory and ancient continuity.",
+    icon: "echo-path",
+    emblem: "DREAMPATH NAVIGATOR.jpeg",
     tone: "mystic",
   },
 
