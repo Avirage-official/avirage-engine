@@ -1,6 +1,6 @@
 /**
  * CODE MATCHER (UPGRADED — still Model B "Relative Resonance")
- * Matches detected patterns to 20 Cultural Codes and ranks all codes.
+ * Matches detected patterns to 20 Mythical Codes and ranks all codes.
  *
  * Upgrades (better, not simpler):
  * - Sanitizes bad data (e.g., same pattern marked core + incompatible)
@@ -42,7 +42,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 1,
     codeName: "khoisan",
-    fullName: "San/Khoisan",
+    fullName: "Earthlistener",
     corePatterns: [4, 3, 6, 15, 26],
     supportingPatterns: [9, 17, 19, 20],
     incompatiblePatterns: [8, 11, 23],
@@ -51,7 +51,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 2,
     codeName: "kayori",
-    fullName: "Yoruba",
+    fullName: "Fireweaver",
     corePatterns: [1, 7, 13, 18, 25],
     supportingPatterns: [4, 21, 22, 27],
     incompatiblePatterns: [14, 17, 29],
@@ -60,7 +60,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 3,
     codeName: "sahen",
-    fullName: "Tuareg",
+    fullName: "HorizonWalker",
     corePatterns: [1, 16, 15, 26, 29],
     supportingPatterns: [17, 19, 14, 2],
     incompatiblePatterns: [18, 27, 11],
@@ -69,7 +69,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 4,
     codeName: "enzuka",
-    fullName: "Maasai + Zulu Fusion",
+    fullName: "Shieldbearer",
     corePatterns: [12, 21, 11, 20, 22],
     supportingPatterns: [2, 8, 18, 26],
     incompatiblePatterns: [17, 20, 29],
@@ -78,7 +78,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 5,
     codeName: "siyuane",
-    fullName: "Ethiopian + Han Chinese Fusion",
+    fullName: "Kitsune",
     corePatterns: [8, 22, 24, 14, 30],
     supportingPatterns: [5, 10, 21, 25],
     incompatiblePatterns: [9, 23, 13],
@@ -87,7 +87,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 6,
     codeName: "jaejin",
-    fullName: "Korean",
+    fullName: "Harmonist",
     corePatterns: [11, 21, 14, 8, 7],
     supportingPatterns: [2, 22, 19, 12],
     incompatiblePatterns: [9, 29, 13],
@@ -96,7 +96,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 7,
     codeName: "namsea",
-    fullName: "Vietnamese + Thai Fusion",
+    fullName: "Flowbinder",
     corePatterns: [6, 9, 20, 27, 15],
     supportingPatterns: [4, 18, 21, 26],
     incompatiblePatterns: [8, 11, 5],
@@ -105,7 +105,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 8,
     codeName: "shokunin",
-    fullName: "Japanese",
+    fullName: "BladeSmith",
     corePatterns: [7, 5, 8, 4, 11],
     supportingPatterns: [2, 22, 14, 15, 21],
     incompatiblePatterns: [9, 23, 13],
@@ -114,7 +114,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 9,
     codeName: "khoruun",
-    fullName: "Mongolian",
+    fullName: "SkyRider",
     corePatterns: [9, 29, 15, 26, 12],
     supportingPatterns: [3, 2, 17, 20],
     incompatiblePatterns: [8, 24, 21],
@@ -123,7 +123,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 10,
     codeName: "lhumir",
-    fullName: "Tibetan",
+    fullName: "StillMind",
     corePatterns: [1, 6, 12, 16, 25],
     supportingPatterns: [10, 17, 21, 22],
     incompatiblePatterns: [11, 23, 18],
@@ -132,7 +132,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 11,
     codeName: "yatevar",
-    fullName: "Indian Vedic + Nahua Fusion",
+    fullName: "CycleKeeper",
     corePatterns: [1, 16, 25, 22, 8],
     supportingPatterns: [7, 13, 15, 26],
     incompatiblePatterns: [9, 23, 27],
@@ -141,7 +141,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 12,
     codeName: "renara",
-    fullName: "Javanese",
+    fullName: "Harmony Weaver",
     corePatterns: [8, 12, 14, 22, 24],
     supportingPatterns: [10, 21, 20, 7],
     incompatiblePatterns: [9, 13, 23],
@@ -150,7 +150,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 13,
     codeName: "karayni",
-    fullName: "Balinese + Quechua Fusion",
+    fullName: "AncestorRoot",
     corePatterns: [15, 21, 25, 26, 28],
     supportingPatterns: [4, 7, 22, 18],
     incompatiblePatterns: [29, 17, 2],
@@ -159,7 +159,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 14,
     codeName: "wohaka",
-    fullName: "Maori + Lakota Fusion",
+    fullName: "SonglineKeeper",
     corePatterns: [15, 21, 22, 25, 26],
     supportingPatterns: [13, 18, 20, 27],
     incompatiblePatterns: [29, 14, 17],
@@ -168,7 +168,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 15,
     codeName: "tjukari",
-    fullName: "Aboriginal Australian",
+    fullName: "Dreampath Navigator",
     corePatterns: [1, 4, 3, 6, 26],
     supportingPatterns: [15, 22, 25, 19],
     incompatiblePatterns: [11, 8, 23],
@@ -177,7 +177,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 16,
     codeName: "kinmora",
-    fullName: "Maya",
+    fullName: "TimeArchitect",
     corePatterns: [1, 3, 5, 22, 25],
     supportingPatterns: [8, 24, 30, 26],
     incompatiblePatterns: [9, 23, 6],
@@ -186,7 +186,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 17,
     codeName: "siljoa",
-    fullName: "Inuit + Sami Fusion",
+    fullName: "FrostSentinel",
     corePatterns: [3, 15, 26, 12, 9],
     supportingPatterns: [2, 17, 19, 24],
     incompatiblePatterns: [18, 23, 11],
@@ -195,7 +195,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 18,
     codeName: "skenari",
-    fullName: "Haudenosaunee",
+    fullName: "FutureGuardian",
     corePatterns: [8, 21, 22, 24, 30],
     supportingPatterns: [25, 28, 20, 26],
     incompatiblePatterns: [23, 29, 9],
@@ -204,7 +204,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 19,
     codeName: "ashkara",
-    fullName: "Persian/Zoroastrian",
+    fullName: "TruthForger",
     corePatterns: [1, 16, 25, 11, 22],
     supportingPatterns: [7, 8, 12, 26],
     incompatiblePatterns: [9, 20, 27],
@@ -213,7 +213,7 @@ const CODE_REQUIREMENTS_RAW: CodeRequirement[] = [
   {
     codeId: 20,
     codeName: "alethir",
-    fullName: "Ancient Greek",
+    fullName: "Seeker",
     corePatterns: [1, 3, 16, 25, 23],
     supportingPatterns: [13, 18, 7, 26],
     incompatiblePatterns: [22, 24, 14],
