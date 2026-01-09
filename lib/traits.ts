@@ -52,7 +52,7 @@ export function initializeTraits(): TraitScores {
 /**
  * Trait metadata for display and explanation
  */
-export const TRAIT_METADATA: Record
+export const TRAIT_METADATA: Record <
   keyof TraitScores,
   {
     name: string;
