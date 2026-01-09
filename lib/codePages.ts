@@ -7,7 +7,7 @@
  *
  * Display-only. Does NOT affect scoring / algorithms.
  * 
- * CRITICAL: All keys must be lowercase to match codeMatcher.ts output
+ * CRITICAL: All keys must match codeMatcher.ts exactly (lowercase except Tahiri)
  */
 
 export type CodeSlug = string;
@@ -854,80 +854,73 @@ export const CODE_PAGES: Record<CodeSlug, CodePage> = {
   },
 
   // ========================================
-  // CODE 12: RENARA
+  // CODE 12: TAHIRI
   // ========================================
-  renara: {
-    codeName: "renara",
-    fullName: "Harmony Weaver",
+  Tahiri: {
+    codeName: "Tahiri",
+    fullName: "HeartBearer",
     snapshot:
-      "You create stability by softening friction — you're the person who makes environments feel calmer, smoother, and more livable.",
+      "You're passionate and expressive — grounded in shared values, generous warmth, and communal honor.",
 
     origin: {
-      level1: "Javanese",
+      level1: "Middle East & North Africa",
       lineage: [
-        "Harmony-first social rhythm",
-        "Soft power influence (subtle, effective)",
-        "Balance + restraint (halus)",
-        "Community stability",
+        "Honor • hospitality • expressive warmth",
+        "Passionate expressiveness",
+        "Communal values and kinship",
+        "Generous hospitality tradition",
       ],
     },
 
     lens: {
-      title: "Balance & Harmony",
-      description: "Stability through calm awareness, emotional intelligence, and soft power.",
+      title: "Passionate Honor",
+      description: "Expressive warmth, communal values, generous hospitality.",
       inPlainEnglish: [
-        "You feel tension quickly.",
-        "You smooth conflict naturally.",
-        "You thrive in calm, respectful environments.",
+        "You express emotions openly and generously.",
+        "You value honor and shared community bonds.",
+        "Hospitality and warmth define your social presence.",
       ],
     },
 
     traits: {
       headline: "Core Traits",
       highlights: [
-        { label: "Emotionally aware", meaning: "You read atmosphere and tone early." },
-        { label: "Stabilizing", meaning: "You reduce friction and restore flow." },
-        { label: "Relationally intelligent", meaning: "You value cooperation over dominance." },
-        { label: "Subtly powerful", meaning: "Your influence is gentle but effective." },
+        { label: "Expressively warm", meaning: "Your emotions flow naturally and openly." },
+        { label: "Honor-centered", meaning: "Your word and reputation matter deeply." },
+        { label: "Generously hospitable", meaning: "You welcome others with genuine warmth." },
+        { label: "Communally grounded", meaning: "You thrive in close-knit social bonds." },
       ],
     },
 
     recommendations: {
       lifestyle: [
-        "Keep routines gentle and consistent.",
-        "Choose stability over drama.",
-        "Set boundaries early so harmony includes you too.",
+        "Create spaces for gathering and connection.",
+        "Express emotions openly with trusted people.",
+        "Honor commitments and keep your word.",
       ],
       places: [
-        "Calm, beautiful neighborhoods (parks, waterfronts, walkable areas).",
-        "Spaces with respectful social rhythm (not chaotic nightlife).",
-        "Cozy community hubs you can return to.",
+        "Communities with strong social ties",
+        "Neighborhoods with gathering spaces (cafes, plazas)",
+        "Places that value hospitality and honor",
       ],
       music: [
-        "Warm, melodic, emotionally balanced music.",
-        "Chill R&B, melodic house, soft soul.",
-        "Anything smooth (not rage content energy).",
+        "Middle Eastern classical, Arabic pop",
+        "Music with emotional depth and passion",
+        "Anything that invites expression",
       ],
       activities: [
-        "Yoga, walking, swimming (reset your baseline).",
-        "Cooking, photography, design (beauty + flow).",
-        "Small gatherings with low drama and consistency.",
+        "Hosting gatherings, cooking for others",
+        "Storytelling and expressive arts",
+        "Community events and celebrations",
       ],
     },
 
-    strengths: ["Emotional intelligence", "Conflict reduction", "Relationship awareness", "Stability-building"],
-
-    watchouts: [
-      "Avoiding necessary confrontation",
-      "Over-accommodating others",
-      "Quiet resentment from delayed needs",
-      "Staying too long in unbalanced environments",
-    ],
-
+    strengths: ["Emotional expressiveness", "Generous hospitality", "Strong community bonds", "Honor and integrity"],
+    watchouts: ["Over-commitment to honor expectations", "Difficulty with emotional boundaries", "Taking criticism as dishonor"],
     tryThisWeek: [
-      "Say no once without over-explaining.",
-      "Choose one boundary and communicate it early.",
-      "Do one calm reset (walk, music, tidy) before sleep.",
+      "Set one boundary without guilt",
+      "Express one vulnerable emotion",
+      "Receive hospitality gracefully without reciprocating immediately",
     ],
   },
 
