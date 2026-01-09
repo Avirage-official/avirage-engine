@@ -132,17 +132,13 @@ export default function CodePageClient({
           </div>
 
           {/* EMBLEM */}
-          {emblemSrc && (
-            <div className="shrink-0 rounded-2xl border border-white/12 bg-black/30 p-3">
-              <img
-                src={emblemSrc}
-                alt={`${display?.label ?? page.codeName} emblem`}
-                className="h-20 w-20 rounded-xl object-cover opacity-90"
-                draggable={false}
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).style.display = "none";
-                }}
-              />
+         <img
+  src={emblemSrc}
+  alt={`${display?.label ?? page.codeName} emblem`}
+  className="h-20 w-20 rounded-xl object-cover opacity-90"
+  draggable={false}
+/>
+
             </div>
           )}
         </div>
