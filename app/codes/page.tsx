@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { CSSProperties, useState } from "react";
 import { CODE_PAGES, CODE_SLUGS, type CodeSlug } from "@/lib/codePages";
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';  // ← ADD THIS LINE
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+
 /* ============================
    THEME
 ============================ */
@@ -31,18 +32,18 @@ const BODY_FONT = "'Inter', system-ui, sans-serif";
 const REGIONS: Record<string, CodeSlug[]> = {
   "All Codes": CODE_SLUGS as unknown as CodeSlug[],
   "Africa": ["khoisan", "kayori", "sahen", "enzuka"],
-  "Asia": ["siyuane", "jaejin", "namsea", "shokunin", "khoruun", "lhumir", "yatevar", "renara"],
+  "Asia": ["siyuane", "jaejin", "namsea", "shokunin", "khoruun", "lhumir", "yatevar"],
   "Pacific": ["karayni", "wohaka", "tjukari"],
   "Americas": ["kinmora", "skenari"],
   "Arctic": ["siljoa"],
-  "Middle East": ["ashkara"],
+  "Middle East": ["Tahiri", "ashkara"],
   "Mediterranean": ["alethir"],
 };
 
 const CODE_TYPES: Record<string, CodeSlug[]> = {
   "All": CODE_SLUGS as unknown as CodeSlug[],
-  "Standalone": ["khoisan", "kayori", "sahen", "shokunin", "khoruun", "lhumir", "renara", "tjukari", "kinmora", "skenari", "ashkara", "alethir"],
-  "Fusion": ["enzuka", "siyuane", "jaejin", "namsea", "yatevar", "karayni", "wohaka", "siljoa"],
+  "Standalone": ["khoisan", "kayori", "sahen", "jaejin", "shokunin", "khoruun", "lhumir", "Tahiri", "tjukari", "kinmora", "skenari", "ashkara", "alethir"],
+  "Fusion": ["enzuka", "siyuane", "namsea", "yatevar", "karayni", "wohaka", "siljoa"],
 };
 
 /* ============================
@@ -86,11 +87,11 @@ export default function CodesLibraryPage() {
             <Link href="/faq" style={navLink}>
               FAQ
             </Link>
-             <SignedIn>           
-  <Link href="/dashboard" style={navLink}>
-    Dashboard
-  </Link>
-</SignedIn>
+            <SignedIn>           
+              <Link href="/dashboard" style={navLink}>
+                Dashboard
+              </Link>
+            </SignedIn>
             <Link href="/quiz" style={signInBtn}>
               Take Quiz
             </Link>
