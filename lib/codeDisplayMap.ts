@@ -29,7 +29,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Presence • attunement • environmental intelligence",
     description: "You're deeply grounded and perceptive. You notice patterns others miss and move with natural rhythm.",
     icon: "spiral-stone",
-    emblem: "earthlistener",
+    emblem: "EARTHLISTENER.jpeg",
     tone: "mystic",
   },
 
@@ -38,7 +38,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Expression • emotional transmission • collective rhythm",
     description: "You're expressive and communal. Your energy connects people and brings shared meaning to life.",
     icon: "ember-drum",
-    emblem: "fireweaver",
+    emblem: "FIREWEAVER.jpeg",
     tone: "electric",
   },
 
@@ -47,7 +47,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Endurance • solitude • internal strength",
     description: "You're quietly resilient and inwardly strong. You're comfortable with solitude and long horizons.",
     icon: "distant-sun",
-    emblem: "horizonwalker",
+    emblem: "HORIZONWALKER.jpeg",
     tone: "calm",
   },
 
@@ -56,7 +56,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Protective leadership • order • responsibility",
     description: "You lead through strength and clarity. You create safety and structure for those around you.",
     icon: "iron-circle",
-    emblem: "shieldbearer",
+    emblem: "SHIELDBEARER.jpeg",
     tone: "bold",
   },
 
@@ -74,7 +74,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Order • respect • social equilibrium",
     description: "You're respectful and socially attuned. You balance hierarchy with care for harmony.",
     icon: "balanced-knot",
-    emblem: "harmonist",
+    emblem: "HARMONIST.jpeg",
     tone: "warm",
   },
 
@@ -83,7 +83,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Adaptation • relational balance • fluid intelligence",
     description: "You're fluid and adaptable. You move with change rather than against it, finding balance naturally.",
     icon: "tidal-ring",
-    emblem: "flowbinder",
+    emblem: "FLOWBINDER.jpeg",
     tone: "calm",
   },
 
@@ -92,7 +92,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Craft devotion • repetition • exactness",
     description: "You're devoted to craft and quiet excellence. Precision through repetition is your way.",
     icon: "anvil-mark",
-    emblem: "bladesmith",
+    emblem: "BLADESMITH.jpeg",
     tone: "calm",
   },
 
@@ -101,7 +101,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Freedom • resilience • wide-horizon thinking",
     description: "You're independent and resilient, rooted in vast open environments and free movement.",
     icon: "wind-horse",
-    emblem: "skyrider",
+    emblem: "SKYRIDER.jpeg",
     tone: "bold",
   },
 
@@ -110,7 +110,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Inner clarity • contemplation • disciplined calm",
     description: "You're calm and contemplative. You value inner clarity over outward noise.",
     icon: "silent-flame",
-    emblem: "stillmind",
+    emblem: "STILLMIND.jpeg",
     tone: "mystic",
   },
 
@@ -119,7 +119,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Ritual • layered meaning • cosmic order",
     description: "You're layered and philosophical. You're devoted to ritual precision and cosmic understanding.",
     icon: "turning-wheel",
-    emblem: "cyclekeeper",
+    emblem: "CYCLEKEEPER.jpeg",
     tone: "mystic",
   },
 
@@ -128,7 +128,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Honor • hospitality • expressive warmth",
     description: "You're passionate and expressive, grounded in shared values and generous warmth.",
     icon: "open-palm",
-    emblem: "heartbearer",
+    emblem: "HARMONY WEAVER.jpeg",
     tone: "warm",
   },
 
@@ -137,7 +137,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Beauty • passion • expressive vitality",
     description: "You're passionate and social. You deeply appreciate beauty and expression in all forms.",
     icon: "laurel-flame",
-    emblem: "musebearer",
+    emblem: "DREAMPATH NAVIGATOR.jpeg",
     tone: "electric",
   },
 
@@ -146,7 +146,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Collective memory • environmental unity",
     description: "You're deeply interconnected and communal. You carry collective memory and environmental connection.",
     icon: "woven-root",
-    emblem: "ancestorroot",
+    emblem: "ANCESTORROOT.jpeg",
     tone: "warm",
   },
 
@@ -155,7 +155,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Deep time • land-memory • continuity",
     description: "You carry deep time consciousness. You navigate through land-memory and ancient continuity.",
     icon: "echo-path",
-    emblem: "songlinekeeper",
+    emblem: "SONGLINEKEEPER.jpeg",
     tone: "mystic",
   },
 
@@ -164,7 +164,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Cycles • precision • cosmic structure",
     description: "You understand mathematical cosmology and cyclical time. Precision in cosmic patterns drives you.",
     icon: "celestial-grid",
-    emblem: "timearchitect",
+    emblem: "TIMEARCHITECT.jpeg",
     tone: "mystic",
   },
 
@@ -173,7 +173,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Climate attunement • resilience • cooperation",
     description: "You live in dialogue with climate and place. Your resilience comes from environmental partnership.",
     icon: "ice-mark",
-    emblem: "frostsentinel",
+    emblem: "FROSTSENTINEL.jpeg",
     tone: "calm",
   },
 
@@ -182,7 +182,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Long-horizon ethics • collective responsibility",
     description: "You hold responsibility to future generations. You think in long horizons and collective care.",
     icon: "seven-rings",
-    emblem: "futureguardian",
+    emblem: "FUTUREGUARDIAN.jpeg",
     tone: "warm",
   },
 
@@ -191,7 +191,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Ethical action • moral clarity • integrity",
     description: "You enact truth through ethical choice. Moral clarity and integrity guide your every action.",
     icon: "dual-flame",
-    emblem: "truthforger",
+    emblem: "TRUTHFORGER.jpeg",
     tone: "bold",
   },
 
@@ -200,7 +200,7 @@ export const CODE_DISPLAY_MAP = {
     essence: "Inquiry • reason • pursuit of truth",
     description: "Truth emerges through inquiry and dialogue for you. You pursue understanding through reasoning.",
     icon: "open-eye",
-    emblem: "seeker",
+    emblem: "SEEKER.jpeg",
     tone: "mystic",
   },
 } as const;
