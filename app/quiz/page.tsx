@@ -64,8 +64,9 @@ export default function QuizPage() {
   // Animation
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const gradientX = useTransform(mouseX, [0, window.innerWidth], [0, 100]);
-  const gradientY = useTransform(mouseY, [0, window.innerHeight], [0, 100]);
+// AFTER (safe for SSR):
+const gradientX = useTransform(mouseX, [0, typeof window !== 'undefined' ? window.innerWidth : 1920], [0, 100]);
+const gradientY = useTransform(mouseY, [0, typeof window !== 'undefined' ? window.innerHeight : 1080], [0, 100]);
   const gradientMesh = useTransform(
     [gradientX, gradientY],
     ([x, y]) =>
@@ -427,7 +428,7 @@ export default function QuizPage() {
                         />
                       </div>
 
-                      {/* MBTI (NEW - Optional) */}
+{/* MBTI (Optional) */}
                       <div>
                         <label className="block text-sm font-bold text-white/80 mb-2">
                           MBTI Type{" "}
