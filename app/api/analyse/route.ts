@@ -53,7 +53,11 @@ export async function POST(req: Request) {
       userMBTI: mbtiValue, // NEW: Pass optional MBTI
       birthTime: birthTimeValue, // NEW: Pass optional birth time
     });
-
+console.log("=== DEBUG INFO ===");
+console.log("Astrology data:", result.frameworks.astrology);
+console.log("Patterns detected:", Object.keys(result.patterns).length);
+console.log("Primary code:", result.culturalCodes.primary.codeName);
+console.log("Match percentage:", result.culturalCodes.primary.matchPercentage);
     // Format response for frontend
     const response = {
       userName: result.userName,
