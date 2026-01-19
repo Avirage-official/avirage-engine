@@ -87,7 +87,7 @@ const gradientY = useTransform(mouseY, [0, typeof window !== 'undefined' ? windo
     if (!name.trim()) return "Please enter your name.";
     if (!gender) return "Please select a gender.";
     if (gender === "other" && !genderOther.trim()) return "Please specify your gender.";
-    if (!city.trim()) return "Please enter your city.";
+    if (!city.trim()) return "Please enter your Country.";
     if (!ethnicity.trim()) return "Please enter your ethnicity/background.";
 
     if (!/^\d{4}-\d{2}-\d{2}$/.test(resolvedBirthDate)) return "Birthdate looks invalid.";
@@ -404,17 +404,46 @@ const gradientY = useTransform(mouseY, [0, typeof window !== 'undefined' ? windo
                         />
                       </div>
 
-                      {/* City */}
-                      <div>
-                        <label className="block text-sm font-bold text-white/80 mb-2">City</label>
-                        <input
-                          type="text"
-                          value={city}
-                          onChange={(e) => setCity(e.target.value)}
-                          placeholder="Where do you live?"
-                          className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 backdrop-blur-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition"
-                        />
-                      </div>
+                      {/* Country */}
+<div>
+  <label className="block text-sm font-bold text-white/80 mb-2">Country</label>
+  <select
+    value={city}
+    onChange={(e) => setCity(e.target.value)}
+    className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 backdrop-blur-xl text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition appearance-none cursor-pointer"
+  >
+    <option value="" className="bg-gray-900">Select your country</option>
+    <option value="United States" className="bg-gray-900">United States</option>
+    <option value="United Kingdom" className="bg-gray-900">United Kingdom</option>
+    <option value="Canada" className="bg-gray-900">Canada</option>
+    <option value="Australia" className="bg-gray-900">Australia</option>
+    <option value="Singapore" className="bg-gray-900">Singapore</option>
+    <option value="India" className="bg-gray-900">India</option>
+    <option value="China" className="bg-gray-900">China</option>
+    <option value="Japan" className="bg-gray-900">Japan</option>
+    <option value="South Korea" className="bg-gray-900">South Korea</option>
+    <option value="Germany" className="bg-gray-900">Germany</option>
+    <option value="France" className="bg-gray-900">France</option>
+    <option value="Spain" className="bg-gray-900">Spain</option>
+    <option value="Italy" className="bg-gray-900">Italy</option>
+    <option value="Netherlands" className="bg-gray-900">Netherlands</option>
+    <option value="Brazil" className="bg-gray-900">Brazil</option>
+    <option value="Mexico" className="bg-gray-900">Mexico</option>
+    <option value="Argentina" className="bg-gray-900">Argentina</option>
+    <option value="South Africa" className="bg-gray-900">South Africa</option>
+    <option value="Nigeria" className="bg-gray-900">Nigeria</option>
+    <option value="Egypt" className="bg-gray-900">Egypt</option>
+    <option value="UAE" className="bg-gray-900">UAE</option>
+    <option value="Saudi Arabia" className="bg-gray-900">Saudi Arabia</option>
+    <option value="Indonesia" className="bg-gray-900">Indonesia</option>
+    <option value="Malaysia" className="bg-gray-900">Malaysia</option>
+    <option value="Thailand" className="bg-gray-900">Thailand</option>
+    <option value="Philippines" className="bg-gray-900">Philippines</option>
+    <option value="Vietnam" className="bg-gray-900">Vietnam</option>
+    <option value="New Zealand" className="bg-gray-900">New Zealand</option>
+    <option value="Other" className="bg-gray-900">Other</option>
+  </select>
+</div>
 
                       {/* Ethnicity */}
                       <div>
