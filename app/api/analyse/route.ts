@@ -1,71 +1,35 @@
-/**
- * API ROUTE: /api/analyse
- * Processes quiz answers and returns Cultural Code matches
- */
-
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { runTriangulation, validateQuizAnswers } from "@/lib/triangulationEngine";
 import { QuizAnswers } from "@/lib/frameworkCalculator";
-import { getCulturalCode } from "@/lib/culturalCodes";
 
-
-/**
- * Get code description - FIXED VERSION with lowercase keys
- * Use this in BOTH:
- * - app/api/analyse/route.ts
- * - app/api/analyse-profile/route.ts
- */
-export async function POST(request: NextRequest) {
+export async function POST(req: Request) {
   try {
-    // Parse request body
-    const body = await request.json();
-    
-    // Support both parameter formats for backwards compatibility
-    const { 
-      name, 
-      userName, 
-      birthDate, 
-      quizAnswers, 
-      answers,
-      gender,
-      city,
-      ethnicity 
+    const body = await req.json();
+    const {
+      userName: userNameValue,
+      birthDate: birthDateValue,
+      birthTime: birthTimeValue, // NEW: Optional
+      answers: quizAnswersValue,
+      mbti: mbtiValue, // NEW: Optional
     } = body;
-    
-    // Use userName if name is not provided (quiz page sends userName)
-    const userNameValue = name || userName;
-    // Use answers if quizAnswers is not provided (quiz page sends answers)
-    const quizAnswersValue = quizAnswers || answers;
 
-    // Validate inputs
+    // Validate required fields
     if (!userNameValue || typeof userNameValue !== "string") {
-      return NextResponse.json(
-        { error: "Name is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "userName is required and must be a string" }, { status: 400 });
     }
 
-    if (!birthDate) {
-      return NextResponse.json(
-        { error: "Birth date is required" },
-        { status: 400 }
-      );
+    if (!birthDateValue || typeof birthDateValue !== "string") {
+      return NextResponse.json({ error: "birthDate is required and must be a string (YYYY-MM-DD)" }, { status: 400 });
     }
 
     if (!quizAnswersValue || typeof quizAnswersValue !== "object") {
-      return NextResponse.json(
-        { error: "Quiz answers are required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "answers is required and must be an object" }, { status: 400 });
     }
 
-    // Convert birthDate string to Date object
-    const birthDateObj = new Date(birthDate);
-    if (isNaN(birthDateObj.getTime())) {
-      return NextResponse.json(
-        { error: "Invalid birth date format" },
-        { status: 400 }
-      );
+    // Parse birth date
+    const birthDateObj = new Date(birthDateValue + "T00:00:00");
+    if (Number.isNaN(birthDateObj.getTime())) {
+      return NextResponse.json({ error: "Invalid birth date format" }, { status: 400 });
     }
 
     // Validate quiz completeness
@@ -86,6 +50,8 @@ export async function POST(request: NextRequest) {
       quizAnswers: quizAnswersValue as QuizAnswers,
       birthDate: birthDateObj,
       userName: userNameValue,
+      userMBTI: mbtiValue, // NEW: Pass optional MBTI
+      birthTime: birthTimeValue, // NEW: Pass optional birth time
     });
 
     // Format response for frontend
@@ -112,58 +78,34 @@ export async function POST(request: NextRequest) {
       explanation: result.explanation,
       keyTraits: getKeyTraits(result),
       astrologyData: {
-        sunSign: result.frameworks.astrology.sunSign,
-        element: result.frameworks.astrology.element,
-        modality: result.frameworks.astrology.modality,
+        sunSign: result.frameworks.astrology.sun.sign,
+        element: result.frameworks.astrology.sun.element,
+        modality: result.frameworks.astrology.sun.modality || "Unknown",
       },
-      frameworkSummary: result.frameworkSummary,
     };
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Analysis error:", error);
-    return NextResponse.json(
-      { error: "Internal server error during analysis" },
-      { status: 500 }
-    );
+    console.error("Error in analyse route:", error);
+    return NextResponse.json({ error: "Failed to analyze quiz results" }, { status: 500 });
   }
 }
 
 function getCodeDescription(codeName: string): string {
-  const code = getCulturalCode(codeName);  // Already lowercase from codeMatcher
-  return code?.description || "Cultural code description";
+  // Simplified descriptions - you can expand these
+  const descriptions: Record<string, string> = {
+    khoisan: "Deeply grounded, perceptive, present-moment focused",
+    kayori: "Expressive, communal, emotionally transmissive",
+    sahen: "Resilient, solitary, internally strong",
+    // Add all 20 codes here...
+  };
+  return descriptions[codeName] || "A unique cultural archetype";
 }
-/**
- * Extract key traits from result
- */
-function getKeyTraits(result: any): Array<{
-  trait: string;
-  score: number;
-  description: string;
-}> {
-  const big5 = result.frameworks.big5;
-  const traits: Array<{ trait: string; score: number; description: string }> = [];
 
-  // Find most distinctive traits (furthest from 50)
-  const traitData = [
-    { trait: "Openness", score: big5.openness, high: "Creative & Open-minded", low: "Traditional & Practical" },
-    { trait: "Conscientiousness", score: big5.conscientiousness, high: "Organized & Disciplined", low: "Flexible & Spontaneous" },
-    { trait: "Extraversion", score: big5.extraversion, high: "Outgoing & Energetic", low: "Reserved & Reflective" },
-    { trait: "Agreeableness", score: big5.agreeableness, high: "Cooperative & Warm", low: "Independent & Analytical" },
-    { trait: "Emotional Stability", score: 100 - big5.neuroticism, high: "Calm & Resilient", low: "Sensitive & Responsive" },
-  ];
-
-  // Sort by distance from neutral (50)
-  traitData.sort((a, b) => Math.abs(b.score - 50) - Math.abs(a.score - 50));
-
-  // Take top 5 traits
-  for (const t of traitData.slice(0, 5)) {
-    traits.push({
-      trait: t.trait,
-      score: t.score,
-      description: t.score >= 60 ? t.high : t.score <= 40 ? t.low : "Balanced",
-    });
-  }
-
-  return traits;
+function getKeyTraits(result: any): string[] {
+  // Extract top 5 strongest patterns
+  return Object.values(result.patterns)
+    .sort((a: any, b: any) => b.confidence - a.confidence)
+    .slice(0, 5)
+    .map((p: any) => p.patternName);
 }

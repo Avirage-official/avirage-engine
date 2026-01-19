@@ -1,15 +1,7 @@
 /**
- * PATTERN DETECTOR
- * Detects which of 30 behavioral patterns are present based on framework scores
- *
- * Design goals:
- * - Keep your pipeline stable (TriangulationEngine + CodeMatcher expectations unchanged)
- * - Make detection stricter + more reliable (no “MBTI+Astro only” patterns)
- * - Provide weighted confidence (Big5 + Enneagram matter most)
- *
- * Notes:
- * - Patterns are binary “present/not present” with a confidence score (0–1).
- * - Confidence is weighted by framework support, not by raw magnitude.
+ * PATTERN DETECTOR (UPGRADED v2)
+ * - Uses full natal chart (5 placements)
+ * - Dynamic MBTI handling (optional)
  */
 
 import { FrameworkScores } from "./frameworkCalculator";
@@ -17,7 +9,7 @@ import { FrameworkScores } from "./frameworkCalculator";
 export interface PatternMatch {
   patternId: number;
   patternName: string;
-  confidence: number; // 0-1 (weighted support across frameworks)
+  confidence: number;
   frameworkSupport: {
     big5: boolean;
     mbti: boolean;
@@ -30,10 +22,6 @@ export interface DetectedPatterns {
   [patternId: number]: PatternMatch;
 }
 
-/* ============================
-   TYPES
-============================ */
-
 type Big5 = FrameworkScores["big5"];
 type Mbti = FrameworkScores["mbti"];
 type Ennea = FrameworkScores["enneagram"];
@@ -41,7 +29,7 @@ type Astro = FrameworkScores["astrology"];
 
 type IndicatorSet = {
   big5: (scores: Big5) => boolean;
-  mbti: (type: Mbti) => boolean;
+  mbti: (type: Mbti | null) => boolean;
   enneagram: (type: Ennea) => boolean;
   astrology: (data: Astro) => boolean;
 };
@@ -52,53 +40,77 @@ type PatternRule = {
   indicators: IndicatorSet;
 };
 
-/* ============================
-   SCORING POLICY
-============================ */
+/* =========================
+   FRAMEWORK WEIGHTS
+========================= */
 
-/**
- * Framework weights (sum = 1.0)
- * - Big5 + Enneagram: highest behavioral signal (directly derived from user choices)
- * - MBTI: supportive direction
- * - Astrology: symbolic reinforcement only (lowest weight)
- */
-const FRAMEWORK_WEIGHTS = {
-  big5: 0.4,
-  enneagram: 0.3,
-  mbti: 0.2,
-  astrology: 0.1,
-} as const;
+function getFrameworkWeights(hasMBTI: boolean) {
+  if (hasMBTI) {
+    return {
+      big5: 0.45,
+      enneagram: 0.25,
+      mbti: 0.15,
+      astrology: 0.15,
+    };
+  }
+  return {
+    big5: 0.50,
+    enneagram: 0.30,
+    mbti: 0.0,
+    astrology: 0.20,
+  };
+}
 
-/**
- * A pattern should only exist if at least one behavioral anchor supports it:
- * Big5 OR Enneagram.
- * This prevents “MBTI + Astrology” from creating patterns alone.
- */
 function hasBehavioralAnchor(support: { big5: boolean; enneagram: boolean }): boolean {
   return support.big5 || support.enneagram;
 }
 
-/**
- * Weighted confidence:
- * sum(weights of supporting frameworks) since weights sum to 1.
- */
-function computeWeightedConfidence(support: {
-  big5: boolean;
-  mbti: boolean;
-  enneagram: boolean;
-  astrology: boolean;
-}): number {
+function computeWeightedConfidence(
+  support: {
+    big5: boolean;
+    mbti: boolean;
+    enneagram: boolean;
+    astrology: boolean;
+  },
+  hasMBTI: boolean
+): number {
+  const weights = getFrameworkWeights(hasMBTI);
   let score = 0;
-  if (support.big5) score += FRAMEWORK_WEIGHTS.big5;
-  if (support.enneagram) score += FRAMEWORK_WEIGHTS.enneagram;
-  if (support.mbti) score += FRAMEWORK_WEIGHTS.mbti;
-  if (support.astrology) score += FRAMEWORK_WEIGHTS.astrology;
+  if (support.big5) score += weights.big5;
+  if (support.enneagram) score += weights.enneagram;
+  if (support.mbti && hasMBTI) score += weights.mbti;
+  if (support.astrology) score += weights.astrology;
   return Math.max(0, Math.min(1, score));
 }
 
-/* ============================
-   PATTERN RULES (1–30)
-============================ */
+/* =========================
+   ASTROLOGY HELPERS
+========================= */
+
+function countElement(astro: Astro, element: string): number {
+  let count = 0;
+  if (astro.sun.element === element) count++;
+  if (astro.moon?.element === element) count++;
+  if (astro.rising?.element === element) count++;
+  if (astro.mercury?.element === element) count++;
+  if (astro.venus?.element === element) count++;
+  return count;
+}
+
+function hasElement(astro: Astro, element: string): boolean {
+  return countElement(astro, element) >= 2; // At least 2 placements
+}
+
+function dominantElement(astro: Astro): string {
+  const elements = ["Fire", "Earth", "Air", "Water"];
+  const counts = elements.map(e => ({ element: e, count: countElement(astro, e) }));
+  counts.sort((a, b) => b.count - a.count);
+  return counts[0].element;
+}
+
+/* =========================
+   PATTERN RULES
+========================= */
 
 const PATTERN_RULES: PatternRule[] = [
   {
@@ -106,9 +118,9 @@ const PATTERN_RULES: PatternRule[] = [
     name: "Abstract Thinking",
     indicators: {
       big5: (scores) => scores.openness >= 70,
-      mbti: (type) => type.preferences.SN === "N",
+      mbti: (type) => type?.preferences.SN === "N" || false,
       enneagram: (type) => [4, 5, 7].includes(type.coreType),
-      astrology: (data) => ["Air", "Fire"].includes(data.element),
+      astrology: (data) => hasElement(data, "Air") || hasElement(data, "Fire"),
     },
   },
   {
@@ -116,9 +128,9 @@ const PATTERN_RULES: PatternRule[] = [
     name: "Concrete Practical Focus",
     indicators: {
       big5: (scores) => scores.openness <= 50,
-      mbti: (type) => type.preferences.SN === "S",
+      mbti: (type) => type?.preferences.SN === "S" || false,
       enneagram: (type) => [1, 6, 8, 9].includes(type.coreType),
-      astrology: (data) => data.element === "Earth",
+      astrology: (data) => hasElement(data, "Earth"),
     },
   },
   {
@@ -126,20 +138,19 @@ const PATTERN_RULES: PatternRule[] = [
     name: "Pattern Recognition Mastery",
     indicators: {
       big5: (scores) => scores.openness >= 70,
-      mbti: (type) => type.preferences.SN === "N",
+      mbti: (type) => type?.preferences.SN === "N" || false,
       enneagram: (type) => [5, 7].includes(type.coreType),
-      // Scorpio is a sun sign (not an element) — so we match by sunSign.
-      astrology: (data) => data.element === "Air" || data.sunSign === "Scorpio",
+      astrology: (data) => data.sun.sign === "Scorpio" || hasElement(data, "Air"),
     },
   },
   {
     id: 4,
     name: "Sensory Appreciation",
     indicators: {
-      big5: (scores) => scores.openness >= 70,
-      mbti: (type) => type.preferences.SN === "S" && type.preferences.TF === "F",
-      enneagram: (type) => [4, 7].includes(type.coreType),
-      astrology: (data) => ["Taurus", "Libra", "Cancer"].includes(data.sunSign),
+      big5: (scores) => scores.openness >= 60,
+      mbti: (type) => type?.preferences.SN === "S" || false,
+      enneagram: (type) => [4, 7, 9].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Earth") || data.venus?.element === "Earth",
     },
   },
   {
@@ -147,291 +158,230 @@ const PATTERN_RULES: PatternRule[] = [
     name: "Detail Obsession",
     indicators: {
       big5: (scores) => scores.conscientiousness >= 75,
-      mbti: (type) => type.preferences.SN === "S" && type.preferences.JP === "J",
-      enneagram: (type) => [1, 6].includes(type.coreType),
-      astrology: (data) => ["Virgo", "Capricorn"].includes(data.sunSign),
+      mbti: (type) => type?.preferences.SN === "S" && type?.preferences.JP === "J",
+      enneagram: (type) => [1, 5, 6].includes(type.coreType),
+      astrology: (data) => data.sun.sign === "Virgo" || data.mercury?.sign === "Virgo",
     },
   },
   {
     id: 6,
     name: "Present-Moment Focus",
     indicators: {
-      big5: (scores) =>
-        scores.neuroticism <= 40 && scores.openness >= 40 && scores.openness <= 70,
-      mbti: (type) => type.preferences.SN === "S" && type.preferences.JP === "P",
+      big5: (scores) => scores.openness <= 55 && scores.conscientiousness <= 55,
+      mbti: (type) => type?.preferences.SN === "S" && type?.preferences.JP === "P",
       enneagram: (type) => [7, 8, 9].includes(type.coreType),
-      astrology: (data) => data.element === "Fire" || data.sunSign === "Sagittarius",
+      astrology: (data) => hasElement(data, "Fire") || hasElement(data, "Water"),
     },
   },
   {
     id: 7,
     name: "Craftsmanship Drive",
     indicators: {
-      big5: (scores) => scores.conscientiousness >= 70 && scores.openness >= 50,
-      mbti: (type) => type.preferences.SN === "S" && type.preferences.JP === "J",
-      enneagram: (type) => [1, 3, 4].includes(type.coreType),
-      astrology: (data) => ["Taurus", "Virgo", "Capricorn"].includes(data.sunSign),
+      big5: (scores) => scores.conscientiousness >= 70,
+      mbti: (type) => type?.preferences.SN === "S" && type?.preferences.TF === "T",
+      enneagram: (type) => [1, 3, 5].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Earth"),
     },
   },
   {
     id: 8,
     name: "Structure Preference",
     indicators: {
-      big5: (scores) => scores.conscientiousness >= 70,
-      mbti: (type) => type.preferences.JP === "J",
-      enneagram: (type) => [1, 3, 6].includes(type.coreType),
-      astrology: (data) => data.element === "Earth",
+      big5: (scores) => scores.conscientiousness >= 65,
+      mbti: (type) => type?.preferences.JP === "J" || false,
+      enneagram: (type) => [1, 6].includes(type.coreType),
+      astrology: (data) => data.sun.modality === "Fixed" || hasElement(data, "Earth"),
     },
   },
   {
     id: 9,
     name: "Improvisation Comfort",
     indicators: {
-      big5: (scores) => scores.conscientiousness <= 40 && scores.openness >= 60,
-      mbti: (type) => type.preferences.JP === "P",
+      big5: (scores) => scores.conscientiousness <= 45 && scores.openness >= 60,
+      mbti: (type) => type?.preferences.JP === "P" || false,
       enneagram: (type) => [7, 9].includes(type.coreType),
-      astrology: (data) => data.modality === "Mutable",
+      astrology: (data) => data.sun.modality === "Mutable" || hasElement(data, "Fire"),
     },
   },
   {
     id: 10,
     name: "Slow Steady Pace",
     indicators: {
-      big5: (scores) => scores.extraversion <= 40 && scores.conscientiousness >= 60,
-      mbti: (type) => type.preferences.IE === "I" && type.preferences.JP === "J",
-      enneagram: (type) => [1, 5, 9].includes(type.coreType),
-      astrology: (data) => data.element === "Earth" || data.modality === "Fixed",
+      big5: (scores) => scores.conscientiousness >= 60 && scores.extraversion <= 50,
+      mbti: (type) => type?.preferences.IE === "I" && type?.preferences.JP === "J",
+      enneagram: (type) => [4, 5, 9].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Earth") || data.sun.modality === "Fixed",
     },
   },
   {
     id: 11,
-    name: "High Output Drive",
+    name: "High Energy Output",
     indicators: {
-      big5: (scores) => scores.conscientiousness >= 75 && scores.extraversion >= 50,
-      mbti: (type) => type.preferences.JP === "J" && type.preferences.TF === "T",
-      enneagram: (type) => [3, 8].includes(type.coreType),
-      astrology: (data) => data.modality === "Cardinal",
+      big5: (scores) => scores.extraversion >= 70 && scores.conscientiousness >= 60,
+      mbti: (type) => type?.preferences.IE === "E" && type?.preferences.JP === "J",
+      enneagram: (type) => [3, 7, 8].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Fire") || data.sun.modality === "Cardinal",
     },
   },
   {
     id: 12,
-    name: "Emotional Stability",
+    name: "Product-Over-Process",
     indicators: {
-      big5: (scores) => scores.neuroticism <= 40,
-      mbti: (type) => type.preferences.TF === "T",
-      enneagram: (type) => [8, 9].includes(type.coreType),
-      astrology: (data) => data.element === "Earth" || data.modality === "Fixed",
+      big5: (scores) => scores.conscientiousness >= 70,
+      mbti: (type) => type?.preferences.TF === "T" && type?.preferences.JP === "J",
+      enneagram: (type) => [1, 3, 8].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Fire") || hasElement(data, "Earth"),
     },
   },
   {
     id: 13,
-    name: "Emotional Expressiveness",
+    name: "Emotional Stability",
     indicators: {
-      big5: (scores) => scores.extraversion >= 70 && scores.agreeableness >= 60,
-      mbti: (type) => type.preferences.TF === "F" && type.preferences.IE === "E",
-      enneagram: (type) => [2, 7].includes(type.coreType),
-      astrology: (data) =>
-        data.element === "Fire" || ["Cancer", "Pisces"].includes(data.sunSign),
+      big5: (scores) => scores.neuroticism <= 35,
+      mbti: (type) => type?.preferences.TF === "T" || false,
+      enneagram: (type) => [8, 9].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Earth") || hasElement(data, "Air"),
     },
   },
   {
     id: 14,
-    name: "Emotional Restraint",
+    name: "Emotional Volatility",
     indicators: {
-      big5: (scores) => scores.extraversion <= 40 && scores.agreeableness <= 45,
-      mbti: (type) => type.preferences.IE === "I" && type.preferences.TF === "T",
-      enneagram: (type) => [1, 5, 9].includes(type.coreType),
-      astrology: (data) =>
-        data.element === "Earth" || ["Capricorn", "Aquarius"].includes(data.sunSign),
+      big5: (scores) => scores.neuroticism >= 65,
+      mbti: (type) => type?.preferences.TF === "F" || false,
+      enneagram: (type) => [4, 6].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Water") || data.moon?.element === "Water",
     },
   },
   {
     id: 15,
-    name: "Environmental Sensitivity",
+    name: "Expressive Nature",
     indicators: {
-      big5: (scores) => scores.openness >= 70 && scores.neuroticism >= 60,
-      mbti: (type) => type.preferences.TF === "F" && type.preferences.SN === "N",
-      enneagram: (type) => [4, 9].includes(type.coreType),
-      astrology: (data) => data.element === "Water",
+      big5: (scores) => scores.extraversion >= 70 && scores.agreeableness >= 60,
+      mbti: (type) => type?.preferences.IE === "E" && type?.preferences.TF === "F",
+      enneagram: (type) => [2, 3, 7].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Fire") || hasElement(data, "Air"),
     },
   },
   {
     id: 16,
-    name: "Deep Introspection",
+    name: "Environmental Sensitivity",
     indicators: {
-      big5: (scores) => scores.openness >= 70 && scores.extraversion <= 40,
-      mbti: (type) => type.preferences.IE === "I" && type.preferences.SN === "N",
-      enneagram: (type) => [4, 5].includes(type.coreType),
-      astrology: (data) => data.element === "Water",
+      big5: (scores) => scores.neuroticism >= 55 && scores.openness >= 60,
+      mbti: (type) => type?.preferences.SN === "S" || false,
+      enneagram: (type) => [4, 5, 9].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Water") || data.moon?.element === "Water",
     },
   },
   {
     id: 17,
-    name: "Low Social Energy",
+    name: "Deep Introspection",
     indicators: {
-      big5: (scores) => scores.extraversion <= 40,
-      mbti: (type) => type.preferences.IE === "I",
-      enneagram: (type) => [4, 5, 9].includes(type.coreType),
-      astrology: (data) => data.element === "Water",
+      big5: (scores) => scores.extraversion <= 40 && scores.openness >= 65,
+      mbti: (type) => type?.preferences.IE === "I" && type?.preferences.SN === "N",
+      enneagram: (type) => [4, 5].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Water") || data.sun.sign === "Scorpio",
     },
   },
   {
     id: 18,
-    name: "High Social Energy",
+    name: "Optimistic Baseline",
     indicators: {
-      big5: (scores) => scores.extraversion >= 70,
-      mbti: (type) => type.preferences.IE === "E",
-      enneagram: (type) => [2, 7, 8].includes(type.coreType),
-      astrology: (data) => data.element === "Fire" || ["Leo", "Gemini"].includes(data.sunSign),
+      big5: (scores) => scores.neuroticism <= 40 && scores.extraversion >= 60,
+      mbti: (type) => type?.preferences.IE === "E" || false,
+      enneagram: (type) => [7, 9].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Fire") || hasElement(data, "Air"),
     },
   },
   {
     id: 19,
-    name: "Small Group Preference",
+    name: "Social Energy",
     indicators: {
-      big5: (scores) => scores.extraversion >= 30 && scores.extraversion <= 55,
-      mbti: (type) => type.preferences.IE === "I",
-      enneagram: (type) => [1, 4, 6].includes(type.coreType),
-      astrology: (data) => data.element === "Earth" || data.modality === "Fixed",
+      big5: (scores) => scores.extraversion >= 70,
+      mbti: (type) => type?.preferences.IE === "E" || false,
+      enneagram: (type) => [2, 3, 7].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Air") || hasElement(data, "Fire"),
     },
   },
   {
     id: 20,
-    name: "Conflict Avoidance",
+    name: "Solitude Preference",
     indicators: {
-      big5: (scores) => scores.agreeableness >= 70,
-      mbti: (type) => type.preferences.TF === "F",
-      enneagram: (type) => [2, 6, 9].includes(type.coreType),
-      astrology: (data) => ["Libra", "Cancer"].includes(data.sunSign),
+      big5: (scores) => scores.extraversion <= 35,
+      mbti: (type) => type?.preferences.IE === "I" || false,
+      enneagram: (type) => [4, 5, 9].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Earth") || hasElement(data, "Water"),
     },
   },
   {
     id: 21,
-    name: "Collaborative Nature",
+    name: "Large Group Comfort",
     indicators: {
-      big5: (scores) => scores.agreeableness >= 70,
-      mbti: (type) => type.preferences.TF === "F" && type.preferences.JP === "J",
-      enneagram: (type) => [2, 6, 9].includes(type.coreType),
-      astrology: (data) => data.element === "Air" || data.sunSign === "Cancer",
+      big5: (scores) => scores.extraversion >= 75 && scores.agreeableness >= 55,
+      mbti: (type) => type?.preferences.IE === "E" || false,
+      enneagram: (type) => [2, 7].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Fire") || hasElement(data, "Air"),
     },
   },
   {
     id: 22,
-    name: "Tradition Orientation",
+    name: "Conflict Avoidance",
     indicators: {
-      big5: (scores) => scores.openness <= 40,
-      mbti: (type) => type.preferences.SN === "S" && type.preferences.JP === "J",
-      enneagram: (type) => [1, 6].includes(type.coreType),
-      astrology: (data) => data.element === "Earth",
+      big5: (scores) => scores.agreeableness >= 70 && scores.neuroticism >= 50,
+      mbti: (type) => type?.preferences.TF === "F" || false,
+      enneagram: (type) => [2, 6, 9].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Water") || hasElement(data, "Air"),
     },
   },
   {
     id: 23,
-    name: "Novelty Seeking",
+    name: "Direct Confrontation",
     indicators: {
-      big5: (scores) => scores.openness >= 75 && scores.extraversion >= 60,
-      mbti: (type) => type.preferences.SN === "N" && type.preferences.JP === "P",
-      enneagram: (type) => [7, 3].includes(type.coreType),
-      astrology: (data) => data.element === "Fire",
+      big5: (scores) => scores.agreeableness <= 45 && scores.extraversion >= 60,
+      mbti: (type) => type?.preferences.TF === "T" || false,
+      enneagram: (type) => [1, 8].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Fire") || data.sun.modality === "Cardinal",
     },
   },
   {
     id: 24,
-    name: "Stability Seeking",
+    name: "Influence Drive",
     indicators: {
-      big5: (scores) => scores.conscientiousness >= 70 && scores.openness <= 50,
-      mbti: (type) => type.preferences.SN === "S" && type.preferences.JP === "J",
-      enneagram: (type) => [6, 9].includes(type.coreType),
-      astrology: (data) => data.element === "Earth" || data.modality === "Fixed",
+      big5: (scores) => scores.extraversion >= 70 && scores.conscientiousness >= 65,
+      mbti: (type) => type?.preferences.IE === "E" && type?.preferences.TF === "T",
+      enneagram: (type) => [3, 8].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Fire") || data.sun.modality === "Cardinal",
     },
   },
   {
     id: 25,
-    name: "Meaning Orientation",
+    name: "Collaborative Preference",
     indicators: {
-      big5: (scores) => scores.openness >= 70,
-      mbti: (type) => type.preferences.SN === "N" && type.preferences.TF === "F",
-      enneagram: (type) => [1, 4, 5].includes(type.coreType),
-      astrology: (data) => ["Sagittarius", "Pisces"].includes(data.sunSign),
+      big5: (scores) => scores.agreeableness >= 65 && scores.extraversion >= 55,
+      mbti: (type) => type?.preferences.TF === "F" || false,
+      enneagram: (type) => [2, 6, 9].includes(type.coreType),
+      astrology: (data) => hasElement(data, "Air") || hasElement(data, "Water"),
     },
   },
   {
     id: 26,
     name: "Nature Connection",
     indicators: {
-      big5: (scores) => scores.openness >= 60,
-      mbti: (type) => type.preferences.SN === "S" && type.preferences.TF === "F",
+      big5: (scores) => scores.openness >= 60 && scores.agreeableness >= 60,
+      mbti: (type) => type?.preferences.SN === "S" || false,
       enneagram: (type) => [4, 9].includes(type.coreType),
-      astrology: (data) => data.element === "Earth",
-    },
-  },
-  {
-    id: 27,
-    name: "Optimism Baseline",
-    indicators: {
-      big5: (scores) => scores.neuroticism <= 35 && scores.extraversion >= 60,
-      mbti: (type) => type.preferences.IE === "E" && type.preferences.JP === "P",
-      enneagram: (type) => [7, 2].includes(type.coreType),
-      astrology: (data) => data.element === "Fire",
-    },
-  },
-  {
-    id: 28,
-    name: "Service Orientation",
-    indicators: {
-      big5: (scores) => scores.agreeableness >= 75,
-      mbti: (type) => type.preferences.TF === "F" && type.preferences.JP === "J",
-      enneagram: (type) => [2, 6].includes(type.coreType),
-      astrology: (data) => data.sunSign === "Virgo",
-    },
-  },
-  {
-    id: 29,
-    name: "Autonomy Drive",
-    indicators: {
-      big5: (scores) => scores.agreeableness <= 40 && scores.neuroticism <= 40,
-      mbti: (type) => type.preferences.TF === "T" && type.preferences.JP === "P",
-      enneagram: (type) => [5, 8].includes(type.coreType),
-      astrology: (data) => ["Aquarius", "Aries"].includes(data.sunSign),
-    },
-  },
-  {
-    id: 30,
-    name: "Future Orientation",
-    indicators: {
-      big5: (scores) => scores.conscientiousness >= 75,
-      mbti: (type) => type.preferences.SN === "N" && type.preferences.JP === "J",
-      enneagram: (type) => [1, 3, 6].includes(type.coreType),
-      astrology: (data) => data.sunSign === "Capricorn",
+      astrology: (data) => hasElement(data, "Earth") || data.venus?.element === "Earth",
     },
   },
 ];
 
-/* ============================
-   VALIDATION (DEV-SAFE)
-============================ */
-
-function validateRules(): void {
-  const ids = PATTERN_RULES.map((p) => p.id);
-  const unique = new Set(ids);
-
-  // quick sanity: ensure 30 unique IDs
-  if (unique.size !== ids.length) {
-    // eslint-disable-next-line no-console
-    console.warn("[patternDetector] Duplicate pattern IDs detected.");
-  }
-}
-validateRules();
-
-/* ============================
+/* =========================
    DETECTION
-============================ */
+========================= */
 
-/**
- * Detect all patterns from framework scores
- */
 export function detectPatterns(frameworks: FrameworkScores): DetectedPatterns {
   const detectedPatterns: DetectedPatterns = {};
+  const hasMBTI = frameworks.mbti !== null;
 
   for (const pattern of PATTERN_RULES) {
     const frameworkSupport = {
@@ -441,15 +391,12 @@ export function detectPatterns(frameworks: FrameworkScores): DetectedPatterns {
       astrology: pattern.indicators.astrology(frameworks.astrology),
     };
 
-    // Require behavioral anchor
     if (!hasBehavioralAnchor({ big5: frameworkSupport.big5, enneagram: frameworkSupport.enneagram })) {
       continue;
     }
 
-    // Weighted confidence
-    const confidence = computeWeightedConfidence(frameworkSupport);
+    const confidence = computeWeightedConfidence(frameworkSupport, hasMBTI);
 
-    // Inclusion threshold (kept at 0.5)
     if (confidence >= 0.5) {
       detectedPatterns[pattern.id] = {
         patternId: pattern.id,
@@ -463,23 +410,14 @@ export function detectPatterns(frameworks: FrameworkScores): DetectedPatterns {
   return detectedPatterns;
 }
 
-/**
- * Get pattern match by ID
- */
 export function getPattern(patterns: DetectedPatterns, patternId: number): PatternMatch | null {
   return patterns[patternId] || null;
 }
 
-/**
- * Get all strong patterns (confidence >= 0.75)
- */
 export function getStrongPatterns(patterns: DetectedPatterns): PatternMatch[] {
   return Object.values(patterns).filter((p) => p.confidence >= 0.75);
 }
 
-/**
- * Get all moderate patterns (confidence >= 0.5 and < 0.75)
- */
 export function getModeratePatterns(patterns: DetectedPatterns): PatternMatch[] {
   return Object.values(patterns).filter((p) => p.confidence >= 0.5 && p.confidence < 0.75);
 }

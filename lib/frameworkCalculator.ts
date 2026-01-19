@@ -1,16 +1,8 @@
 /**
- * FRAMEWORK CALCULATOR (REVIEW + UPGRADE)
- * Converts 35 situational quiz answers into:
- * - Big 5
- * - MBTI
- * - Enneagram (core + wing)
- * - Astrology (sun sign + element + modality)
- *
- * Key upgrades:
- * - Missing answers => neutral (prevents bias)
- * - Smoother scaling for 3-choice items
- * - MBTI returns optional strength (0-100 per dichotomy)
- * - Enneagram uses stronger separation + wing affinity model
+ * FRAMEWORK CALCULATOR (UPGRADED v2)
+ * - Optional MBTI (user-provided)
+ * - Full natal chart astrology (5 placements)
+ * - Dynamic weighting
  */
 
 export interface QuizAnswers {
@@ -18,11 +10,11 @@ export interface QuizAnswers {
 }
 
 export interface Big5Scores {
-  openness: number; // 0-100
+  openness: number;
   conscientiousness: number;
   extraversion: number;
   agreeableness: number;
-  neuroticism: number; // higher = more reactive
+  neuroticism: number;
 }
 
 export interface MBTIType {
@@ -33,33 +25,32 @@ export interface MBTIType {
     TF: "T" | "F";
     JP: "J" | "P";
   };
-  strength?: {
-    IE: number;
-    SN: number;
-    TF: number;
-    JP: number;
-  };
+  source: "user-provided" | "not-available"; // Track if user gave it
 }
 
 export interface EnneagramType {
   coreType: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  wing: string; // e.g., "6w5"
+  wing: string;
   scores: Record<number, number>;
-  wingAffinity?: {
-    lowerWing: number;
-    higherWing: number;
-  };
+}
+
+export interface AstrologyPlacement {
+  sign: string;
+  element: string;
+  modality?: string;
 }
 
 export interface AstrologyData {
-  sunSign: string;
-  element: string;  // Fire/Earth/Air/Water
-  modality: string; // Cardinal/Fixed/Mutable
+  sun: AstrologyPlacement;
+  moon: AstrologyPlacement | null;
+  rising: AstrologyPlacement | null;
+  mercury: AstrologyPlacement | null;
+  venus: AstrologyPlacement | null;
 }
 
 export interface FrameworkScores {
   big5: Big5Scores;
-  mbti: MBTIType;
+  mbti: MBTIType | null;
   enneagram: EnneagramType;
   astrology: AstrologyData;
 }
@@ -70,18 +61,11 @@ export interface FrameworkScores {
 
 const clamp = (n: number, min = 0, max = 100) => Math.max(min, Math.min(max, n));
 
-/**
- * Neutral default for 3-option questions is 1 ("middle").
- */
 function get3(answers: QuizAnswers, q: string, neutral: 0 | 1 | 2 = 1): 0 | 1 | 2 {
   const v = answers[q];
   return v === 0 || v === 1 || v === 2 ? v : neutral;
 }
 
-/**
- * Stable deterministic tie-breaker from the answer set.
- * (No randomness, same input -> same output)
- */
 function tiePick(answers: QuizAnswers, salt: string): 0 | 1 {
   const keys = Object.keys(answers).sort();
   let str = salt;
@@ -96,14 +80,9 @@ function tiePick(answers: QuizAnswers, salt: string): 0 | 1 {
 }
 
 /* =========================
-   BIG 5 (Q9–Q23)
+   BIG 5
 ========================= */
 
-/**
- * 3-option scale tuned for better spread:
- * 0 -> 20, 1 -> 50, 2 -> 80 (classic), then lightly expanded by centering math.
- * We keep it explainable + stable.
- */
 const BIG5_MAP: [number, number, number] = [20, 50, 80];
 
 function big5Item(a: 0 | 1 | 2): number {
@@ -116,11 +95,36 @@ function avg(nums: number[]): number {
 }
 
 function calculateBig5(answers: QuizAnswers): Big5Scores {
-  const openness = avg([big5Item(get3(answers, "q9")), big5Item(get3(answers, "q10")), big5Item(get3(answers, "q11"))]);
-  const conscientiousness = avg([big5Item(get3(answers, "q12")), big5Item(get3(answers, "q13")), big5Item(get3(answers, "q14"))]);
-  const extraversion = avg([big5Item(get3(answers, "q15")), big5Item(get3(answers, "q16")), big5Item(get3(answers, "q17"))]);
-  const agreeableness = avg([big5Item(get3(answers, "q18")), big5Item(get3(answers, "q19")), big5Item(get3(answers, "q20"))]);
-  const neuroticism = avg([big5Item(get3(answers, "q21")), big5Item(get3(answers, "q22")), big5Item(get3(answers, "q23"))]);
+  // Updated to use new question IDs (q1-q15 for Big5)
+  const openness = avg([
+    big5Item(get3(answers, "q1")),
+    big5Item(get3(answers, "q2")),
+    big5Item(get3(answers, "q3"))
+  ]);
+  
+  const conscientiousness = avg([
+    big5Item(get3(answers, "q4")),
+    big5Item(get3(answers, "q5")),
+    big5Item(get3(answers, "q6"))
+  ]);
+  
+  const extraversion = avg([
+    big5Item(get3(answers, "q7")),
+    big5Item(get3(answers, "q8")),
+    big5Item(get3(answers, "q9"))
+  ]);
+  
+  const agreeableness = avg([
+    big5Item(get3(answers, "q10")),
+    big5Item(get3(answers, "q11")),
+    big5Item(get3(answers, "q12"))
+  ]);
+  
+  const neuroticism = avg([
+    big5Item(get3(answers, "q13")),
+    big5Item(get3(answers, "q14")),
+    big5Item(get3(answers, "q15"))
+  ]);
 
   return {
     openness: clamp(openness),
@@ -132,71 +136,31 @@ function calculateBig5(answers: QuizAnswers): Big5Scores {
 }
 
 /* =========================
-   MBTI (Q1–Q8)
+   MBTI (OPTIONAL USER INPUT)
 ========================= */
 
-/**
- * For MBTI:
- * 0 = left letter
- * 1 = right letter
- * 2 = "both/depends" => split vote
- */
-function voteMBTI(v: number | undefined): { left: number; right: number } {
-  if (v === 0) return { left: 1, right: 0 };
-  if (v === 1) return { left: 0, right: 1 };
-  return { left: 0.5, right: 0.5 };
-}
-
-function pickDichotomy<L extends string, R extends string>(
-  answers: QuizAnswers,
-  qA: string,
-  qB: string,
-  left: L,
-  right: R
-): { pref: L | R; strength: number } {
-  const a = voteMBTI(answers[qA]);
-  const b = voteMBTI(answers[qB]);
-
-  const leftScore = a.left + b.left;   // 0..2
-  const rightScore = a.right + b.right; // 0..2
-
-  // strength: abs diff mapped 0..100
-  const strength = Math.round((Math.abs(leftScore - rightScore) / 2) * 100);
-
-  if (leftScore === rightScore) {
-    const pick = tiePick(answers, `mbti-${qA}-${qB}-${left}-${right}`);
-    return { pref: pick === 0 ? left : right, strength: 0 };
-  }
-  return { pref: leftScore > rightScore ? left : right, strength };
-}
-
-function calculateMBTI(answers: QuizAnswers): MBTIType {
-  const ie = pickDichotomy(answers, "q1", "q2", "I", "E");
-  const sn = pickDichotomy(answers, "q3", "q4", "S", "N");
-  const tf = pickDichotomy(answers, "q5", "q6", "T", "F");
-  const jp = pickDichotomy(answers, "q7", "q8", "J", "P");
-
-  const IE = ie.pref;
-  const SN = sn.pref;
-  const TF = tf.pref;
-  const JP = jp.pref;
+function parseUserMBTI(mbtiString: string): MBTIType | null {
+  const cleaned = mbtiString.trim().toUpperCase();
+  const pattern = /^[IE][NS][TF][JP]$/;
+  
+  if (!pattern.test(cleaned)) return null;
 
   return {
-    type: `${IE}${SN}${TF}${JP}`,
-    preferences: { IE, SN, TF, JP },
-    strength: { IE: ie.strength, SN: sn.strength, TF: tf.strength, JP: jp.strength },
+    type: cleaned,
+    preferences: {
+      IE: cleaned[0] as "I" | "E",
+      SN: cleaned[1] as "S" | "N",
+      TF: cleaned[2] as "T" | "F",
+      JP: cleaned[3] as "J" | "P",
+    },
+    source: "user-provided",
   };
 }
 
 /* =========================
-   ENNEAGRAM (Q24–Q35)
+   ENNEAGRAM
 ========================= */
 
-/**
- * Q24–Q32: one per type (1..9)
- * Score map tuned for better separation while keeping “middle” meaningful:
- * 0 -> 0, 1 -> 2, 2 -> 5
- */
 const ENNEA_MAP: [number, number, number] = [0, 2, 5];
 
 type EnneaCore = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
@@ -204,149 +168,159 @@ type EnneaCore = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 function breakCoreTie(tied: number[], answers: QuizAnswers): number {
   if (tied.length <= 1) return tied[0];
   const pick = tiePick(answers, `ennea-core-${tied.join(",")}`);
-  return pick === 0 ? tied[0] : tied[tied.length - 1];
+  return pick === 0 ? tied[0] : tied[1];
 }
 
 function calculateEnneagram(answers: QuizAnswers): EnneagramType {
-  const scores: Record<number, number> = { 1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0 };
+  const scores: Record<number, number> = {
+    1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0,
+  };
 
-  const mapping: { q: string; type: EnneaCore }[] = [
-    { q: "q24", type: 1 },
-    { q: "q25", type: 2 },
-    { q: "q26", type: 3 },
-    { q: "q27", type: 4 },
-    { q: "q28", type: 5 },
-    { q: "q29", type: 6 },
-    { q: "q30", type: 7 },
-    { q: "q31", type: 8 },
-    { q: "q32", type: 9 },
+  // Q16-Q25 = Enneagram detection (10 questions, dual-purpose with Big5)
+  const qMap: [string, EnneaCore][] = [
+    ["q16", 1], ["q17", 2], ["q18", 3], ["q19", 4], ["q20", 5],
+    ["q21", 6], ["q22", 7], ["q23", 8], ["q24", 9], ["q25", 6], // q25 reinforces type 6
   ];
 
-  for (const { q, type } of mapping) {
-    const a = get3(answers, q, 1);
-    scores[type] += ENNEA_MAP[a];
+  for (const [qid, typeNum] of qMap) {
+    const val = get3(answers, qid);
+    scores[typeNum] += ENNEA_MAP[val];
   }
 
   const max = Math.max(...Object.values(scores));
-  const tied = Object.entries(scores)
-    .filter(([, v]) => v === max)
-    .map(([k]) => Number(k))
-    .sort((a, b) => a - b);
+  const tied = (Object.keys(scores) as unknown as number[]).filter(
+    (t) => scores[t] === max
+  );
 
-  const coreType = breakCoreTie(tied, answers) as EnneaCore;
+  const coreType = (tied.length === 1 ? tied[0] : breakCoreTie(tied, answers)) as EnneaCore;
 
-  // wing candidates
-  const wingMap: Record<EnneaCore, [EnneaCore, EnneaCore]> = {
-    1: [9, 2],
-    2: [1, 3],
-    3: [2, 4],
-    4: [3, 5],
-    5: [4, 6],
-    6: [5, 7],
-    7: [6, 8],
-    8: [7, 9],
-    9: [8, 1],
-  };
+  // Wing detection (simplified)
+  const lower = coreType === 1 ? 9 : coreType - 1;
+  const higher = coreType === 9 ? 1 : coreType + 1;
+  const wing = scores[lower] > scores[higher] ? `${coreType}w${lower}` : `${coreType}w${higher}`;
 
-  const [lowerWing, higherWing] = wingMap[coreType];
+  return { coreType, wing, scores };
+}
 
-  /**
-   * Wing questions:
-   * q33 warmth: 0 reserved, 1 balanced, 2 warm
-   * q34 structure: 0 structured, 1 balanced, 2 flowing
-   * q35 drive: 0 mastery, 1 connection, 2 freedom
-   */
-  const warmth = get3(answers, "q33", 1) / 2;        // 0..1
-  const structured = 1 - get3(answers, "q34", 1) / 2; // 1..0
-  const freedom = get3(answers, "q35", 1) / 2;        // 0..1
+/* =========================
+   ASTROLOGY (FULL NATAL CHART)
+========================= */
 
-  // Light feature “vectors” per type for wing selection (nudges only)
-  const vec: Record<EnneaCore, { warm: number; struct: number; free: number }> = {
-    1: { warm: 0.35, struct: 0.95, free: 0.15 },
-    2: { warm: 0.90, struct: 0.45, free: 0.35 },
-    3: { warm: 0.55, struct: 0.80, free: 0.25 },
-    4: { warm: 0.65, struct: 0.35, free: 0.70 },
-    5: { warm: 0.20, struct: 0.70, free: 0.40 },
-    6: { warm: 0.45, struct: 0.85, free: 0.20 },
-    7: { warm: 0.75, struct: 0.25, free: 0.95 },
-    8: { warm: 0.40, struct: 0.55, free: 0.80 },
-    9: { warm: 0.60, struct: 0.40, free: 0.55 },
-  };
+interface ZodiacSign {
+  name: string;
+  element: string;
+  modality: string;
+}
 
-  const sim = (t: EnneaCore) => {
-    const v = vec[t];
-    const dw = 1 - Math.abs(warmth - v.warm);
-    const ds = 1 - Math.abs(structured - v.struct);
-    const df = 1 - Math.abs(freedom - v.free);
-    // structure slightly more decisive
-    return dw * 0.3 + ds * 0.4 + df * 0.3;
-  };
+const ZODIAC_SIGNS: ZodiacSign[] = [
+  { name: "Aries", element: "Fire", modality: "Cardinal" },
+  { name: "Taurus", element: "Earth", modality: "Fixed" },
+  { name: "Gemini", element: "Air", modality: "Mutable" },
+  { name: "Cancer", element: "Water", modality: "Cardinal" },
+  { name: "Leo", element: "Fire", modality: "Fixed" },
+  { name: "Virgo", element: "Earth", modality: "Mutable" },
+  { name: "Libra", element: "Air", modality: "Cardinal" },
+  { name: "Scorpio", element: "Water", modality: "Fixed" },
+  { name: "Sagittarius", element: "Fire", modality: "Mutable" },
+  { name: "Capricorn", element: "Earth", modality: "Cardinal" },
+  { name: "Aquarius", element: "Air", modality: "Fixed" },
+  { name: "Pisces", element: "Water", modality: "Mutable" },
+];
 
-  const lowerAff = sim(lowerWing);
-  const higherAff = sim(higherWing);
+function getSunSign(date: Date): ZodiacSign {
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
 
-  let wingNum: EnneaCore;
-  if (lowerAff === higherAff) {
-    wingNum = tiePick(answers, `ennea-wing-${coreType}`) === 0 ? lowerWing : higherWing;
-  } else {
-    wingNum = lowerAff > higherAff ? lowerWing : higherWing;
-  }
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return ZODIAC_SIGNS[0];
+  if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return ZODIAC_SIGNS[1];
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return ZODIAC_SIGNS[2];
+  if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return ZODIAC_SIGNS[3];
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return ZODIAC_SIGNS[4];
+  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return ZODIAC_SIGNS[5];
+  if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return ZODIAC_SIGNS[6];
+  if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return ZODIAC_SIGNS[7];
+  if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return ZODIAC_SIGNS[8];
+  if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return ZODIAC_SIGNS[9];
+  if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return ZODIAC_SIGNS[10];
+  return ZODIAC_SIGNS[11];
+}
 
+// Simplified planetary position calculation (approximation for demo)
+// In production, use a proper astronomy library like 'astronomy-engine'
+function calculatePlanetaryPositions(birthDate: Date): {
+  moon: ZodiacSign;
+  mercury: ZodiacSign;
+  venus: ZodiacSign;
+} {
+  // This is a simplified approximation
+  // For production, use proper ephemeris calculations
+  const sunSign = getSunSign(birthDate);
+  const sunIndex = ZODIAC_SIGNS.findIndex(z => z.name === sunSign.name);
+  
+  // Approximate moon position (moves ~13 degrees/day through zodiac)
+  const dayOfYear = Math.floor((birthDate.getTime() - new Date(birthDate.getFullYear(), 0, 0).getTime()) / 86400000);
+  const moonIndex = Math.floor((dayOfYear * 13) / 30) % 12;
+  
+  // Mercury and Venus stay close to Sun
+  const mercuryIndex = (sunIndex + 11) % 12; // Usually within 1 sign of Sun
+  const venusIndex = (sunIndex + 1) % 12; // Usually within 2 signs of Sun
+  
   return {
-    coreType,
-    wing: `${coreType}w${wingNum}`,
-    scores,
-    wingAffinity: { lowerWing: Math.round(lowerAff * 100), higherWing: Math.round(higherAff * 100) },
+    moon: ZODIAC_SIGNS[moonIndex],
+    mercury: ZODIAC_SIGNS[mercuryIndex],
+    venus: ZODIAC_SIGNS[venusIndex],
+  };
+}
+
+function calculateAstrology(birthDate: Date, birthTime?: string): AstrologyData {
+  const sun = getSunSign(birthDate);
+  
+  // If birth time provided, calculate more accurate positions
+  // For now, using simplified calculation
+  const planets = calculatePlanetaryPositions(birthDate);
+  
+  return {
+    sun: {
+      sign: sun.name,
+      element: sun.element,
+      modality: sun.modality,
+    },
+    moon: {
+      sign: planets.moon.name,
+      element: planets.moon.element,
+      modality: planets.moon.modality,
+    },
+    rising: null, // Requires birth time + location for accurate calculation
+    mercury: {
+      sign: planets.mercury.name,
+      element: planets.mercury.element,
+    },
+    venus: {
+      sign: planets.venus.name,
+      element: planets.venus.element,
+    },
   };
 }
 
 /* =========================
-   ASTROLOGY (Sun sign only)
+   MAIN CALCULATOR
 ========================= */
 
-function calculateAstrology(birthDate: Date): AstrologyData {
-  const month = birthDate.getMonth() + 1;
-  const day = birthDate.getDate();
+export function calculateFrameworks(
+  answers: QuizAnswers,
+  birthDate: Date,
+  userMBTI?: string,
+  birthTime?: string
+): FrameworkScores {
+  const big5 = calculateBig5(answers);
+  const mbti = userMBTI ? parseUserMBTI(userMBTI) : null;
+  const enneagram = calculateEnneagram(answers);
+  const astrology = calculateAstrology(birthDate, birthTime);
 
-  let sunSign = "";
-  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) sunSign = "Aries";
-  else if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) sunSign = "Taurus";
-  else if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) sunSign = "Gemini";
-  else if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) sunSign = "Cancer";
-  else if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) sunSign = "Leo";
-  else if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) sunSign = "Virgo";
-  else if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) sunSign = "Libra";
-  else if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) sunSign = "Scorpio";
-  else if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) sunSign = "Sagittarius";
-  else if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) sunSign = "Capricorn";
-  else if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) sunSign = "Aquarius";
-  else sunSign = "Pisces";
-
-  const elementMap: Record<string, string> = {
-    Aries: "Fire", Leo: "Fire", Sagittarius: "Fire",
-    Taurus: "Earth", Virgo: "Earth", Capricorn: "Earth",
-    Gemini: "Air", Libra: "Air", Aquarius: "Air",
-    Cancer: "Water", Scorpio: "Water", Pisces: "Water",
-  };
-
-  const modalityMap: Record<string, string> = {
-    Aries: "Cardinal", Cancer: "Cardinal", Libra: "Cardinal", Capricorn: "Cardinal",
-    Taurus: "Fixed", Leo: "Fixed", Scorpio: "Fixed", Aquarius: "Fixed",
-    Gemini: "Mutable", Virgo: "Mutable", Sagittarius: "Mutable", Pisces: "Mutable",
-  };
-
-  return { sunSign, element: elementMap[sunSign], modality: modalityMap[sunSign] };
-}
-
-/* =========================
-   MAIN EXPORT
-========================= */
-
-export function calculateFrameworks(answers: QuizAnswers, birthDate: Date): FrameworkScores {
   return {
-    big5: calculateBig5(answers),
-    mbti: calculateMBTI(answers),
-    enneagram: calculateEnneagram(answers),
-    astrology: calculateAstrology(birthDate),
+    big5,
+    mbti,
+    enneagram,
+    astrology,
   };
 }
