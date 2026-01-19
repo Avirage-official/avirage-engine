@@ -615,12 +615,12 @@ function validateInfo(): string | null {
                   <p className="text-lg text-white/60 mb-8">{result.explanation}</p>
 
                   <div className="flex justify-center gap-4">
-                    <Link
-                      href={`/codes/${result.primary.code_name}`}
-                      className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-bold shadow-lg hover:shadow-xl transition"
-                    >
-                      Explore Your Code
-                    </Link>
+                   <Link
+  href={`/codepages/${result.primary.code_name.toLowerCase()}`}  // ✅ EVEN SAFER
+  className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-bold shadow-lg hover:shadow-xl transition"
+>
+  Explore Your Code
+</Link>
                     <button
                       onClick={resetAll}
                       className="px-6 py-3 rounded-xl border border-white/20 bg-white/5 text-white font-bold hover:bg-white/10 transition"
