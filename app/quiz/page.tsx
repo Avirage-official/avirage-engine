@@ -83,20 +83,19 @@ const gradientY = useTransform(mouseY, [0, typeof window !== 'undefined' ? windo
      HANDLERS
   ============================ */
 
-  function validateInfo(): string | null {
-    if (!name.trim()) return "Please enter your name.";
-    if (!gender) return "Please select a gender.";
-    if (gender === "other" && !genderOther.trim()) return "Please specify your gender.";
-    if (!city.trim()) return "Please enter your Country.";
-    if (!ethnicity.trim()) return "Please enter your ethnicity/background.";
+function validateInfo(): string | null {
+  if (!name.trim()) return "Please enter your name.";
+  if (!gender) return "Please select a gender.";
+  if (gender === "other" && !genderOther.trim()) return "Please specify your gender.";
+  if (!city.trim()) return "Please select your country."; // Changed message
+  if (!ethnicity.trim()) return "Please enter your ethnicity/background.";
 
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(resolvedBirthDate)) return "Birthdate looks invalid.";
-    const dt = new Date(resolvedBirthDate + "T00:00:00");
-    if (Number.isNaN(dt.getTime())) return "Birthdate looks invalid.";
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(resolvedBirthDate)) return "Birthdate looks invalid.";
+  const dt = new Date(resolvedBirthDate + "T00:00:00");
+  if (Number.isNaN(dt.getTime())) return "Birthdate looks invalid.";
 
-    return null;
-  }
-
+  return null;
+}
   function start() {
     const err = validateInfo();
     if (err) {
@@ -458,31 +457,54 @@ const gradientY = useTransform(mouseY, [0, typeof window !== 'undefined' ? windo
                       </div>
 
 {/* MBTI (Optional) */}
-                      <div>
-                        <label className="block text-sm font-bold text-white/80 mb-2">
-                          MBTI Type{" "}
-                          <span className="text-xs text-white/40">
-                            (optional — e.g., INTJ, ENFP. Don't know?{" "}
-                            <a
-                              href="https://www.16personalities.com"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-violet-400 hover:text-violet-300 underline"
-                            >
-                              Take this free test
-                            </a>
-                            )
-                          </span>
-                        </label>
-                        <input
-                          type="text"
-                          value={mbtiInput}
-                          onChange={(e) => setMbtiInput(e.target.value.toUpperCase())}
-                          placeholder="e.g., INTJ"
-                          maxLength={4}
-                          className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 backdrop-blur-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition uppercase"
-                        />
-                      </div>
+<div>
+  <label className="block text-sm font-bold text-white/80 mb-2">
+    MBTI Type{" "}
+    <span className="text-xs text-white/40">
+      (optional — Don't know?{" "}
+      <a
+        href="https://www.16personalities.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-violet-400 hover:text-violet-300 underline"
+      >
+        Take this free test
+      </a>
+      )
+    </span>
+  </label>
+  <select
+    value={mbtiInput}
+    onChange={(e) => setMbtiInput(e.target.value)}
+    className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/5 backdrop-blur-xl text-white focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition appearance-none cursor-pointer"
+  >
+    <option value="" className="bg-gray-900">Skip (optional)</option>
+    <optgroup label="Analysts" className="bg-gray-900">
+      <option value="INTJ" className="bg-gray-900">INTJ - Architect</option>
+      <option value="INTP" className="bg-gray-900">INTP - Logician</option>
+      <option value="ENTJ" className="bg-gray-900">ENTJ - Commander</option>
+      <option value="ENTP" className="bg-gray-900">ENTP - Debater</option>
+    </optgroup>
+    <optgroup label="Diplomats" className="bg-gray-900">
+      <option value="INFJ" className="bg-gray-900">INFJ - Advocate</option>
+      <option value="INFP" className="bg-gray-900">INFP - Mediator</option>
+      <option value="ENFJ" className="bg-gray-900">ENFJ - Protagonist</option>
+      <option value="ENFP" className="bg-gray-900">ENFP - Campaigner</option>
+    </optgroup>
+    <optgroup label="Sentinels" className="bg-gray-900">
+      <option value="ISTJ" className="bg-gray-900">ISTJ - Logistician</option>
+      <option value="ISFJ" className="bg-gray-900">ISFJ - Defender</option>
+      <option value="ESTJ" className="bg-gray-900">ESTJ - Executive</option>
+      <option value="ESFJ" className="bg-gray-900">ESFJ - Consul</option>
+    </optgroup>
+    <optgroup label="Explorers" className="bg-gray-900">
+      <option value="ISTP" className="bg-gray-900">ISTP - Virtuoso</option>
+      <option value="ISFP" className="bg-gray-900">ISFP - Adventurer</option>
+      <option value="ESTP" className="bg-gray-900">ESTP - Entrepreneur</option>
+      <option value="ESFP" className="bg-gray-900">ESFP - Entertainer</option>
+    </optgroup>
+  </select>
+</div>
 
                       {/* Start button */}
                       <button
