@@ -599,39 +599,85 @@ function validateInfo(): string | null {
           </AnimatePresence>
 
           {/* RESULT STEP */}
-          <AnimatePresence mode="wait">
-            {step === "result" && result && (
-              <motion.div
-                key="result"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <div className="text-center mb-8">
-                  <h1 className="text-4xl sm:text-5xl font-black mb-4">
-                    Your Code: <span className="text-violet-400">{result.primary.full_name}</span>
-                  </h1>
-                  <p className="text-lg text-white/60 mb-8">{result.explanation}</p>
+<AnimatePresence mode="wait">
+  {step === "result" && result && (
+    <motion.div
+      key="result"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="text-center mb-12">
+        {/* Primary */}
+        <h1 className="text-4xl sm:text-5xl font-black mb-3">
+          Your Primary Code
+        </h1>
+        <div className="text-5xl font-black text-violet-400 mb-4">
+          {result.primary.full_name}
+        </div>
+        <p className="text-lg text-white/60 max-w-xl mx-auto">
+          {result.explanation}
+        </p>
+      </div>
 
-                  <div className="flex justify-center gap-4">
-                   <Link
-  href={`/codepages/${result.primary.code_name.toLowerCase()}`}  // ✅ CORRECT
-  className="..."
->
-  Explore Your Code
-</Link>
-                    <button
-                      onClick={resetAll}
-                      className="px-6 py-3 rounded-xl border border-white/20 bg-white/5 text-white font-bold hover:bg-white/10 transition"
-                    >
-                      Retake Quiz
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+      {/* Secondary + Tertiary */}
+      <div className="grid gap-6 mb-10">
+        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6">
+          <div className="text-sm text-white/40 mb-1">Secondary Influence</div>
+          <div className="text-xl font-bold text-white">
+            {result.secondary.full_name}
+          </div>
+          <div className="text-sm text-white/50">
+            {result.secondary.matchPercentage}% alignment
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6">
+          <div className="text-sm text-white/40 mb-1">Tertiary Influence</div>
+          <div className="text-xl font-bold text-white">
+            {result.tertiary.full_name}
+          </div>
+          <div className="text-sm text-white/50">
+            {result.tertiary.matchPercentage}% alignment
+          </div>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex flex-col sm:flex-row justify-center gap-4">
+        {/* Main site */}
+        <a
+          href="https://ethos-official.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-3 rounded-xl border border-white/20 bg-white/5 text-white font-bold hover:bg-white/10 transition"
+        >
+          What is ETHOS
+        </a>
+
+        {/* App */}
+        <a
+          href="https://app.ethos-official.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-white font-bold shadow-lg shadow-purple-500/40 hover:shadow-purple-500/60 transition"
+        >
+          Enter the App
+        </a>
+
+        {/* Retake */}
+        <button
+          onClick={resetAll}
+          className="px-6 py-3 rounded-xl border border-white/20 bg-white/5 text-white/70 hover:text-white transition"
+        >
+          Retake Quiz
+        </button>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
         </div>
       </div>
     </div>
