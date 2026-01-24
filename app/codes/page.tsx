@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { CSSProperties, useState } from "react";
+import { useState } from "react";
 import { CODE_PAGES, CODE_SLUGS, type CodeSlug } from "@/lib/codePages";
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { SignedIn } from '@clerk/nextjs';
+import { motion } from "framer-motion";
 
 /* ============================
    THEME
@@ -19,31 +20,32 @@ const THEME = {
   textSecondary: "#9aa3ad",
   textMuted: "rgba(154,163,173,0.75)",
   accent: "#c9a96a",
+  accentGlow: "rgba(201,169,106,0.15)",
 };
 
 const DISPLAY_FONT = "'Cinzel', serif";
 const BODY_FONT = "'Inter', system-ui, sans-serif";
 
 /* ============================
-   DATA
+   DATA - UPDATED FOR MYTHICAL GROUPING
 ============================ */
 
-// Region groupings for filtering
-const REGIONS: Record<string, CodeSlug[]> = {
-  "All Codes": CODE_SLUGS as unknown as CodeSlug[],
-  "Africa": ["khoisan", "kayori", "sahen", "enzuka"],
-  "Asia": ["siyuane", "jaejin", "namsea", "shokunin", "khoruun", "lhumir", "yatevar"],
-  "Pacific": ["karayni", "wohaka", "tjukari"],
-  "Americas": ["kinmora", "skenari"],
-  "Arctic": ["siljoa"],
-  "Middle East": ["Tahiri", "ashkara"],
-  "Mediterranean": ["alethir"],
+// Archetype categories for filtering
+const ARCHETYPES: Record<string, CodeSlug[]> = {
+  "All Archetypes": CODE_SLUGS as unknown as CodeSlug[],
+  "Warriors & Protectors": ["khoisan", "enzuka", "ashkara", "kinmora"],
+  "Creators & Visionaries": ["kayori", "shokunin", "jaejin", "alethir"],
+  "Seekers & Scholars": ["sahen", "lhumir", "yatevar", "siyuane"],
+  "Guardians & Builders": ["Tahiri", "tjukari", "skenari"],
+  "Wanderers & Adapters": ["namsea", "khoruun", "karayni", "wohaka", "siljoa"],
 };
 
-const CODE_TYPES: Record<string, CodeSlug[]> = {
+const ESSENCE_TYPES: Record<string, CodeSlug[]> = {
   "All": CODE_SLUGS as unknown as CodeSlug[],
-  "Standalone": ["khoisan", "kayori", "sahen", "jaejin", "shokunin", "khoruun", "lhumir", "Tahiri", "tjukari", "kinmora", "skenari", "ashkara", "alethir"],
-  "Fusion": ["enzuka", "siyuane", "namsea", "yatevar", "karayni", "wohaka", "siljoa"],
+  "Solitary": ["khoisan", "sahen", "lhumir", "tjukari", "skenari"],
+  "Communal": ["kayori", "enzuka", "Tahiri", "karayni", "wohaka"],
+  "Adaptive": ["namsea", "khoruun", "siyuane", "yatevar", "siljoa"],
+  "Mastery": ["shokunin", "jaejin", "alethir", "kinmora", "ashkara"],
 };
 
 /* ============================
@@ -51,177 +53,365 @@ const CODE_TYPES: Record<string, CodeSlug[]> = {
 ============================ */
 
 export default function CodesLibraryPage() {
-  const [regionFilter, setRegionFilter] = useState<string>("All Codes");
-  const [typeFilter, setTypeFilter] = useState<string>("All");
+  const [archetypeFilter, setArchetypeFilter] = useState<string>("All Archetypes");
+  const [essenceFilter, setEssenceFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Get filtered codes
   const filteredCodes = CODE_SLUGS.filter((slug) => {
-    const regionMatch = REGIONS[regionFilter]?.includes(slug);
-    const typeMatch = CODE_TYPES[typeFilter]?.includes(slug);
+    const archetypeMatch = ARCHETYPES[archetypeFilter]?.includes(slug);
+    const essenceMatch = ESSENCE_TYPES[essenceFilter]?.includes(slug);
     const searchMatch = 
       searchQuery === "" ||
-      CODE_PAGES[slug].codeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       CODE_PAGES[slug].fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      CODE_PAGES[slug].snapshot.toLowerCase().includes(searchQuery.toLowerCase());
+      CODE_PAGES[slug].snapshot.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      CODE_PAGES[slug].lens.title.toLowerCase().includes(searchQuery.toLowerCase());
     
-    return regionMatch && typeMatch && searchMatch;
+    return archetypeMatch && essenceMatch && searchMatch;
   });
 
   return (
-    <main style={mainStyle}>
+    <main className="min-h-screen font-[family-name:var(--font-inter)] text-white" 
+          style={{ background: THEME.bg }}>
+      
       {/* Navigation */}
-      <nav style={navStyle}>
-        <div style={navContainer}>
-          <Link href="/" style={logoStyle}>
+      <nav className="sticky top-0 z-50 backdrop-blur-xl border-b"
+           style={{ 
+             background: "rgba(10,13,18,0.92)",
+             borderColor: THEME.softBorder 
+           }}>
+        <div className="max-w-[1400px] mx-auto px-6 py-4 flex justify-between items-center">
+          <Link href="/" 
+                className="text-2xl font-black tracking-tight font-[family-name:var(--font-cinzel)]"
+                style={{ color: THEME.accent }}>
             Avirage
           </Link>
 
-          <div style={navLinks}>
-            <Link href="/about" style={navLink}>
+          <div className="flex gap-8 items-center">
+            <Link href="/about" 
+                  className="text-sm font-semibold tracking-wide transition-colors hover:text-white"
+                  style={{ color: THEME.textSecondary }}>
               About
             </Link>
-            <Link href="/codes" style={{ ...navLink, color: THEME.accent }}>
-              Code Library
+            <Link href="/codes" 
+                  className="text-sm font-semibold tracking-wide"
+                  style={{ color: THEME.accent }}>
+              Mythical Codex
             </Link>
-            <Link href="/faq" style={navLink}>
+            <Link href="/faq" 
+                  className="text-sm font-semibold tracking-wide transition-colors hover:text-white"
+                  style={{ color: THEME.textSecondary }}>
               FAQ
             </Link>
             <SignedIn>           
-              <Link href="/dashboard" style={navLink}>
+              <Link href="/dashboard" 
+                    className="text-sm font-semibold tracking-wide transition-colors hover:text-white"
+                    style={{ color: THEME.textSecondary }}>
                 Dashboard
               </Link>
             </SignedIn>
-            <Link href="/quiz" style={signInBtn}>
+            <Link href="/quiz" 
+                  className="px-5 py-2 rounded-xl text-sm font-bold tracking-wider border transition-all hover:scale-105"
+                  style={{ 
+                    background: THEME.panel,
+                    borderColor: THEME.softBorder,
+                    color: THEME.textPrimary 
+                  }}>
               Take Quiz
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* Hero */}
-      <section style={heroSection}>
-        <div style={heroContent}>
-          <div style={heroKicker}>Explore</div>
-          <h1 style={h1}>Cultural Code Library</h1>
-          <p style={heroDesc}>
-            20 archetypal traditions grounded in historical cultures. Each code represents a distinct
-            lens through which people perceive and navigate the world.
-          </p>
+      {/* Hero Section - Enhanced */}
+      <section className="relative pt-24 pb-20 px-6 text-center border-b overflow-hidden"
+               style={{ borderColor: THEME.softBorder }}>
+        {/* Ambient glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[100px] opacity-20"
+               style={{ background: THEME.accent }} />
+          <div className="absolute top-1/3 right-1/4 w-96 h-96 rounded-full blur-[120px] opacity-10"
+               style={{ background: "#6a95c9" }} />
+        </div>
+
+        <div className="relative max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-block px-4 py-2 rounded-full border backdrop-blur-sm mb-6"
+            style={{ 
+              borderColor: THEME.softBorder,
+              background: "rgba(255,255,255,0.03)" 
+            }}>
+            <span className="text-xs font-black tracking-[0.2em] uppercase"
+                  style={{ color: THEME.accent }}>
+              Explore
+            </span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-6xl sm:text-7xl font-black tracking-tight mb-6 font-[family-name:var(--font-cinzel)]"
+            style={{ 
+              background: `linear-gradient(135deg, ${THEME.textPrimary} 0%, ${THEME.accent} 100%)`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>
+            Mythical Codex
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-lg sm:text-xl leading-relaxed max-w-3xl mx-auto"
+            style={{ color: THEME.textSecondary }}>
+            Twenty archetypal traditions — each a distinct lens through which to perceive, 
+            decide, and navigate existence. Not cultural identities, but behavioral patterns 
+            that transcend geography.
+          </motion.p>
         </div>
       </section>
 
-      {/* Filters & Search */}
-      <section style={filtersSection}>
-        <div style={container}>
-          {/* Search Bar */}
-          <div style={searchContainer}>
-            <input
-              type="text"
-              placeholder="Search codes by name or description..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={searchInput}
-            />
-          </div>
+      {/* Filters & Search - Enhanced */}
+      <section className="py-12 px-6 border-b"
+               style={{ borderColor: THEME.softBorder }}>
+        <div className="max-w-[1400px] mx-auto">
+          {/* Search Bar - Enhanced */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-10">
+            <div className="relative max-w-2xl mx-auto">
+              <div className="absolute inset-0 rounded-2xl blur-xl opacity-30 pointer-events-none"
+                   style={{ background: THEME.accentGlow }} />
+              <input
+                type="text"
+                placeholder="Search by archetype, description, or lens..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="relative w-full px-6 py-4 text-base rounded-2xl border backdrop-blur-sm outline-none transition-all focus:border-opacity-100 font-medium"
+                style={{ 
+                  background: "rgba(255,255,255,0.04)",
+                  borderColor: THEME.softBorder,
+                  color: THEME.textPrimary 
+                }}
+              />
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-2xl">
+                🔍
+              </div>
+            </div>
+          </motion.div>
 
-          {/* Filter Tabs */}
-          <div style={filterRow}>
-            <div style={filterGroup}>
-              <div style={filterLabel}>Region:</div>
-              <div style={filterTabs}>
-                {Object.keys(REGIONS).map((region) => (
+          {/* Filter Tabs - Enhanced */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="space-y-8">
+            
+            {/* Archetype Filter */}
+            <div>
+              <div className="text-xs font-black tracking-[0.15em] uppercase mb-4"
+                   style={{ color: THEME.textMuted }}>
+                Archetype Category
+              </div>
+              <div className="flex gap-3 flex-wrap">
+                {Object.keys(ARCHETYPES).map((archetype) => (
                   <button
-                    key={region}
-                    onClick={() => setRegionFilter(region)}
-                    style={regionFilter === region ? activeFilterBtn : filterBtn}
-                  >
-                    {region}
+                    key={archetype}
+                    onClick={() => setArchetypeFilter(archetype)}
+                    className="px-5 py-2.5 text-sm font-bold rounded-xl border transition-all hover:scale-105"
+                    style={archetypeFilter === archetype ? {
+                      borderColor: THEME.accent,
+                      background: THEME.accentGlow,
+                      color: THEME.accent,
+                      boxShadow: `0 0 20px ${THEME.accentGlow}`
+                    } : {
+                      borderColor: THEME.softBorder,
+                      background: "transparent",
+                      color: THEME.textSecondary
+                    }}>
+                    {archetype}
                   </button>
                 ))}
               </div>
             </div>
 
-            <div style={filterGroup}>
-              <div style={filterLabel}>Type:</div>
-              <div style={filterTabs}>
-                {Object.keys(CODE_TYPES).map((type) => (
+            {/* Essence Filter */}
+            <div>
+              <div className="text-xs font-black tracking-[0.15em] uppercase mb-4"
+                   style={{ color: THEME.textMuted }}>
+                Core Essence
+              </div>
+              <div className="flex gap-3 flex-wrap">
+                {Object.keys(ESSENCE_TYPES).map((essence) => (
                   <button
-                    key={type}
-                    onClick={() => setTypeFilter(type)}
-                    style={typeFilter === type ? activeFilterBtn : filterBtn}
-                  >
-                    {type}
+                    key={essence}
+                    onClick={() => setEssenceFilter(essence)}
+                    className="px-5 py-2.5 text-sm font-bold rounded-xl border transition-all hover:scale-105"
+                    style={essenceFilter === essence ? {
+                      borderColor: THEME.accent,
+                      background: THEME.accentGlow,
+                      color: THEME.accent,
+                      boxShadow: `0 0 20px ${THEME.accentGlow}`
+                    } : {
+                      borderColor: THEME.softBorder,
+                      background: "transparent",
+                      color: THEME.textSecondary
+                    }}>
+                    {essence}
                   </button>
                 ))}
               </div>
             </div>
-          </div>
 
-          {/* Results Count */}
-          <div style={resultsCount}>
-            Showing {filteredCodes.length} of {CODE_SLUGS.length} codes
-          </div>
+            {/* Results Count */}
+            <div className="text-sm font-semibold pt-2"
+                 style={{ color: THEME.textMuted }}>
+              Showing <span style={{ color: THEME.accent }}>{filteredCodes.length}</span> of {CODE_SLUGS.length} archetypes
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Code Grid */}
-      <section style={codesSection}>
-        <div style={container}>
+      {/* Codes Grid - Enhanced */}
+      <section className="py-20 px-6">
+        <div className="max-w-[1400px] mx-auto">
           {filteredCodes.length === 0 ? (
-            <div style={emptyState}>
-              <div style={emptyIcon}>🔍</div>
-              <div style={emptyTitle}>No codes found</div>
-              <p style={emptyText}>Try adjusting your filters or search query</p>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-24">
+              <div className="text-6xl mb-6">🔮</div>
+              <div className="text-2xl font-black mb-3"
+                   style={{ color: THEME.textPrimary }}>
+                No archetypes found
+              </div>
+              <p className="text-base"
+                 style={{ color: THEME.textMuted }}>
+                Try adjusting your filters or search query
+              </p>
+            </motion.div>
           ) : (
-            <div style={codeGrid}>
-              {filteredCodes.map((slug) => (
-                <CodeCard key={slug} slug={slug} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCodes.map((slug, index) => (
+                <ArchetypeCard key={slug} slug={slug} index={index} />
               ))}
             </div>
           )}
         </div>
       </section>
 
-      {/* CTA */}
-      <section style={ctaSection}>
-        <div style={ctaCard}>
-          <h2 style={ctaTitle}>Ready to discover your code?</h2>
-          <p style={ctaText}>
-            Take the 10-minute quiz to find your archetypal cultural lens.
-          </p>
-          <Link href="/quiz" style={ctaBtn}>
-            Start Quiz
-          </Link>
-        </div>
+      {/* CTA Section - Enhanced */}
+      <section className="py-24 px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="max-w-3xl mx-auto relative">
+          
+          {/* Glow effect */}
+          <div className="absolute inset-0 rounded-3xl blur-2xl opacity-20 pointer-events-none"
+               style={{ background: THEME.accent }} />
+          
+          <div className="relative p-16 rounded-3xl border text-center"
+               style={{ 
+                 background: "rgba(255,255,255,0.02)",
+                 borderColor: THEME.border 
+               }}>
+            <h2 className="text-4xl sm:text-5xl font-black mb-5 font-[family-name:var(--font-cinzel)]"
+                style={{ color: THEME.textPrimary }}>
+              Discover Your Archetype
+            </h2>
+            <p className="text-lg mb-10 leading-relaxed"
+               style={{ color: THEME.textSecondary }}>
+              Take the 10-minute assessment to reveal which mythical lens 
+              you naturally embody.
+            </p>
+            <Link href="/quiz" 
+                  className="inline-block px-10 py-4 rounded-2xl border font-black text-base tracking-[0.08em] uppercase transition-all hover:scale-105"
+                  style={{ 
+                    borderColor: "rgba(201,169,106,0.45)",
+                    background: "rgba(201,169,106,0.12)",
+                    color: THEME.textPrimary,
+                    boxShadow: `0 0 30px ${THEME.accentGlow}`
+                  }}>
+              Begin Assessment
+            </Link>
+          </div>
+        </motion.div>
       </section>
 
       {/* Footer */}
-      <footer style={footerStyle}>
-        <div style={footerContainer}>
-          <div style={footerBrand}>
-            <div style={footerLogo}>Avirage</div>
-            <p style={footerTagline}>Cultural lens identification system</p>
-          </div>
-
-          <div style={footerLinks}>
-            <div style={footerCol}>
-              <div style={footerColTitle}>Learn</div>
-              <Link href="/about" style={footerLink}>About</Link>
-              <Link href="/codes" style={footerLink}>Code Library</Link>
-              <Link href="/faq" style={footerLink}>FAQ</Link>
+      <footer className="border-t px-6 py-16"
+              style={{ 
+                borderColor: THEME.softBorder,
+                background: "rgba(0,0,0,0.2)" 
+              }}>
+        <div className="max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-12">
+            <div>
+              <div className="text-2xl font-black mb-3 font-[family-name:var(--font-cinzel)]"
+                   style={{ color: THEME.accent }}>
+                Avirage
+              </div>
+              <p className="text-sm"
+                 style={{ color: THEME.textMuted }}>
+                Cultural lens identification system
+              </p>
             </div>
 
-            <div style={footerCol}>
-              <div style={footerColTitle}>Start</div>
-              <Link href="/quiz" style={footerLink}>Take Quiz</Link>
+            <div className="flex gap-20 justify-end">
+              <div className="flex flex-col gap-3">
+                <div className="text-xs font-black tracking-[0.1em] uppercase mb-1"
+                     style={{ color: THEME.textPrimary }}>
+                  Learn
+                </div>
+                <Link href="/about" 
+                      className="text-sm transition-colors hover:text-white"
+                      style={{ color: THEME.textSecondary }}>
+                  About
+                </Link>
+                <Link href="/codes" 
+                      className="text-sm transition-colors hover:text-white"
+                      style={{ color: THEME.textSecondary }}>
+                  Mythical Codex
+                </Link>
+                <Link href="/faq" 
+                      className="text-sm transition-colors hover:text-white"
+                      style={{ color: THEME.textSecondary }}>
+                  FAQ
+                </Link>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <div className="text-xs font-black tracking-[0.1em] uppercase mb-1"
+                     style={{ color: THEME.textPrimary }}>
+                  Start
+                </div>
+                <Link href="/quiz" 
+                      className="text-sm transition-colors hover:text-white"
+                      style={{ color: THEME.textSecondary }}>
+                  Take Assessment
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div style={footerBottom}>
-          <p style={footerCopyright}>© 2025 Avirage. All rights reserved.</p>
+          <div className="pt-8 border-t text-center"
+               style={{ borderColor: THEME.softBorder }}>
+            <p className="text-sm"
+               style={{ color: THEME.textMuted }}>
+              © 2025 Avirage. All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
     </main>
@@ -229,458 +419,94 @@ export default function CodesLibraryPage() {
 }
 
 /* ============================
-   HELPER COMPONENTS
+   ARCHETYPE CARD - COMPLETELY REDESIGNED
 ============================ */
 
-function CodeCard({ slug }: { slug: CodeSlug }) {
+function ArchetypeCard({ slug, index }: { slug: CodeSlug; index: number }) {
   const code = CODE_PAGES[slug];
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Link
-      href={`/codepages/${slug}`}
-      style={{
-        ...codeCard,
-        ...(isHovered ? codeCardHover : {}),
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Header */}
-      <div style={codeCardHeader}>
-        <div style={codeCardName}>{code.codeName}</div>
-        <div style={codeCardOrigin}>{code.fullName}</div>
-        <div style={codeCardType}>
-          {code.origin.level1}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.05 }}
+      whileHover={{ y: -8 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}>
+      
+      <Link
+        href={`/codepages/${slug}`}
+        className="block relative group">
+        
+        {/* Glow on hover */}
+        <div className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-lg pointer-events-none"
+             style={{ background: THEME.accentGlow }} />
+        
+        {/* Card */}
+        <div className="relative p-7 rounded-2xl border backdrop-blur-sm transition-all duration-300"
+             style={{
+               background: isHovered ? THEME.panelStrong : THEME.panel,
+               borderColor: isHovered ? THEME.border : THEME.softBorder,
+             }}>
+          
+          {/* Header */}
+          <div className="mb-5">
+            {/* Mythical Name - PRIMARY */}
+            <h3 className="text-2xl font-black mb-2 font-[family-name:var(--font-cinzel)] tracking-tight"
+                style={{ color: THEME.accent }}>
+              {code.fullName}
+            </h3>
+            
+            {/* Cultural Reference - SUBTLE */}
+            <div className="text-xs font-bold tracking-wide mb-1"
+                 style={{ color: THEME.textMuted }}>
+              {code.codeName.toUpperCase()}
+            </div>
+            
+            {/* Archetype Type */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-[10px] font-black tracking-wider uppercase"
+                 style={{ 
+                   background: "rgba(255,255,255,0.05)",
+                   color: THEME.textMuted 
+                 }}>
+              <span className="w-1.5 h-1.5 rounded-full"
+                    style={{ background: THEME.accent }} />
+              {code.origin.level1}
+            </div>
+          </div>
+
+          {/* Description */}
+          <p className="text-sm leading-relaxed mb-5 min-h-[80px]"
+             style={{ color: THEME.textSecondary }}>
+            {code.snapshot}
+          </p>
+
+          {/* Lens Badge */}
+          <div className="flex items-center justify-between">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border"
+                 style={{ 
+                   borderColor: THEME.softBorder,
+                   background: "rgba(255,255,255,0.02)" 
+                 }}>
+              <span className="text-sm">👁</span>
+              <span className="text-xs font-bold tracking-wide"
+                    style={{ color: THEME.textMuted }}>
+                {code.lens.title}
+              </span>
+            </div>
+
+            {/* Arrow indicator */}
+            <div className="text-xl transition-transform duration-300 group-hover:translate-x-1"
+                 style={{ 
+                   color: THEME.accent,
+                   opacity: isHovered ? 1 : 0.4 
+                 }}>
+              →
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Description */}
-      <p style={codeCardDesc}>{code.snapshot}</p>
-
-      {/* Lens Label */}
-      <div style={codeCardLens}>
-        <span style={lensIcon}>👁</span>
-        <span style={lensText}>{code.lens.title}</span>
-      </div>
-
-      {/* Arrow */}
-      <div style={codeCardArrow}>→</div>
-    </Link>
+      </Link>
+    </motion.div>
   );
 }
-
-/* ============================
-   STYLES
-============================ */
-
-const mainStyle: CSSProperties = {
-  minHeight: "100vh",
-  fontFamily: BODY_FONT,
-  background: THEME.bg,
-  color: THEME.textPrimary,
-};
-
-// Navigation
-const navStyle: CSSProperties = {
-  position: "sticky",
-  top: 0,
-  zIndex: 100,
-  background: "rgba(10,13,18,0.92)",
-  backdropFilter: "blur(12px)",
-  borderBottom: `1px solid ${THEME.softBorder}`,
-};
-
-const navContainer: CSSProperties = {
-  maxWidth: 1400,
-  margin: "0 auto",
-  padding: "16px 24px",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-};
-
-const logoStyle: CSSProperties = {
-  fontFamily: DISPLAY_FONT,
-  fontSize: 24,
-  fontWeight: 900,
-  color: THEME.accent,
-  textDecoration: "none",
-};
-
-const navLinks: CSSProperties = {
-  display: "flex",
-  gap: 32,
-  alignItems: "center",
-};
-
-const navLink: CSSProperties = {
-  color: THEME.textSecondary,
-  textDecoration: "none",
-  fontSize: 14,
-  fontWeight: 600,
-  letterSpacing: "0.02em",
-};
-
-const signInBtn: CSSProperties = {
-  padding: "8px 20px",
-  borderRadius: 12,
-  border: `1px solid ${THEME.softBorder}`,
-  background: THEME.panel,
-  color: THEME.textPrimary,
-  textDecoration: "none",
-  fontSize: 13,
-  fontWeight: 700,
-  letterSpacing: "0.04em",
-};
-
-// Hero
-const heroSection: CSSProperties = {
-  padding: "80px 24px 60px",
-  textAlign: "center",
-  borderBottom: `1px solid ${THEME.softBorder}`,
-};
-
-const heroContent: CSSProperties = {
-  maxWidth: 800,
-  margin: "0 auto",
-};
-
-const heroKicker: CSSProperties = {
-  fontSize: 12,
-  letterSpacing: "0.20em",
-  textTransform: "uppercase",
-  color: THEME.accent,
-  fontWeight: 900,
-  marginBottom: 16,
-};
-
-const h1: CSSProperties = {
-  fontFamily: DISPLAY_FONT,
-  fontSize: 48,
-  fontWeight: 900,
-  lineHeight: 1.2,
-  margin: "0 0 20px",
-};
-
-const heroDesc: CSSProperties = {
-  fontSize: 18,
-  lineHeight: 1.7,
-  color: THEME.textSecondary,
-  margin: 0,
-};
-
-// Container
-const container: CSSProperties = {
-  maxWidth: 1400,
-  margin: "0 auto",
-  padding: "0 24px",
-};
-
-// Filters
-const filtersSection: CSSProperties = {
-  padding: "40px 0",
-  borderBottom: `1px solid ${THEME.softBorder}`,
-};
-
-const searchContainer: CSSProperties = {
-  marginBottom: 32,
-};
-
-const searchInput: CSSProperties = {
-  width: "100%",
-  padding: "14px 20px",
-  fontSize: 15,
-  borderRadius: 14,
-  border: `1px solid ${THEME.softBorder}`,
-  background: THEME.panel,
-  color: THEME.textPrimary,
-  fontFamily: BODY_FONT,
-  outline: "none",
-};
-
-const filterRow: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 24,
-};
-
-const filterGroup: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: 16,
-  flexWrap: "wrap",
-};
-
-const filterLabel: CSSProperties = {
-  fontSize: 13,
-  fontWeight: 900,
-  color: THEME.textMuted,
-  letterSpacing: "0.04em",
-  textTransform: "uppercase",
-};
-
-const filterTabs: CSSProperties = {
-  display: "flex",
-  gap: 8,
-  flexWrap: "wrap",
-};
-
-const filterBtn: CSSProperties = {
-  padding: "8px 16px",
-  fontSize: 13,
-  fontWeight: 700,
-  borderRadius: 10,
-  border: `1px solid ${THEME.softBorder}`,
-  background: "transparent",
-  color: THEME.textSecondary,
-  cursor: "pointer",
-  transition: "all 0.2s",
-};
-
-const activeFilterBtn: CSSProperties = {
-  ...filterBtn,
-  border: `1px solid ${THEME.accent}`,
-  background: "rgba(201,169,106,0.10)",
-  color: THEME.accent,
-};
-
-const resultsCount: CSSProperties = {
-  marginTop: 24,
-  fontSize: 13,
-  color: THEME.textMuted,
-  fontWeight: 600,
-};
-
-// Codes Grid
-const codesSection: CSSProperties = {
-  padding: "60px 0 80px",
-};
-
-const codeGrid: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-  gap: 24,
-};
-
-const codeCard: CSSProperties = {
-  padding: 28,
-  borderRadius: 16,
-  border: `1px solid ${THEME.softBorder}`,
-  background: THEME.panel,
-  textDecoration: "none",
-  display: "flex",
-  flexDirection: "column",
-  transition: "all 0.2s",
-  cursor: "pointer",
-  position: "relative",
-};
-
-const codeCardHover: CSSProperties = {
-  borderColor: THEME.border,
-  background: THEME.panelStrong,
-  transform: "translateY(-2px)",
-};
-
-const codeCardHeader: CSSProperties = {
-  marginBottom: 16,
-};
-
-const codeCardName: CSSProperties = {
-  fontSize: 22,
-  fontFamily: DISPLAY_FONT,
-  fontWeight: 900,
-  color: THEME.accent,
-  marginBottom: 6,
-};
-
-const codeCardOrigin: CSSProperties = {
-  fontSize: 13,
-  color: THEME.textMuted,
-  fontWeight: 700,
-  marginBottom: 4,
-};
-
-const codeCardType: CSSProperties = {
-  fontSize: 11,
-  color: THEME.textMuted,
-  fontWeight: 600,
-  letterSpacing: "0.04em",
-  textTransform: "uppercase",
-};
-
-const codeCardDesc: CSSProperties = {
-  fontSize: 14,
-  lineHeight: 1.7,
-  color: THEME.textSecondary,
-  margin: "0 0 20px",
-  flex: 1,
-};
-
-const codeCardLens: CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 8,
-  padding: "8px 14px",
-  borderRadius: 10,
-  border: `1px solid ${THEME.softBorder}`,
-  background: "rgba(255,255,255,0.02)",
-  marginBottom: 16,
-  alignSelf: "flex-start",
-};
-
-const lensIcon: CSSProperties = {
-  fontSize: 14,
-};
-
-const lensText: CSSProperties = {
-  fontSize: 12,
-  fontWeight: 700,
-  color: THEME.textMuted,
-};
-
-const codeCardArrow: CSSProperties = {
-  fontSize: 20,
-  color: THEME.accent,
-  opacity: 0.5,
-  position: "absolute",
-  bottom: 24,
-  right: 24,
-};
-
-// Empty State
-const emptyState: CSSProperties = {
-  textAlign: "center",
-  padding: "80px 24px",
-};
-
-const emptyIcon: CSSProperties = {
-  fontSize: 48,
-  marginBottom: 16,
-};
-
-const emptyTitle: CSSProperties = {
-  fontSize: 20,
-  fontWeight: 900,
-  color: THEME.textPrimary,
-  marginBottom: 8,
-};
-
-const emptyText: CSSProperties = {
-  fontSize: 14,
-  color: THEME.textMuted,
-};
-
-// CTA
-const ctaSection: CSSProperties = {
-  padding: "0 24px 80px",
-};
-
-const ctaCard: CSSProperties = {
-  maxWidth: 680,
-  margin: "0 auto",
-  padding: 60,
-  borderRadius: 20,
-  border: `1px solid ${THEME.border}`,
-  background: "rgba(255,255,255,0.02)",
-  textAlign: "center",
-};
-
-const ctaTitle: CSSProperties = {
-  fontFamily: DISPLAY_FONT,
-  fontSize: 36,
-  fontWeight: 900,
-  marginBottom: 16,
-};
-
-const ctaText: CSSProperties = {
-  fontSize: 16,
-  color: THEME.textSecondary,
-  marginBottom: 32,
-};
-
-const ctaBtn: CSSProperties = {
-  display: "inline-block",
-  padding: "18px 40px",
-  borderRadius: 14,
-  border: `1px solid rgba(201,169,106,0.45)`,
-  background: "rgba(201,169,106,0.12)",
-  color: THEME.textPrimary,
-  fontWeight: 900,
-  fontSize: 15,
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
-  textDecoration: "none",
-};
-
-// Footer
-const footerStyle: CSSProperties = {
-  borderTop: `1px solid ${THEME.softBorder}`,
-  padding: "60px 24px 32px",
-  background: "rgba(0,0,0,0.2)",
-};
-
-const footerContainer: CSSProperties = {
-  maxWidth: 1400,
-  margin: "0 auto 40px",
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: 60,
-};
-
-const footerBrand: CSSProperties = {};
-
-const footerLogo: CSSProperties = {
-  fontFamily: DISPLAY_FONT,
-  fontSize: 24,
-  fontWeight: 900,
-  color: THEME.accent,
-  marginBottom: 8,
-};
-
-const footerTagline: CSSProperties = {
-  fontSize: 13,
-  color: THEME.textMuted,
-  margin: 0,
-};
-
-const footerLinks: CSSProperties = {
-  display: "flex",
-  gap: 80,
-  justifyContent: "flex-end",
-};
-
-const footerCol: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 12,
-};
-
-const footerColTitle: CSSProperties = {
-  fontSize: 12,
-  fontWeight: 900,
-  letterSpacing: "0.10em",
-  textTransform: "uppercase",
-  color: THEME.textPrimary,
-  marginBottom: 4,
-};
-
-const footerLink: CSSProperties = {
-  fontSize: 14,
-  color: THEME.textSecondary,
-  textDecoration: "none",
-};
-
-const footerBottom: CSSProperties = {
-  maxWidth: 1400,
-  margin: "0 auto",
-  paddingTop: 24,
-  borderTop: `1px solid ${THEME.softBorder}`,
-  textAlign: "center",
-};
-
-const footerCopyright: CSSProperties = {
-  fontSize: 13,
-  color: THEME.textMuted,
-  margin: 0,
-};
