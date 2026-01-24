@@ -616,8 +616,8 @@ function validateInfo(): string | null {
 
                   <div className="flex justify-center gap-4">
                    <Link
-  href={`/codepages/${result.primary.code_name.toLowerCase()}`}  // ✅ EVEN SAFER
-  className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-bold shadow-lg hover:shadow-xl transition"
+  href={`/codepages/${result.primary.code_name.toLowerCase()}`}  // ✅ CORRECT
+  className="..."
 >
   Explore Your Code
 </Link>
